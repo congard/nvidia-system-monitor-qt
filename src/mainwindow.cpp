@@ -77,10 +77,10 @@ void MainWindow::about() {
     QMessageBox::information(
         nullptr,
         "About",
-        _("<font size=4><b>nvidia-system-monitor</b></font>") +
+        _("<font size=4><b>NVIDIA System Monitor</b></font>") +
         _("<br>Version 1.0<br>The app monitors your Nvidia GPU<br><br>Developed by Daniel Bernar") +
         _("<br><a href='dbcongard@gmail.com'>dbcongard@gmail.com</a>") +
-        _("<br><br><a href='https://github.com/congard/nvidia-system-monitor/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor'>Github</a> <a href='https://t.me/congard'>Telegram</a>")
+        _("<br><br><a href='https://github.com/congard/nvidia-system-monitor-qt/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor-qt'>GitHub</a> <a href='https://t.me/congard'>Telegram</a>")
     );
 }
 
@@ -110,7 +110,7 @@ void MainWindow::help() {
         _("</ul>") +
         _("<b>GPU Utilization</b><br>This section displays a graph of gpu utilization.") +
         _("<br><b>Memory Utilization</b><br>This section displays a graph of memory utilization.") +
-        _("<br><a href='https://github.com/congard/nvidia-system-monitor/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor'>Github</a> <a href='https://t.me/congard'>Telegram</a>")
+        _("<br><a href='https://github.com/congard/nvidia-system-monitor-qt/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor-qt'>GitHub</a> <a href='https://t.me/congard'>Telegram</a>")
     );
     msgBox.exec();
 }
