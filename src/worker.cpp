@@ -6,8 +6,6 @@
 #include "constants.h"
 #include "settings.h"
 
-void Worker::work() {}
-
 Worker::~Worker() {
     std::cout << "Worker " << this << " deleted\n";
 }

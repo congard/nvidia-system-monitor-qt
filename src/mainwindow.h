@@ -12,12 +12,12 @@ public:
     WorkerThread *workerThread;
     QTabWidget *tabs;
     
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
 
     void closeEvent(QCloseEvent *event) override;
 private slots:
-    void about();
-    void help();
+    static void about();
+    static void help();
 };
 
 #endif

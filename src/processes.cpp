@@ -1,11 +1,9 @@
 #include "processes.h"
-#include <iostream>
 #include <QStandardItem>
 #include <QHeaderView>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QMutexLocker>
-#include "worker.h"
 #include "constants.h"
 #include "utils.h"
 
@@ -49,7 +47,7 @@ void ProcessesWorker::work() {
 }
 
 int ProcessesWorker::processesIndexByPid(const std::string& pid) {
-    for (uint i = 0; i < processes.size(); i++)
+    for (size_t i = 0; i < processes.size(); i++)
         if (processes[i].pid == pid)
             return i;
         
@@ -59,7 +57,7 @@ int ProcessesWorker::processesIndexByPid(const std::string& pid) {
 ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
     worker = new ProcessesWorker;
     
-    QStandardItemModel *model = new QStandardItemModel;
+    auto *model = new QStandardItemModel;
  
     //Заголовки столбцов
     QStringList horizontalHeader;
@@ -129,7 +127,7 @@ void ProcessesTableView::onDataUpdated() {
     model()->removeRows(0, model()->rowCount());
     QMutexLocker locker(&worker->mutex);
     
-    for (uint i = 0; i < worker->processes.size(); i++) {
+    for (size_t i = 0; i < worker->processes.size(); i++) {
         _setItem(i, NVSM_NAME, name);
         _setItem(i, NVSM_TYPE, type);
         _setItem(i, NVSM_GPUIDX, gpuIdx);

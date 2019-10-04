@@ -21,7 +21,7 @@ class ProcessesWorker : public Worker {
 public:
     std::vector<ProcessList> processes;
     
-    virtual void work();
+    void work() override;
     int processesIndexByPid(const std::string &pid);
 };
 
@@ -30,8 +30,8 @@ class ProcessesTableView : public QTableView {
 public:
     ProcessesWorker *worker;
     
-    ProcessesTableView(QWidget *parent = nullptr);
-    ~ProcessesTableView();
+    explicit ProcessesTableView(QWidget *parent = nullptr);
+    ~ProcessesTableView() override;
     
     void mousePressEvent(QMouseEvent *event) override;
     

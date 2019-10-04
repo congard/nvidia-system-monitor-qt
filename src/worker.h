@@ -9,9 +9,9 @@ class Worker : public QObject {
 public:
     QMutex mutex;
 
-    virtual void work();
+    virtual void work() = 0;
 
-    ~Worker();
+    ~Worker() override;
 signals:
     void dataUpdated();
 };
@@ -22,7 +22,7 @@ public:
     Worker **workers;
     
     WorkerThread();
-    ~WorkerThread();
+    ~WorkerThread() override;
     
     void run() override;
 };

@@ -11,12 +11,12 @@
 #include "utilization.h"
 
 MainWindow::MainWindow(QWidget*) { 
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto *layout = new QVBoxLayout;
     layout->setSpacing(0);
     layout->setMargin(0);
     
-    QMenuBar *menuBar = new QMenuBar;
-    QMenu *menu = new QMenu("&Help");
+    auto *menuBar = new QMenuBar;
+    auto *menu = new QMenu("&Help");
 
     menu->addAction("&About NVSM", this, SLOT(about()), Qt::CTRL + Qt::Key_A);
     menu->addAction("&Help", this, SLOT(help()), Qt::CTRL + Qt::Key_H);
@@ -28,18 +28,18 @@ MainWindow::MainWindow(QWidget*) {
     menuBar->addMenu(menu);
     layout->addWidget(menuBar);
     
-    ProcessesTableView *processes = new ProcessesTableView;
+    auto *processes = new ProcessesTableView;
     
-    QWidget *gwidget = new QWidget();
-    QVBoxLayout *glayout = new QVBoxLayout;
-    GPUUtilization *gutilization = new GPUUtilization;
+    auto *gwidget = new QWidget();
+    auto *glayout = new QVBoxLayout;
+    auto *gutilization = new GPUUtilization;
     glayout->addWidget(gutilization);
     glayout->setMargin(32);
     gwidget->setLayout(glayout);
 
-    QWidget *mwidget = new QWidget();
-    QVBoxLayout *mlayout = new QVBoxLayout;
-    MemoryUtilization *mutilization = new MemoryUtilization;
+    auto *mwidget = new QWidget();
+    auto *mlayout = new QVBoxLayout;
+    auto *mutilization = new MemoryUtilization;
     mlayout->addWidget(mutilization);
     mlayout->setMargin(32);
     mwidget->setLayout(mlayout);
@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget*) {
     tabs->addTab(mwidget, "Memory Utilization");
     layout->addWidget(tabs);
     
-    QWidget *window = new QWidget();
+    auto *window = new QWidget();
     window->setLayout(layout);
     setCentralWidget(window);
     
@@ -72,15 +72,14 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     event->accept();
 }
 
-#define _(str) QString(str)
 void MainWindow::about() {
     QMessageBox::information(
         nullptr,
         "About",
-        _("<font size=4><b>NVIDIA System Monitor</b></font>") +
-        _("<br>Version 1.0<br>The app monitors your Nvidia GPU<br><br>Developed by Daniel Bernar") +
-        _("<br><a href='dbcongard@gmail.com'>dbcongard@gmail.com</a>") +
-        _("<br><br><a href='https://github.com/congard/nvidia-system-monitor-qt/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor-qt'>GitHub</a> <a href='https://t.me/congard'>Telegram</a>")
+        R"(<font size=4><b>NVIDIA System Monitor</b></font>
+        <br>Version 1.1<br>The app monitors your Nvidia GPU<br><br>Developed by Daniel Bernar
+        <br><a href='dbcongard@gmail.com'>dbcongard@gmail.com</a>
+        <br><br><a href='https://github.com/congard/nvidia-system-monitor-qt/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor-qt'>GitHub</a> <a href='https://t.me/congard'>Telegram</a>)"
     );
 }
 
@@ -88,29 +87,29 @@ void MainWindow::help() {
     QMessageBox msgBox;
     msgBox.setText("<font size=4><b>Help</b></font>");
     msgBox.setInformativeText(
-        _("<b>Settings</b><br>By default, update delay is 2 seconds (2000 ms). ") +
-        _("You most likely want to change this value to, for example, 500 ms. To do this, create file <i>config</i> in the folder") +
-        _("<i>~/.config/nvidia-system-monitor</i>") +
-        _("<br><b>config values:</b>") +
-        _("<ul>") +
-            _("<li>updateDelay &lt;time in ms&gt;</li>") +
-            _("<li>graphLength &lt;time in ms&gt;</li>") +
-            _("<li>gpuColor &lt;gpu index&gt; &lt;red&gt; &lt;green&gt; &lt;blue&gt;</li>") +
-        _("</ul>") +
-        _("<b>Processes</b>") +
-        _("<ul>") +
-            _("<li>Name - process name</li>") +
-            _("<li>Type - \"C\" for Compute Process, \"G\" for Graphics Process, and \"C+G\" for the process having both Compute and Graphics contexts</li>") +
-            _("<li>GPU ID - id of GPU in which process running</li>") +
-            _("<li>pid - process id</li>") +
-            _("<li>sm [%]</li>") +
-            _("<li>mem [%]</li>") +
-            _("<li>enc [%]</li>") +
-            _("<li>dec [%]</li>") +
-        _("</ul>") +
-        _("<b>GPU Utilization</b><br>This section displays a graph of gpu utilization.") +
-        _("<br><b>Memory Utilization</b><br>This section displays a graph of memory utilization.") +
-        _("<br><a href='https://github.com/congard/nvidia-system-monitor-qt/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor-qt'>GitHub</a> <a href='https://t.me/congard'>Telegram</a>")
+        R"(<b>Settings</b><br>By default, update delay is 2 seconds (2000 ms).
+        You most likely want to change this value to, for example, 500 ms. To do this, create file <i>config</i> in the folder
+        <i>~/.config/nvidia-system-monitor</i>
+        <br><br><b>config values</b>
+        <ul>
+            <li>updateDelay &lt;time in ms&gt;</li>
+            <li>graphLength &lt;time in ms&gt;</li>
+            <li>gpuColor &lt;gpu index&gt; &lt;red&gt; &lt;green&gt; &lt;blue&gt;</li>
+        </ul><br>
+        <b>Processes</b>
+        <ul>
+            <li>Name - process name</li>
+            <li>Type - "C" for Compute Process, "G" for Graphics Process, and "C+G" for the process having both Compute and Graphics contexts</li>
+            <li>GPU ID - id of GPU in which process running</li>
+            <li>pid - process id</li>
+            <li>sm [%]</li>
+            <li>mem [%]</li>
+            <li>enc [%]</li>
+            <li>dec [%]</li>
+        </ul><br>
+        <b>GPU Utilization</b><br>This section displays a graph of gpu utilization.
+        <br><br><b>Memory Utilization</b><br>This section displays a graph of memory utilization.
+        <br><br><a href='https://github.com/congard/nvidia-system-monitor-qt/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor-qt'>GitHub</a> <a href='https://t.me/congard'>Telegram</a>)"
     );
     msgBox.exec();
 }

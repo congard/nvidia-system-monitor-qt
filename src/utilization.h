@@ -13,7 +13,7 @@ struct Point {
     float x; // [0; 1]
     int y; // [0; 100]
     
-    Point(const float x, const int y);
+    Point(float x, int y);
 };
 
 struct UtilizationData {
@@ -34,9 +34,9 @@ public:
     
     void work() override;
     virtual void receiveData() = 0;
-    void deleteSuperfluousPoints(const uint index);
+    void deleteSuperfluousPoints(uint index);
     
-    virtual ~UtilizationWorker();
+    ~UtilizationWorker() override;
 protected:
     long lastTime = 0;
 };
@@ -51,7 +51,7 @@ public:
     MemoryData *memoryData;
 
     MemoryUtilizationWorker();
-    ~MemoryUtilizationWorker();
+    ~MemoryUtilizationWorker() override;
 
     void receiveData() override;
 };
@@ -62,7 +62,7 @@ public:
     std::vector<QRect> statusObjectsAreas;
     UtilizationWorker *worker;
 
-    ~UtilizationWidget();
+    ~UtilizationWidget() override;
 
     void paintEvent(QPaintEvent*) override;
 

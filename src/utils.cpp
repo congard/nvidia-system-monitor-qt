@@ -23,10 +23,11 @@ std::string exec(const std::string& cmd) {
     return result;
 }
 
-Iterator range(const std::string& line, const std::string key, const size_t& n) {
+// TODO: maybe use regex instead?
+
+Iterator range(const std::string& line, const std::string &key, const size_t& n) {
     size_t pos = 0;
-    Iterator it;
-    it.begin = it.end = std::string::npos;
+    Iterator it {std::string::npos, std::string::npos};
 
     if ((it.begin = line.find(key, n)) == std::string::npos) return it;
 
@@ -56,23 +57,23 @@ std::vector<std::string> split(std::string in, const std::string& delimiter) {
 std::string streamline(const std::string& in) {
     std::vector<std::string> lines = split(in, "\n");
 
-    Iterator it;
-    for (size_t i = 0; i < lines.size(); i++) {
-        it = range(lines[i], " ");
-        if (it.begin == 0) lines[i].erase(0, it.end);
+    Iterator it {};
+    for (std::string &line : lines) {
+        it = range(line, " ");
+        if (it.begin == 0) line.erase(0, it.end);
         it.end = 0;
 
-        while ((it = range(lines[i], " ", it.end)).begin != std::string::npos) {
+        while ((it = range(line, " ", it.end)).begin != std::string::npos) {
             if ((it.end - it.begin) > 1) {
-                lines[i].erase(it.begin, it.end - it.begin - 1);
+                line.erase(it.begin, it.end - it.begin - 1);
                 it.end = 0; // because we call erase
             }
         }
     }
     
     std::string s;
-    for (size_t i = 0; i < lines.size(); i++)
-        s += lines[i] + "\n";
+    for (const std::string &line : lines)
+        s += line + "\n";
 
     return s;
 }

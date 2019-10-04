@@ -1,5 +1,4 @@
 #include "utilization.h"
-#include <iostream>
 #include <QFontMetrics>
 #include <QApplication>
 #include <QToolTip>
@@ -20,7 +19,7 @@ void drawGrid(QWidget *widget, QPainter *p) {
     p->setPen(QColor(100, 100, 100));
     grapthStartY = y0 * 1.25f;
     grapthEndY = grapthStartY + graphHeight;
-    for (float i = 0; i <= 1.0f; i += 0.25) {
+    for (float i = 0; i <= 1.0f; i += 0.25f) {
         p->drawLine(width * i, grapthStartY, width * i, grapthStartY + graphHeight);
         p->drawLine(0, grapthStartY + graphHeight * i, width, grapthStartY + graphHeight * i);
     }
@@ -128,8 +127,8 @@ void UtilizationWorker::work() {
     
     // g means gpu
     for (int g = 0; g < GPU_COUNT; g++) {
-        for (uint i = 0; i < gpoints[g].size(); i++)
-            gpoints[g][i].x -= step;
+        for (Point &i : gpoints[g])
+            i.x -= step;
         
         gpoints[g].emplace_back(1.0f, udata[g].level);
         deleteSuperfluousPoints(g);
@@ -137,7 +136,7 @@ void UtilizationWorker::work() {
         // calculate average, min, max
         udata[g].avgLevel = udata[g].maxLevel = 0;
         udata[g].minLevel = 100;
-        for (uint i = 0; i < gpoints[g].size(); i++) {
+        for (size_t i = 0; i < gpoints[g].size(); i++) {
             udata[g].avgLevel += gpoints[g][i].y;
             if (udata[g].maxLevel < gpoints[g][i].y)
                 udata[g].maxLevel = gpoints[g][i].y;
@@ -219,7 +218,7 @@ GPUUtilization::GPUUtilization() {
 
 #define area statusObjectsAreas[i]
 void GPUUtilization::mouseMoveEvent(QMouseEvent* event) {
-    for (uint i = 0; i < statusObjectsAreas.size(); i++) {
+    for (size_t i = 0; i < statusObjectsAreas.size(); i++) {
         if ((area.x() <= event->x()) && (area.x() + area.width() >= event->x()) &&
             (area.y() <= event->y()) && (area.y() + area.height() >= event->y()))
         {
@@ -242,7 +241,7 @@ MemoryUtilization::MemoryUtilization() {
 }
 
 void MemoryUtilization::mouseMoveEvent(QMouseEvent* event) {
-    for (uint i = 0; i < statusObjectsAreas.size(); i++) {
+    for (size_t i = 0; i < statusObjectsAreas.size(); i++) {
         if ((area.x() <= event->x()) && (area.x() + area.width() >= event->x()) &&
             (area.y() <= event->y()) && (area.y() + area.height() >= event->y()))
         {

@@ -90,5 +90,5 @@ int main(int argc, char** argv) {
     w.setWindowTitle("NVIDIA System Monitor");
     w.show();
 
-    return app.exec();
+    return QApplication::exec();
 }
