@@ -1,2 +1,6 @@
-build
-qnvsm.pro.user
+# CLion
+cmake-build-debug
+.idea
+
+# QtCreator
+CMakeLists.txt.user
