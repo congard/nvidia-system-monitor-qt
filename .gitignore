@@ -1,5 +1,5 @@
 # CLion
-cmake-build-debug
+cmake-build-*
 .idea
 
 # QtCreator
