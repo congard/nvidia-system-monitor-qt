@@ -1,20 +1,30 @@
 # nvidia-system-monitor
-<center>
+<div style="text-align: center;">
     <img src="icon.png" alt="icon" width="256" height="256"/>
-</center>
+</div>
 
 Task Manager for Linux for Nvidia graphics cards
 
 # Dependencies
-Qt is required for work. If you are an ArchLinux user, you can install from [here](https://wiki.archlinux.org/index.php/qt#Installation)
+Qt 5.11+ is required for work. If you are an ArchLinux user, you can install from [here](https://wiki.archlinux.org/index.php/qt#Installation)
 <br>Also in the system must be available `nvidia-smi`
 
 # Building
+## ArchLinux
+You can install `nvidia-system-monitor-qt` directly from [AUR](https://aur.archlinux.org/packages/nvidia-system-monitor-qt/)
+<br>To launch enter `qnvsm` or just click on .desktop file
+
+## Other
 ```
-qmake qnvsm.pro
-make
+cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" -B cmake-build-release
+cd cmake-build-release
+make -j4
 ```
-To launch type `build/qnvsm`
+To launch type `cmake-build-release/qnvsm`
+
+The option -j describes the number of parallel processes for the build. In this case make will try to use 4 cores for the build.
+
+If you want to use an IDE for Linux you can try CLion for instance.
 
 # Config
 Here example of simple config located in `~/.config/nvidia-system-monitor/config`:
