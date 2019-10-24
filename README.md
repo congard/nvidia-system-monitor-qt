@@ -6,8 +6,11 @@
 Task Manager for Linux for Nvidia graphics cards
 
 # Dependencies
-Qt 5.11+ is required for work. If you are an ArchLinux user, you can install from [here](https://wiki.archlinux.org/index.php/qt#Installation). If you are Ubuntu user, it can be installed with `sudo apt install qtdeclarative5-dev`.
-<br>Also in the system must be available `nvidia-smi`
+Qt 5.11+ is required for work.
+* If you are an ArchLinux user, you can install from [here](https://wiki.archlinux.org/index.php/qt#Installation).
+* If you are Ubuntu user, it can be installed with `sudo apt install qtdeclarative5-dev`.
+
+Also in the system must be available `nvidia-smi`
 
 # Building
 ## ArchLinux
