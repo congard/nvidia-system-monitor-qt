@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     init();
 
     MainWindow w;
-    w.resize(512, 512);
+    w.resize(764, 700);
     w.setWindowTitle("NVIDIA System Monitor");
     w.show();
 
