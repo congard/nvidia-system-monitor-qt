@@ -59,16 +59,16 @@ ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
     
     auto *model = new QStandardItemModel;
  
-    //Заголовки столбцов
+    // Column titles
     QStringList horizontalHeader;
     horizontalHeader.append("Name");
     horizontalHeader.append("Type (C/G)");
     horizontalHeader.append("GPU ID");
-    horizontalHeader.append("pid");
-    horizontalHeader.append("sm");
-    horizontalHeader.append("mem");
-    horizontalHeader.append("enc");
-    horizontalHeader.append("dec");
+    horizontalHeader.append("Process ID");
+    horizontalHeader.append("Compute use");
+    horizontalHeader.append("GPU Memory Use");
+    horizontalHeader.append("Encoding");
+    horizontalHeader.append("Decoding");
     
     model->setHorizontalHeaderLabels(horizontalHeader);
     
@@ -120,9 +120,11 @@ void ProcessesTableView::killProcess() {
     }
 }
 
-#define _setItem(row, column, str) \
-    ((QStandardItemModel*)model())->setItem(row, column, new QStandardItem(QString(worker->processes[i].str.c_str())))
-    
+#define _setItemExt(row, column, str, extra) \
+    ((QStandardItemModel*)model())->setItem(row, column, new QStandardItem(QString((worker->processes[i].str + extra).c_str())))
+
+#define _setItem(row, column, str) _setItemExt(row, column, str, "")
+
 void ProcessesTableView::onDataUpdated() {
     model()->removeRows(0, model()->rowCount());
     QMutexLocker locker(&worker->mutex);
@@ -133,7 +135,7 @@ void ProcessesTableView::onDataUpdated() {
         _setItem(i, NVSM_GPUIDX, gpuIdx);
         _setItem(i, NVSM_PID, pid);
         _setItem(i, NVSM_SM, sm);
-        _setItem(i, NVSM_MEM, mem);
+        _setItemExt(i, NVSM_MEM, mem, " MB");
         _setItem(i, NVSM_ENC, enc);
         _setItem(i, NVSM_DEC, dec);
     }
