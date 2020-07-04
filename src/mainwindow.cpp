@@ -10,7 +10,9 @@
 #include "processes.h"
 #include "utilization.h"
 
-MainWindow::MainWindow(QWidget*) { 
+MainWindow::MainWindow(QWidget*) {
+    setWindowIcon(QIcon(ICON_PATH));
+
     auto *layout = new QVBoxLayout;
     layout->setSpacing(0);
     layout->setMargin(0);

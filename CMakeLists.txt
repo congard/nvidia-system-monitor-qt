@@ -10,6 +10,10 @@ set(CMAKE_CXX_STANDARD 14)
 find_package(Qt5Core)
 find_package(Qt5Widgets)
 
+if (Distributive STREQUAL "Arch")
+    add_definitions(-DICON_PATH="/usr/share/icons/hicolor/512x512/apps/nvidia-system-monitor-qt.png")
+endif()
+
 include_directories(src)
 
 add_executable(qnvsm

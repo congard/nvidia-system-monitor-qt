@@ -36,6 +36,10 @@
 
 #define NVSM_WORKERS_MAX 3
 
+#ifndef ICON_PATH
+#define ICON_PATH ""
+#endif
+
 typedef unsigned int uint;
 
 #endif
