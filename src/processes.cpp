@@ -10,7 +10,8 @@
 ProcessList::ProcessList(const std::string& name, const std::string& type,
                          const std::string& gpuIdx, const std::string& pid,
                          const std::string& sm, const std::string& mem,
-                         const std::string& enc, const std::string& dec)
+                         const std::string& enc, const std::string& dec,
+                         const std::string& fbmem)
 {
     this->name = name;
     this->type = type;
@@ -20,6 +21,7 @@ ProcessList::ProcessList(const std::string& name, const std::string& type,
     this->mem = mem;
     this->enc = enc;
     this->dec = dec;
+    this->fbmem = fbmem;
 }
 
 void ProcessesWorker::work() {
@@ -37,7 +39,8 @@ void ProcessesWorker::work() {
             data[NVSMI_NAME], data[NVSMI_TYPE],
             data[NVSMI_GPUIDX], data[NVSMI_PID],
             data[NVSMI_SM], data[NVSMI_MEM],
-            data[NVSMI_ENC], data[NVSMI_DEC]
+            data[NVSMI_ENC], data[NVSMI_DEC],
+            data[NVSMI_FBMEM]
         );
     }
     
@@ -61,14 +64,15 @@ ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
  
     // Column titles
     QStringList horizontalHeader;
-    horizontalHeader.append("Name");
+    horizontalHeader.append("Name of Process"); // Longer header increases column width so the process names are visible
     horizontalHeader.append("Type (C/G)");
     horizontalHeader.append("GPU ID");
     horizontalHeader.append("Process ID");
-    horizontalHeader.append("Compute use");
-    horizontalHeader.append("GPU Memory Use");
-    horizontalHeader.append("Encoding");
-    horizontalHeader.append("Decoding");
+    horizontalHeader.append("SM Util (%)");
+    horizontalHeader.append("GPU Mem Util (%)");
+    horizontalHeader.append("Encoding (%)");
+    horizontalHeader.append("Decoding (%)");
+    horizontalHeader.append("FB Mem Usage (MB)");
     
     model->setHorizontalHeaderLabels(horizontalHeader);
     
@@ -121,23 +125,26 @@ void ProcessesTableView::killProcess() {
 }
 
 #define _setItemExt(row, column, str, extra) \
-    ((QStandardItemModel*)model())->setItem(row, column, new QStandardItem(QString((worker->processes[i].str + extra).c_str())))
+    qitem = new QStandardItem(QString((worker->processes[i].str + extra).c_str())); \
+    qitem->setTextAlignment(Qt::AlignHCenter); \
+    ((QStandardItemModel*)model())->setItem(row, column, qitem)
 
 #define _setItem(row, column, str) _setItemExt(row, column, str, "")
 
 void ProcessesTableView::onDataUpdated() {
     model()->removeRows(0, model()->rowCount());
     QMutexLocker locker(&worker->mutex);
-    
+    QStandardItem *qitem;
     for (size_t i = 0; i < worker->processes.size(); i++) {
         _setItem(i, NVSM_NAME, name);
         _setItem(i, NVSM_TYPE, type);
         _setItem(i, NVSM_GPUIDX, gpuIdx);
         _setItem(i, NVSM_PID, pid);
         _setItem(i, NVSM_SM, sm);
-        _setItemExt(i, NVSM_MEM, mem, " MB");
+        _setItem(i, NVSM_MEM, mem);
         _setItem(i, NVSM_ENC, enc);
         _setItem(i, NVSM_DEC, dec);
+        _setItem(i, NVSM_FBMEM, fbmem);
     }
     
     int index = worker->processesIndexByPid(selectedPid);
