@@ -8,14 +8,18 @@
 #include "utils.h"
 
 ProcessList::ProcessList(const std::string& name, const std::string& type,
-                const std::string& gpuIdx, const std::string& pid,
-                const std::string& mem)
+                         const std::string& gpuIdx, const std::string& pid,
+                         const std::string& sm, const std::string& mem,
+                         const std::string& enc, const std::string& dec)
 {
     this->name = name;
     this->type = type;
     this->gpuIdx = gpuIdx;
     this->pid = pid;
+    this->sm = sm;
     this->mem = mem;
+    this->enc = enc;
+    this->dec = dec;
 }
 
 void ProcessesWorker::work() {
@@ -30,11 +34,10 @@ void ProcessesWorker::work() {
         data = split(lines[i], " ");
         
         processes.emplace_back(
-            data[NVSMI_NAME],
-            data[NVSMI_TYPE],
-            data[NVSMI_GPUIDX],
-            data[NVSMI_PID],
-            data[NVSMI_MEM]
+            data[NVSMI_NAME], data[NVSMI_TYPE],
+            data[NVSMI_GPUIDX], data[NVSMI_PID],
+            data[NVSMI_SM], data[NVSMI_MEM],
+            data[NVSMI_ENC], data[NVSMI_DEC]
         );
     }
     
@@ -58,11 +61,14 @@ ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
  
     // Column titles
     QStringList horizontalHeader;
-    horizontalHeader.append("Name of Process"); // Longer header increases column width so the process names are visible
+    horizontalHeader.append("Name");
     horizontalHeader.append("Type (C/G)");
     horizontalHeader.append("GPU ID");
     horizontalHeader.append("Process ID");
-    horizontalHeader.append("GPU Memory Use (MB)");
+    horizontalHeader.append("Compute use");
+    horizontalHeader.append("GPU Memory Use");
+    horizontalHeader.append("Encoding");
+    horizontalHeader.append("Decoding");
     
     model->setHorizontalHeaderLabels(horizontalHeader);
     
@@ -128,7 +134,10 @@ void ProcessesTableView::onDataUpdated() {
         _setItem(i, NVSM_TYPE, type);
         _setItem(i, NVSM_GPUIDX, gpuIdx);
         _setItem(i, NVSM_PID, pid);
-        _setItem(i, NVSM_MEM, mem);
+        _setItem(i, NVSM_SM, sm);
+        _setItemExt(i, NVSM_MEM, mem, " MB");
+        _setItem(i, NVSM_ENC, enc);
+        _setItem(i, NVSM_DEC, dec);
     }
     
     int index = worker->processesIndexByPid(selectedPid);
