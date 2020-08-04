@@ -40,6 +40,7 @@ private:
     std::string selectedPid = "";
     
     void killProcess();
+    void _setItem(int row, int column, std::string str);
     
 public slots:
     void onDataUpdated();

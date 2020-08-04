@@ -124,28 +124,38 @@ void ProcessesTableView::killProcess() {
     }
 }
 
-#define _setItemExt(row, column, str, extra) \
-    qitem = new QStandardItem(QString((worker->processes[i].str + extra).c_str())); \
-    qitem->setTextAlignment(Qt::AlignHCenter); \
-    ((QStandardItemModel*)model())->setItem(row, column, qitem)
+void ProcessesTableView::_setItem(int row, int column, std::string str) {
+    QStandardItem *qitem = new QStandardItem;
 
-#define _setItem(row, column, str) _setItemExt(row, column, str, "")
+    char *end;
+    long long i = strtoll( str.c_str(), &end, 10 ); // check if value can be converted to integer
+    if ( *end == '\0' )  {
+        qitem->setData(i, Qt::EditRole);
+    } else {
+        qitem->setData(str.c_str(), Qt::EditRole);
+    }
+
+    qitem->setTextAlignment(Qt::AlignHCenter); 
+    ((QStandardItemModel*)model())->setItem(row, column, qitem);
+}
 
 void ProcessesTableView::onDataUpdated() {
     model()->removeRows(0, model()->rowCount());
     QMutexLocker locker(&worker->mutex);
-    QStandardItem *qitem;
+
     for (size_t i = 0; i < worker->processes.size(); i++) {
-        _setItem(i, NVSM_NAME, name);
-        _setItem(i, NVSM_TYPE, type);
-        _setItem(i, NVSM_GPUIDX, gpuIdx);
-        _setItem(i, NVSM_PID, pid);
-        _setItem(i, NVSM_SM, sm);
-        _setItem(i, NVSM_MEM, mem);
-        _setItem(i, NVSM_ENC, enc);
-        _setItem(i, NVSM_DEC, dec);
-        _setItem(i, NVSM_FBMEM, fbmem);
+        _setItem(i, NVSM_NAME, worker->processes[i].name);
+        _setItem(i, NVSM_TYPE, worker->processes[i].type);
+        _setItem(i, NVSM_GPUIDX, worker->processes[i].gpuIdx);
+        _setItem(i, NVSM_PID, worker->processes[i].pid);
+        _setItem(i, NVSM_SM, worker->processes[i].sm);
+        _setItem(i, NVSM_MEM, worker->processes[i].mem);
+        _setItem(i, NVSM_ENC, worker->processes[i].enc);
+        _setItem(i, NVSM_DEC, worker->processes[i].dec);
+        _setItem(i, NVSM_FBMEM, worker->processes[i].fbmem);
     }
+
+    setSortingEnabled(true);
     
     int index = worker->processesIndexByPid(selectedPid);
     if (index != -1)
