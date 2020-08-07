@@ -84,15 +84,15 @@ void ProcessesTableView::onDataUpdated() {
     QMutexLocker locker(&worker->mutex);
 
     for (size_t i = 0; i < worker->processes.size(); i++) {
-        setItem(i, NVSM_NAME, name)
-        setItem(i, NVSM_TYPE, type)
-        setItem(i, NVSM_GPUIDX, gpuIdx)
-        setItem(i, NVSM_PID, pid)
-        setItem(i, NVSM_SM, sm)
-        setItem(i, NVSM_MEM, mem)
-        setItem(i, NVSM_ENC, enc)
-        setItem(i, NVSM_DEC, dec)
-        setItem(i, NVSM_FBMEM, fbmem)
+        setItem(i, NVSMColumns::Name, name)
+        setItem(i, NVSMColumns::Type, type)
+        setItem(i, NVSMColumns::GPUIdx, gpuIdx)
+        setItem(i, NVSMColumns::PID, pid)
+        setItem(i, NVSMColumns::Sm, sm)
+        setItem(i, NVSMColumns::Mem, mem)
+        setItem(i, NVSMColumns::Enc, enc)
+        setItem(i, NVSMColumns::Dec, dec)
+        setItem(i, NVSMColumns::FbMem, fbmem)
     }
 
     int index = worker->processesIndexByPid(selectedPid);

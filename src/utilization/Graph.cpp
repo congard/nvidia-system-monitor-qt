@@ -88,8 +88,8 @@ void drawStatusObjects(std::vector<QRect> &statusObjectsAreas, UtilizationData *
     int size = fm.height() * 2; // width and height for progress arc
     int textWidth = fm.horizontalAdvance("100%"); // because max width will be only at 100%
 
-    int blockSize = size + STATUS_OBJECT_TEXT_OFFSET + textWidth + STATUS_OBJECT_OFFSET;
-    int horizontalCount = (width + STATUS_OBJECT_OFFSET) / blockSize; // (width + STATUS_OBJECT_OFFSET) because last element has offset
+    int blockSize = size + StatusObjectTextOffset + textWidth + StatusObjectOffset;
+    int horizontalCount = (width + StatusObjectOffset) / blockSize; // (width + STATUS_OBJECT_OFFSET) because last element has offset
     QRect progress;
 
     for (int g = 0; g < GPUCount; g++) {
@@ -97,7 +97,7 @@ void drawStatusObjects(std::vector<QRect> &statusObjectsAreas, UtilizationData *
         p->setBrush(QBrush(GPUColors[g]));
 
         int x = blockSize * (g % horizontalCount);
-        int y = graphEndY + fm.height() + (size + STATUS_OBJECT_OFFSET) * (g / horizontalCount) + GRAPTH_OFFSET;
+        int y = graphEndY + fm.height() + (size + StatusObjectOffset) * (g / horizontalCount) + GraphOffset;
         int spanAngle = -udata[g].level / 100.0f * 360;
 
         progress = QRect(x, y, size, size);
@@ -111,7 +111,7 @@ void drawStatusObjects(std::vector<QRect> &statusObjectsAreas, UtilizationData *
         p->setBrush(QBrush());
         p->drawEllipse(x, y, size, size);
 
-        p->drawText(x + size + STATUS_OBJECT_TEXT_OFFSET, y + size / 2 + fm.xHeight() / 2, (std::to_string(udata[g].level) + "%").c_str());
+        p->drawText(x + size + StatusObjectTextOffset, y + size / 2 + fm.xHeight() / 2, (std::to_string(udata[g].level) + "%").c_str());
 
         statusObjectsAreas.emplace_back(x, y, blockSize, size);
     }
