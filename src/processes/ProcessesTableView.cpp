@@ -20,11 +20,11 @@ ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
     horizontalHeader.append("Type (C/G)");
     horizontalHeader.append("GPU ID");
     horizontalHeader.append("Process ID");
+    horizontalHeader.append("FB Mem Usage (MB)");
     horizontalHeader.append("SM Util (%)");
     horizontalHeader.append("GPU Mem Util (%)");
     horizontalHeader.append("Encoding (%)");
     horizontalHeader.append("Decoding (%)");
-    horizontalHeader.append("FB Mem Usage (MB)");
 
     model->setHorizontalHeaderLabels(horizontalHeader);
 

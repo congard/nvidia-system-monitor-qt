@@ -39,11 +39,11 @@ enum {
     Type,
     GPUIdx,
     PID,
+    FbMem,
     Sm,
     Mem,
     Enc,
-    Dec,
-    FbMem
+    Dec
 };
 }
 
