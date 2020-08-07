@@ -1,9 +1,10 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef QNVSM_UTILS_H
+#define QNVSM_UTILS_H
 
 #include <string>
 #include <vector>
 
+namespace Utils {
 struct Iterator {
     size_t begin, end;
 };
@@ -15,5 +16,6 @@ std::string streamline(const std::string &in);
 std::string toString(float val, int n = 1);
 size_t startsWith(const std::vector<std::string> &lines, const std::string &s);
 long getTime();
+}
 
 #endif

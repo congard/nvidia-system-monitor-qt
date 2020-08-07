@@ -1,67 +1,19 @@
-#include "processes.h"
-#include <QStandardItem>
+#include "ProcessesTableView.h"
+
+#include <QStandardItemModel>
 #include <QHeaderView>
 #include <QMenu>
 #include <QMouseEvent>
-#include <QMutexLocker>
+#include <QMutex>
+
 #include "constants.h"
-#include "utils.h"
-
-ProcessList::ProcessList(const std::string& name, const std::string& type,
-                         const std::string& gpuIdx, const std::string& pid,
-                         const std::string& sm, const std::string& mem,
-                         const std::string& enc, const std::string& dec,
-                         const std::string& fbmem)
-{
-    this->name = name;
-    this->type = type;
-    this->gpuIdx = gpuIdx;
-    this->pid = pid;
-    this->sm = sm;
-    this->mem = mem;
-    this->enc = enc;
-    this->dec = dec;
-    this->fbmem = fbmem;
-}
-
-void ProcessesWorker::work() {
-    mutex.lock();
-    std::vector<std::string> lines = split(streamline(exec(NVSMI_CMD_PROCESSES)), "\n"), data;
-    processes.clear();
-    
-    for (size_t i = 2; i < lines.size(); i++) {
-        if (lines[i].empty())
-            continue;
-                
-        data = split(lines[i], " ");
-        
-        processes.emplace_back(
-            data[NVSMI_NAME], data[NVSMI_TYPE],
-            data[NVSMI_GPUIDX], data[NVSMI_PID],
-            data[NVSMI_SM], data[NVSMI_MEM],
-            data[NVSMI_ENC], data[NVSMI_DEC],
-            data[NVSMI_FBMEM]
-        );
-    }
-    
-    mutex.unlock();
-    
-    dataUpdated();
-}
-
-int ProcessesWorker::processesIndexByPid(const std::string& pid) {
-    for (size_t i = 0; i < processes.size(); i++)
-        if (processes[i].pid == pid)
-            return i;
-        
-    return -1;
-}
+#include "core/Utils.h"
 
 ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
     worker = new ProcessesWorker;
-    
+
     auto *model = new QStandardItemModel;
- 
+
     // Column titles
     QStringList horizontalHeader;
     horizontalHeader.append("Name of Process"); // Longer header increases column width so the process names are visible
@@ -73,9 +25,9 @@ ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
     horizontalHeader.append("Encoding (%)");
     horizontalHeader.append("Decoding (%)");
     horizontalHeader.append("FB Mem Usage (MB)");
-    
+
     model->setHorizontalHeaderLabels(horizontalHeader);
-    
+
     setModel(model);
     resizeRowsToContents();
     resizeColumnsToContents();
@@ -92,35 +44,29 @@ ProcessesTableView::~ProcessesTableView() {
 void ProcessesTableView::mousePressEvent(QMouseEvent *event) {
     QTableView::mousePressEvent(event);
     int row = indexAt(event->pos()).row();
-    
+
     if (row != -1) {
         QMutexLocker locker(&worker->mutex);
         setCurrentIndex(model()->index(row, 0));
         selectedPid = worker->processes[row].pid;
-    } else
+    } else {
         selectedPid = "";
-    
+    }
+
     if (event->button() == Qt::RightButton && row != -1) {
         QMenu contextMenu(tr("Context menu"), this);
 
         worker->mutex.lock();
         QAction action1(
-            ("Kill " + worker->processes[row].name + " (pid " + worker->processes[row].pid + ")").c_str(),
-            this
+                ("Kill " + worker->processes[row].name + " (pid " + worker->processes[row].pid + ")").c_str(),
+                this
         );
         worker->mutex.unlock();
+
         connect(&action1, &QAction::triggered, this, &ProcessesTableView::killProcess);
         contextMenu.addAction(&action1);
-    
-        contextMenu.exec(mapToGlobal(event->pos()));
-    }
-}
 
-void ProcessesTableView::killProcess() {
-    QMutexLocker locker(&worker->mutex);
-    if (worker->processesIndexByPid(selectedPid) != -1) {
-        exec("kill " + selectedPid);
-        selectedPid = "";
+        contextMenu.exec(mapToGlobal(event->pos()));
     }
 }
 
@@ -146,8 +92,16 @@ void ProcessesTableView::onDataUpdated() {
         _setItem(i, NVSM_DEC, dec);
         _setItem(i, NVSM_FBMEM, fbmem);
     }
-    
+
     int index = worker->processesIndexByPid(selectedPid);
     if (index != -1)
         setCurrentIndex(model()->index(index, 0));
+}
+
+void ProcessesTableView::killProcess() {
+    QMutexLocker locker(&worker->mutex);
+    if (worker->processesIndexByPid(selectedPid) != -1) {
+        Utils::exec("kill " + selectedPid);
+        selectedPid = "";
+    }
 }

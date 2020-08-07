@@ -1,14 +1,20 @@
-#include "mainwindow.h"
+#include "MainWindow.h"
+
 #include <QPushButton>
-#include <iostream>
 #include <QMenuBar>
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QCloseEvent>
 
-#include "processes.h"
-#include "utilization.h"
+#include <iostream>
+
+#include "processes/ProcessesTableView.h"
+#include "utilization/gpu/GPUUtilizationWidget.h"
+#include "utilization/memory/MemoryUtilizationWidget.h"
+
+#include "utilization/gpu/GPUUtilizationWorker.h"
+#include "utilization/memory/MemoryUtilizationWorker.h"
 
 MainWindow::MainWindow(QWidget*) {
     setWindowIcon(QIcon(ICON_PATH));
@@ -33,15 +39,15 @@ MainWindow::MainWindow(QWidget*) {
     auto *processes = new ProcessesTableView;
     
     auto *gwidget = new QWidget();
-    auto *glayout = new QVBoxLayout;
-    auto *gutilization = new GPUUtilization;
+    auto *glayout = new QVBoxLayout();
+    auto *gutilization = new GPUUtilizationWidget();
     glayout->addWidget(gutilization);
     glayout->setMargin(32);
     gwidget->setLayout(glayout);
 
     auto *mwidget = new QWidget();
-    auto *mlayout = new QVBoxLayout;
-    auto *mutilization = new MemoryUtilization;
+    auto *mlayout = new QVBoxLayout();
+    auto *mutilization = new MemoryUtilizationWidget();
     mlayout->addWidget(mutilization);
     mlayout->setMargin(32);
     mwidget->setLayout(mlayout);
@@ -56,9 +62,12 @@ MainWindow::MainWindow(QWidget*) {
     window->setLayout(layout);
     setCentralWidget(window);
     
-    connect(processes->worker, &ProcessesWorker::dataUpdated, processes, &ProcessesTableView::onDataUpdated);
-    connect(gutilization->worker, &GPUUtilizationWorker::dataUpdated, gutilization, &GPUUtilization::onDataUpdated);
-    connect(mutilization->worker, &MemoryUtilizationWorker::dataUpdated, mutilization, &MemoryUtilization::onDataUpdated);
+    connect(processes->worker,
+            &ProcessesWorker::dataUpdated, processes, &ProcessesTableView::onDataUpdated);
+    connect(gutilization->worker,
+            &GPUUtilizationWorker::dataUpdated, gutilization, &GPUUtilizationWidget::onDataUpdated);
+    connect(mutilization->worker,
+            &MemoryUtilizationWorker::dataUpdated, mutilization, &MemoryUtilizationWidget::onDataUpdated);
     
     workerThread = new WorkerThread;
     workerThread->workers[0] = processes->worker;
@@ -79,7 +88,9 @@ void MainWindow::about() {
         nullptr,
         "About",
         R"(<font size=4><b>NVIDIA System Monitor</b></font>
-        <br>Version 1.1<br>The app monitors your Nvidia GPU<br><br>Developed by Daniel Bernar
+        <br>Version )" QNVSM_VERSION
+        R"(<br>The app monitors your Nvidia GPU
+        <br><br>Developed by Daniel Bernar
         <br><a href='dbcongard@gmail.com'>dbcongard@gmail.com</a>
         <br><br><a href='https://github.com/congard/nvidia-system-monitor-qt/blob/master/DONATE.md'>Donate</a> <a href='https://github.com/congard/nvidia-system-monitor-qt'>GitHub</a> <a href='https://t.me/congard'>Telegram</a>)"
     );

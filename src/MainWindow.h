@@ -1,20 +1,23 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef QNVSM_MAINWINDOW_H
+#define QNVSM_MAINWINDOW_H
 
 #include <QMainWindow>
-#include <qobjectdefs.h>
 
-#include "worker.h"
+#include "core/WorkerThread.h"
+#include "core/Worker.h"
 
-class MainWindow : public QMainWindow {
+class MainWindow: public QMainWindow {
     Q_OBJECT
+
 public:
-    WorkerThread *workerThread;
-    QTabWidget *tabs;
-    
     explicit MainWindow(QWidget *parent = nullptr);
 
     void closeEvent(QCloseEvent *event) override;
+
+public:
+    WorkerThread *workerThread;
+    QTabWidget *tabs;
+
 private slots:
     static void about();
     static void help();
