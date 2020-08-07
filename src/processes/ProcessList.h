@@ -5,11 +5,9 @@
 
 class ProcessList {
 public:
-    ProcessList(const std::string &inName, const std::string &type,
-                const std::string &gpuIdx, const std::string &pid,
-                const std::string &sm, const std::string &mem,
-                const std::string &enc, const std::string &dec,
-                const std::string &fbmem);
+    ProcessList(std::string inName, std::string type, std::string gpuIdx, std::string pid,
+                std::string sm, std::string mem, std::string enc, std::string dec,
+                std::string fbmem);
 
 public:
     std::string name;
