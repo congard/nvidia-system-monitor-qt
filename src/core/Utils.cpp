@@ -10,7 +10,6 @@ using namespace std;
 
 namespace Utils {
 string exec(const string &cmd) {
-    char buffer[BUFFER_SIZE];
     string result;
     FILE* pipe = popen(cmd.c_str(), "r");
 
@@ -18,6 +17,8 @@ string exec(const string &cmd) {
         throw runtime_error("popen() failed!");
 
     try {
+        char buffer[BUFFER_SIZE];
+
         while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
             result += buffer;
         }
@@ -106,10 +107,8 @@ string toString(const float val, const int n) {
 }
 
 size_t startsWith(const vector<string> &lines, const string &s) {
-    size_t tmp;
-
     for (size_t i = 0; i < lines.size(); i++) {
-        tmp = lines[i].find(s);
+        size_t tmp = lines[i].find(s);
 
         if (tmp == 0) {
             return i;

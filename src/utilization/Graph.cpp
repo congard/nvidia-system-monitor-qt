@@ -22,15 +22,17 @@ inline int max(const int p1, const int p2) {
 namespace Graph {
 void drawGrid(QWidget *widget, QPainter *p) {
     QFontMetrics fm(qApp->font());
-    int x0,
-            y0 = fm.height(),
-            graphHeight = max(graphMinHeight, (int)((float)widget->size().height() * 0.45f));
+
+    int x0;
+    int y0 = fm.height();
+    int graphHeight = max(graphMinHeight, (int)((float)widget->size().height() * 0.45f));
 
     width = widget->size().width() - 4;
 
     p->setPen(QColor(100, 100, 100));
     graphStartY = y0 * 1.25f;
     graphEndY = graphStartY + graphHeight;
+
     for (float i = 0; i <= 1.0f; i += 0.25f) {
         p->drawLine(width * i, graphStartY, width * i, graphStartY + graphHeight);
         p->drawLine(0, graphStartY + graphHeight * i, width, graphStartY + graphHeight * i);
@@ -54,10 +56,12 @@ void drawGraph(UtilizationWorker *worker, QPainter *p) {
     QColor color;
     QPen pen;
     pen.setWidth(2);
+
     for (int g = 0; g < GPUCount; g++) {
         color = GPUColors[g];
         pen.setColor(color);
         p->setPen(pen);
+
         for (size_t i = 1; i < worker->gpoints[g].size(); i++) {
             x1 = worker->gpoints[g][i - 1].x * width;
             y1 = graphEndY - (graphEndY - graphStartY) / 100.0f * worker->gpoints[g][i - 1].y;
@@ -86,16 +90,15 @@ void drawStatusObjects(std::vector<QRect> &statusObjectsAreas, UtilizationData *
 
     int blockSize = size + STATUS_OBJECT_TEXT_OFFSET + textWidth + STATUS_OBJECT_OFFSET;
     int horizontalCount = (width + STATUS_OBJECT_OFFSET) / blockSize; // (width + STATUS_OBJECT_OFFSET) because last element has offset
-    int spanAngle, x, y;
     QRect progress;
 
     for (int g = 0; g < GPUCount; g++) {
         p->setPen(GPUColors[g]);
         p->setBrush(QBrush(GPUColors[g]));
 
-        x = blockSize * (g % horizontalCount);
-        y = graphEndY + fm.height() + (size + STATUS_OBJECT_OFFSET) * (g / horizontalCount) + GRAPTH_OFFSET;
-        spanAngle = -udata[g].level / 100.0f * 360;
+        int x = blockSize * (g % horizontalCount);
+        int y = graphEndY + fm.height() + (size + STATUS_OBJECT_OFFSET) * (g / horizontalCount) + GRAPTH_OFFSET;
+        int spanAngle = -udata[g].level / 100.0f * 360;
 
         progress = QRect(x, y, size, size);
 

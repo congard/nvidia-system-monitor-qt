@@ -70,27 +70,29 @@ void ProcessesTableView::mousePressEvent(QMouseEvent *event) {
     }
 }
 
-#define _setItemExt(row, column, str, extra) \
-    qitem = new QStandardItem(QString((worker->processes[i].str + extra).c_str())); \
-    qitem->setTextAlignment(Qt::AlignHCenter); \
-    ((QStandardItemModel*)model())->setItem(row, column, qitem)
+#define setItemExt(row, column, str, extra) \
+    { \
+        auto *qItem = new QStandardItem(QString((worker->processes[i].str + extra).c_str())); \
+        qItem->setTextAlignment(Qt::AlignHCenter); \
+        ((QStandardItemModel*)model())->setItem(row, column, qItem); \
+    }
 
-#define _setItem(row, column, str) _setItemExt(row, column, str, "")
+#define setItem(row, column, str) setItemExt(row, column, str, "")
 
 void ProcessesTableView::onDataUpdated() {
     model()->removeRows(0, model()->rowCount());
     QMutexLocker locker(&worker->mutex);
-    QStandardItem *qitem;
+
     for (size_t i = 0; i < worker->processes.size(); i++) {
-        _setItem(i, NVSM_NAME, name);
-        _setItem(i, NVSM_TYPE, type);
-        _setItem(i, NVSM_GPUIDX, gpuIdx);
-        _setItem(i, NVSM_PID, pid);
-        _setItem(i, NVSM_SM, sm);
-        _setItem(i, NVSM_MEM, mem);
-        _setItem(i, NVSM_ENC, enc);
-        _setItem(i, NVSM_DEC, dec);
-        _setItem(i, NVSM_FBMEM, fbmem);
+        setItem(i, NVSM_NAME, name)
+        setItem(i, NVSM_TYPE, type)
+        setItem(i, NVSM_GPUIDX, gpuIdx)
+        setItem(i, NVSM_PID, pid)
+        setItem(i, NVSM_SM, sm)
+        setItem(i, NVSM_MEM, mem)
+        setItem(i, NVSM_ENC, enc)
+        setItem(i, NVSM_DEC, dec)
+        setItem(i, NVSM_FBMEM, fbmem)
     }
 
     int index = worker->processesIndexByPid(selectedPid);
