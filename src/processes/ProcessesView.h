@@ -1,15 +1,15 @@
-#ifndef QNVSM_PROCESSESTABLEVIEW_H
-#define QNVSM_PROCESSESTABLEVIEW_H
+#ifndef QNVSM_PROCESSESVIEW_H
+#define QNVSM_PROCESSESVIEW_H
 
 #include <QTableView>
 #include "ProcessesWorker.h"
 
-class ProcessesTableView: public QTableView {
+class ProcessesView: public QTableView {
     Q_OBJECT
 
 public:
-    explicit ProcessesTableView(QWidget *parent = nullptr);
-    ~ProcessesTableView() override;
+    explicit ProcessesView(QWidget *parent = nullptr);
+    ~ProcessesView() override;
 
     void mousePressEvent(QMouseEvent *event) override;
 
@@ -26,4 +26,4 @@ private:
     void killProcess();
 };
 
-#endif //QNVSM_PROCESSESTABLEVIEW_H
+#endif //QNVSM_PROCESSESVIEW_H

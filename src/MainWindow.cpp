@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-#include "processes/ProcessesTableView.h"
+#include "processes/ProcessesView.h"
 #include "utilization/gpu/GPUUtilizationWidget.h"
 #include "utilization/memory/MemoryUtilizationWidget.h"
 
@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget*) {
     menuBar->addMenu(menu);
     layout->addWidget(menuBar);
     
-    auto *processes = new ProcessesTableView;
+    auto *processes = new ProcessesView;
     
     auto *gwidget = new QWidget();
     auto *glayout = new QVBoxLayout();
@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget*) {
     setCentralWidget(window);
     
     connect(processes->worker,
-            &ProcessesWorker::dataUpdated, processes, &ProcessesTableView::onDataUpdated);
+            &ProcessesWorker::dataUpdated, processes, &ProcessesView::onDataUpdated);
     connect(gutilization->worker,
             &GPUUtilizationWorker::dataUpdated, gutilization, &GPUUtilizationWidget::onDataUpdated);
     connect(mutilization->worker,

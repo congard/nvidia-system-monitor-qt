@@ -30,7 +30,7 @@ add_executable(qnvsm
         src/core/WorkerThread.cpp src/core/WorkerThread.h
         src/processes/ProcessList.cpp src/processes/ProcessList.h
         src/processes/ProcessesWorker.cpp src/processes/ProcessesWorker.h
-        src/processes/ProcessesTableView.cpp src/processes/ProcessesTableView.h
+        src/processes/ProcessesView.cpp src/processes/ProcessesView.h
         src/utilization/Point.h src/utilization/Point.cpp
         src/utilization/UtilizationData.h src/utilization/memory/MemoryData.h
         src/utilization/UtilizationWorker.cpp src/utilization/UtilizationWorker.h

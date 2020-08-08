@@ -1,4 +1,4 @@
-#include "ProcessesTableView.h"
+#include "ProcessesView.h"
 
 #include <QStandardItemModel>
 #include <QHeaderView>
@@ -9,7 +9,7 @@
 #include "constants.h"
 #include "core/Utils.h"
 
-ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
+ProcessesView::ProcessesView(QWidget *parent) : QTableView(parent) {
     worker = new ProcessesWorker;
 
     auto *model = new QStandardItemModel;
@@ -37,11 +37,11 @@ ProcessesTableView::ProcessesTableView(QWidget *parent) : QTableView(parent) {
     setAutoScroll(false);
 }
 
-ProcessesTableView::~ProcessesTableView() {
+ProcessesView::~ProcessesView() {
     delete worker;
 }
 
-void ProcessesTableView::mousePressEvent(QMouseEvent *event) {
+void ProcessesView::mousePressEvent(QMouseEvent *event) {
     QTableView::mousePressEvent(event);
     int row = indexAt(event->pos()).row();
 
@@ -63,7 +63,7 @@ void ProcessesTableView::mousePressEvent(QMouseEvent *event) {
         );
         worker->mutex.unlock();
 
-        connect(&action1, &QAction::triggered, this, &ProcessesTableView::killProcess);
+        connect(&action1, &QAction::triggered, this, &ProcessesView::killProcess);
         contextMenu.addAction(&action1);
 
         contextMenu.exec(mapToGlobal(event->pos()));
@@ -79,7 +79,7 @@ void ProcessesTableView::mousePressEvent(QMouseEvent *event) {
 
 #define setItem(row, column, str) setItemExt(row, column, str, "")
 
-void ProcessesTableView::onDataUpdated() {
+void ProcessesView::onDataUpdated() {
     model()->removeRows(0, model()->rowCount());
     QMutexLocker locker(&worker->mutex);
 
@@ -100,7 +100,7 @@ void ProcessesTableView::onDataUpdated() {
         setCurrentIndex(model()->index(index, 0));
 }
 
-void ProcessesTableView::killProcess() {
+void ProcessesView::killProcess() {
     QMutexLocker locker(&worker->mutex);
     if (worker->processesIndexByPid(selectedPid) != -1) {
         Utils::exec("kill " + selectedPid);
