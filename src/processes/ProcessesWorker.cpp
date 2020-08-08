@@ -18,11 +18,11 @@ void ProcessesWorker::work() {
         data = split(lines[i], " ");
 
         processes.emplace_back(
-                data[NVSMIProcesses::Name], data[NVSMIProcesses::Type],
-                data[NVSMIProcesses::GPUIdx], data[NVSMIProcesses::PID],
-                data[NVSMIProcesses::Sm], data[NVSMIProcesses::Mem],
-                data[NVSMIProcesses::Enc], data[NVSMIProcesses::Dec],
-                data[NVSMIProcesses::FbMem]
+                data[NVSMIProcess::Name], data[NVSMIProcess::Type],
+                data[NVSMIProcess::GPUIdx], data[NVSMIProcess::PID],
+                data[NVSMIProcess::Sm], data[NVSMIProcess::Mem],
+                data[NVSMIProcess::Enc], data[NVSMIProcess::Dec],
+                data[NVSMIProcess::FbMem]
         );
     }
 

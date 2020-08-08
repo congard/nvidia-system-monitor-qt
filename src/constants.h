@@ -17,8 +17,8 @@
 // enums are using for convenience and readability
 // enums are using in array indexing
 
-// nvidia-smi processes output indices
-namespace NVSMIProcesses {
+// nvidia-smi process output indices
+namespace NVSMIProcess {
 enum {
     GPUIdx,
     PID,
