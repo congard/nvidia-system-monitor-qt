@@ -74,7 +74,7 @@ void ProcessesView::onDataUpdated() {
         if (index == -1) {
             model()->removeRow(i);
         } else {
-            const ProcessList &processList = worker->processes[index];
+            const ProcessInfo &processList = worker->processes[index];
 
             // update what may change
             updateItem(i, NVSMColumns::Type, processList.type);

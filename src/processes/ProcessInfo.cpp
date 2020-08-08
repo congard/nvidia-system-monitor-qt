@@ -1,10 +1,10 @@
-#include "ProcessList.h"
+#include "ProcessInfo.h"
 
 #include <utility>
 
 using namespace std;
 
-ProcessList::ProcessList(string in_name, string in_type, string in_gpuIdx, string in_pid,
+ProcessInfo::ProcessInfo(string in_name, string in_type, string in_gpuIdx, string in_pid,
                          string in_sm, string in_mem, string in_enc, string in_dec,
                          string in_fbmem)
         : name(move(in_name)),

@@ -2,7 +2,7 @@
 #define QNVSM_PROCESSESWORKER_H
 
 #include "core/Worker.h"
-#include "ProcessList.h"
+#include "ProcessInfo.h"
 
 class ProcessesWorker: public Worker {
 public:
@@ -10,7 +10,7 @@ public:
     int processesIndexByPid(const std::string &pid);
 
 public:
-    std::vector<ProcessList> processes;
+    std::vector<ProcessInfo> processes;
 };
 
 #endif //QNVSM_PROCESSESWORKER_H
