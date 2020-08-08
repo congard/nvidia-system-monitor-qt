@@ -15,6 +15,9 @@ Qt 5.11+ is required for work.
 Also in the system must be available `nvidia-smi`
 
 ## Building
+**Note:** after a lot of refactoring you may be bumped into compilation errors because of missing headers.
+<br>If so, create new issue or write me email with compilation error: [dbcongard@gmail.com](mailto:dbcongard@gmail.com)
+
 ### ArchLinux
 You can install `nvidia-system-monitor-qt` directly from [AUR](https://aur.archlinux.org/packages/nvidia-system-monitor-qt/)
 <br>To launch enter `qnvsm` or just click on `.desktop` file
