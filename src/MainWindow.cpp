@@ -40,24 +40,18 @@ MainWindow::MainWindow(QWidget*) {
     
     auto *processes = new ProcessesView;
     
-    auto *gwidget = new QWidget();
-    auto *glayout = new QVBoxLayout();
-    auto *gutilization = new GPUUtilizationWidget();
-    glayout->addWidget(gutilization);
-    glayout->setMargin(32);
-    gwidget->setLayout(glayout);
-
-    auto *mwidget = new QWidget();
-    auto *mlayout = new QVBoxLayout();
-    auto *mutilization = new MemoryUtilizationWidget();
-    mlayout->addWidget(mutilization);
-    mlayout->setMargin(32);
-    mwidget->setLayout(mlayout);
+    auto *utilizationWidget = new QWidget();
+    auto *utilizationLayout = new QVBoxLayout();
+    auto *gpuUtilizationWidget = new GPUUtilizationWidget();
+    auto *memoryUtilizationWidget = new MemoryUtilizationWidget();
+    utilizationLayout->addWidget(gpuUtilizationWidget);
+    utilizationLayout->addWidget(memoryUtilizationWidget);
+    utilizationLayout->setMargin(32);
+    utilizationWidget->setLayout(utilizationLayout);
     
     tabs = new QTabWidget();
     tabs->addTab(processes, "Processes");
-    tabs->addTab(gwidget, "GPU Utilization");
-    tabs->addTab(mwidget, "Memory Utilization");
+    tabs->addTab(utilizationWidget, "Utilization");
     layout->addWidget(tabs);
     
     auto *window = new QWidget();
@@ -66,15 +60,15 @@ MainWindow::MainWindow(QWidget*) {
     
     connect(processes->worker,
             &ProcessesWorker::dataUpdated, processes, &ProcessesView::onDataUpdated);
-    connect(gutilization->worker,
-            &GPUUtilizationWorker::dataUpdated, gutilization, &GPUUtilizationWidget::onDataUpdated);
-    connect(mutilization->worker,
-            &MemoryUtilizationWorker::dataUpdated, mutilization, &MemoryUtilizationWidget::onDataUpdated);
+    connect(gpuUtilizationWidget->worker,
+            &GPUUtilizationWorker::dataUpdated, gpuUtilizationWidget, &GPUUtilizationWidget::onDataUpdated);
+    connect(memoryUtilizationWidget->worker,
+            &MemoryUtilizationWorker::dataUpdated, memoryUtilizationWidget, &MemoryUtilizationWidget::onDataUpdated);
     
     workerThread = new WorkerThread;
     workerThread->workers[0] = processes->worker;
-    workerThread->workers[1] = gutilization->worker;
-    workerThread->workers[2] = mutilization->worker;
+    workerThread->workers[1] = gpuUtilizationWidget->worker;
+    workerThread->workers[2] = memoryUtilizationWidget->worker;
     workerThread->start();
 }
 

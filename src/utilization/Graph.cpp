@@ -25,7 +25,10 @@ void drawGrid(QWidget *widget, QPainter *p) {
 
     int x0;
     int y0 = fm.height();
-    int graphHeight = max(graphMinHeight, (int)((float)widget->size().height() * 0.45f));
+
+    // TODO: temporary solution, must be:
+    //  max(graphMinHeight, (int)((float)widget->size().height() * 0.45f));
+    int graphHeight = (int)((float)widget->size().height() * 0.45f);
 
     width = widget->size().width() - 4;
 
