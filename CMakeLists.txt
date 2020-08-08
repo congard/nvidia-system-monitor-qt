@@ -16,19 +16,26 @@ endif()
 find_package(Qt5Core)
 find_package(Qt5Widgets)
 
-add_definitions(-DQNVSM_VERSION="${Version} ${VersionPrefix}")
-
 if (Distributive STREQUAL "Arch")
     add_definitions(-DICON_PATH="/usr/share/icons/hicolor/512x512/apps/nvidia-system-monitor-qt.png")
 endif()
 
+set(QNVSM_Version "${Version} ${VersionPrefix}")
+configure_file(src/resources/MainWindow_about.html src/resources/MainWindow_about.html.out)
+
+file(READ ${CMAKE_CURRENT_BINARY_DIR}/src/resources/MainWindow_about.html.out Resources_MainWindow_About)
+file(READ src/resources/MainWindow_help.html Resources_MainWindow_Help)
+configure_file(src/resources/MainWindowResources.h.in src/resources/MainWindowResources.h)
+
 include_directories(src)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 
 add_executable(qnvsm
         src/constants.h
         src/Settings.h
         src/main.cpp
         src/MainWindow.cpp src/MainWindow.h
+        src/resources/MainWindowResources.h.in src/resources/MainWindowResources.h
         src/core/Utils.cpp src/core/Utils.h
         src/core/Worker.cpp src/core/Worker.h
         src/core/WorkerThread.cpp src/core/WorkerThread.h

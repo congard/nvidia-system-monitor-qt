@@ -1,0 +1,14 @@
+#ifndef QNVSM_MAINWINDOWRESOURCES_H_IN
+#define QNVSM_MAINWINDOWRESOURCES_H_IN
+
+// Auto-generated file
+// DO NOT EDIT!
+
+namespace Resources {
+namespace MainWindow {
+constexpr char About[] = R"(${Resources_MainWindow_About})";
+constexpr char Help[] = R"(${Resources_MainWindow_Help})";
+}
+}
+
+#endif //QNVSM_MAINWINDOWRESOURCES_H_IN
