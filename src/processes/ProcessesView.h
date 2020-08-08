@@ -1,10 +1,10 @@
 #ifndef QNVSM_PROCESSESVIEW_H
 #define QNVSM_PROCESSESVIEW_H
 
-#include <QTableView>
+#include <QTreeView>
 #include "ProcessesWorker.h"
 
-class ProcessesView: public QTableView {
+class ProcessesView: public QTreeView {
     Q_OBJECT
 
 public:

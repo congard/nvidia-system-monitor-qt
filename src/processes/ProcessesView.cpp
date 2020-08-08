@@ -9,10 +9,10 @@
 #include "constants.h"
 #include "core/Utils.h"
 
-ProcessesView::ProcessesView(QWidget *parent) : QTableView(parent) {
-    worker = new ProcessesWorker;
+ProcessesView::ProcessesView(QWidget *parent): QTreeView(parent) {
+    worker = new ProcessesWorker();
 
-    auto *model = new QStandardItemModel;
+    auto *model = new QStandardItemModel();
 
     // Column titles
     QStringList horizontalHeader;
@@ -29,12 +29,12 @@ ProcessesView::ProcessesView(QWidget *parent) : QTableView(parent) {
     model->setHorizontalHeaderLabels(horizontalHeader);
 
     setModel(model);
-    resizeRowsToContents();
-    resizeColumnsToContents();
-    setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    verticalHeader()->hide();
+
     setAutoScroll(false);
+    setRootIsDecorated(false);
 }
 
 ProcessesView::~ProcessesView() {
@@ -42,7 +42,7 @@ ProcessesView::~ProcessesView() {
 }
 
 void ProcessesView::mousePressEvent(QMouseEvent *event) {
-    QTableView::mousePressEvent(event);
+    QTreeView::mousePressEvent(event);
     int row = indexAt(event->pos()).row();
 
     if (row != -1) {
