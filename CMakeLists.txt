@@ -9,10 +9,14 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(Version 1.2)
 
+if (NOT VersionPrefix)
+    set(VersionPrefix "(compiled from source)")
+endif()
+
 find_package(Qt5Core)
 find_package(Qt5Widgets)
 
-add_definitions(-DQNVSM_VERSION="${Version}")
+add_definitions(-DQNVSM_VERSION="${Version} ${VersionPrefix}")
 
 if (Distributive STREQUAL "Arch")
     add_definitions(-DICON_PATH="/usr/share/icons/hicolor/512x512/apps/nvidia-system-monitor-qt.png")
