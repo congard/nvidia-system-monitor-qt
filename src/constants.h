@@ -14,6 +14,10 @@
 #define ICON_PATH ""
 #endif
 
+#ifndef QNVSM_VERSION
+#define QNVSM_VERSION "unknown"
+#endif
+
 // enums are using for convenience and readability
 // enums are using in array indexing
 

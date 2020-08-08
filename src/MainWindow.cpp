@@ -16,6 +16,8 @@
 #include "utilization/gpu/GPUUtilizationWorker.h"
 #include "utilization/memory/MemoryUtilizationWorker.h"
 
+#include "constants.h"
+
 MainWindow::MainWindow(QWidget*) {
     setWindowIcon(QIcon(ICON_PATH));
 
