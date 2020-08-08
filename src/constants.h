@@ -43,7 +43,8 @@ enum {
     Sm,
     Mem,
     Enc,
-    Dec
+    Dec,
+    columns_count
 };
 }
 
