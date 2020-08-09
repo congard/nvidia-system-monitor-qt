@@ -49,6 +49,9 @@ add_executable(qnvsm
         src/utilization/gpu/GPUUtilizationWorker.cpp src/utilization/gpu/GPUUtilizationWorker.h
         src/utilization/gpu/GPUUtilizationWidget.cpp src/utilization/gpu/GPUUtilizationWidget.h
         src/utilization/memory/MemoryUtilizationWorker.cpp src/utilization/memory/MemoryUtilizationWorker.h
-        src/utilization/memory/MemoryUtilizationWidget.cpp src/utilization/memory/MemoryUtilizationWidget.h)
+        src/utilization/memory/MemoryUtilizationWidget.cpp src/utilization/memory/MemoryUtilizationWidget.h
+        src/utilization/UtilizationContainer.cpp src/utilization/UtilizationContainer.h
+        src/utilization/gpu/GPUUtilizationContainer.cpp src/utilization/gpu/GPUUtilizationContainer.h
+        src/utilization/memory/MemoryUtilizationContainer.cpp src/utilization/memory/MemoryUtilizationContainer.h)
 
 target_link_libraries(qnvsm ${Qt5Core_LIBRARIES} ${Qt5Widgets_LIBRARIES})

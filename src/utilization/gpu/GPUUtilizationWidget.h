@@ -6,8 +6,6 @@
 class GPUUtilizationWidget: public UtilizationWidget {
 public:
     GPUUtilizationWidget();
-
-    void mouseMoveEvent(QMouseEvent *event) override;
 };
 
 #endif //QNVSM_GPUUTILIZATIONWIDGET_H

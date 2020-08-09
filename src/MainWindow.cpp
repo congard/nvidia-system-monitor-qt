@@ -6,15 +6,20 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QLabel>
 
 #include <iostream>
 
 #include "processes/ProcessesView.h"
+
 #include "utilization/gpu/GPUUtilizationWidget.h"
 #include "utilization/memory/MemoryUtilizationWidget.h"
 
 #include "utilization/gpu/GPUUtilizationWorker.h"
 #include "utilization/memory/MemoryUtilizationWorker.h"
+
+#include "utilization/gpu/GPUUtilizationContainer.h"
+#include "utilization/memory/MemoryUtilizationContainer.h"
 
 #include "resources/MainWindowResources.h"
 #include "constants.h"
@@ -22,12 +27,12 @@
 MainWindow::MainWindow(QWidget*) {
     setWindowIcon(QIcon(ICON_PATH));
 
-    auto *layout = new QVBoxLayout;
+    auto layout = new QVBoxLayout;
     layout->setSpacing(0);
     layout->setMargin(0);
     
-    auto *menuBar = new QMenuBar;
-    auto *menu = new QMenu("&Help");
+    auto menuBar = new QMenuBar;
+    auto menu = new QMenu("&Help");
 
     menu->addAction("&About NVSM", this, SLOT(about()), Qt::CTRL + Qt::Key_A);
     menu->addAction("&Help", this, SLOT(help()), Qt::CTRL + Qt::Key_H);
@@ -39,16 +44,15 @@ MainWindow::MainWindow(QWidget*) {
     menuBar->addMenu(menu);
     layout->addWidget(menuBar);
 
-    auto *processes = new ProcessesView;
+    auto processes = new ProcessesView();
 
-    UtilizationWidget::init();
-
-    auto *utilizationWidget = new QWidget();
-    auto *utilizationLayout = new QVBoxLayout();
-    auto *gpuUtilizationWidget = new GPUUtilizationWidget();
-    auto *memoryUtilizationWidget = new MemoryUtilizationWidget();
-    utilizationLayout->addWidget(gpuUtilizationWidget);
-    utilizationLayout->addWidget(memoryUtilizationWidget);
+    auto utilizationWidget = new QWidget();
+    auto utilizationLayout = new QVBoxLayout();
+    auto gpuUtilizationWidget = new GPUUtilizationWidget();
+    auto memoryUtilizationWidget = new MemoryUtilizationWidget();
+    utilizationLayout->addLayout(new GPUUtilizationContainer(gpuUtilizationWidget));
+    utilizationLayout->addWidget(new QLabel());
+    utilizationLayout->addLayout(new MemoryUtilizationContainer(memoryUtilizationWidget));
     utilizationLayout->setMargin(32);
     utilizationWidget->setLayout(utilizationLayout);
     
@@ -57,7 +61,7 @@ MainWindow::MainWindow(QWidget*) {
     tabs->addTab(utilizationWidget, "Utilization");
     layout->addWidget(tabs);
     
-    auto *window = new QWidget();
+    auto window = new QWidget();
     window->setLayout(layout);
     setCentralWidget(window);
     

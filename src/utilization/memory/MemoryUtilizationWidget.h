@@ -6,8 +6,6 @@
 class MemoryUtilizationWidget: public UtilizationWidget {
 public:
     MemoryUtilizationWidget();
-
-    void mouseMoveEvent(QMouseEvent *event) override;
 };
 
 #endif //QNVSM_MEMORYUTILIZATIONWIDGET_H
