@@ -38,9 +38,11 @@ MainWindow::MainWindow(QWidget*) {
 
     menuBar->addMenu(menu);
     layout->addWidget(menuBar);
-    
+
     auto *processes = new ProcessesView;
-    
+
+    UtilizationWidget::init();
+
     auto *utilizationWidget = new QWidget();
     auto *utilizationLayout = new QVBoxLayout();
     auto *gpuUtilizationWidget = new GPUUtilizationWidget();

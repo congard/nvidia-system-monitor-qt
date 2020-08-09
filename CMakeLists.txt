@@ -46,7 +46,6 @@ add_executable(qnvsm
         src/utilization/UtilizationData.h src/utilization/memory/MemoryData.h
         src/utilization/UtilizationWorker.cpp src/utilization/UtilizationWorker.h
         src/utilization/UtilizationWidget.cpp src/utilization/UtilizationWidget.h
-        src/utilization/Graph.cpp src/utilization/Graph.h
         src/utilization/gpu/GPUUtilizationWorker.cpp src/utilization/gpu/GPUUtilizationWorker.h
         src/utilization/gpu/GPUUtilizationWidget.cpp src/utilization/gpu/GPUUtilizationWidget.h
         src/utilization/memory/MemoryUtilizationWorker.cpp src/utilization/memory/MemoryUtilizationWorker.h
