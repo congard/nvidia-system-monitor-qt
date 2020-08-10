@@ -94,22 +94,25 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 QString MainWindow::getSplitterStylesheet() {
-    QColor splitterColor = palette().color(QPalette::Window);
+    QColor background = palette().color(QPalette::Window);
+    QColor splitterColor, hoverSplitterColor, pressedSplitterColor;
 
-    if (splitterColor.black() >= 128) {
+    if (background.black() >= 128) {
         // dark theme
-        splitterColor.setRed(splitterColor.red() + 8);
-        splitterColor.setGreen(splitterColor.green() + 8);
-        splitterColor.setBlue(splitterColor.blue() + 8);
+        splitterColor = background.lighter(150);
+        hoverSplitterColor = background.lighter(225);
+        pressedSplitterColor = background.lighter(300);
     } else {
         // light theme
-        splitterColor.setRed(splitterColor.red() - 8);
-        splitterColor.setGreen(splitterColor.green() - 8);
-        splitterColor.setBlue(splitterColor.blue() - 8);
+        splitterColor = background.darker(150);
+        hoverSplitterColor = background.darker(225);
+        pressedSplitterColor = background.darker(300);
     }
 
     QString splitterStylesheet = Resources::QSplitter::Stylesheet;
     splitterStylesheet.replace("/* QSplitter_border_color */", splitterColor.name());
+    splitterStylesheet.replace("/* QSplitter_hover_border_color */", hoverSplitterColor.name());
+    splitterStylesheet.replace("/* QSplitter_pressed_border_color */", pressedSplitterColor.name());
 
     return splitterStylesheet;
 }
