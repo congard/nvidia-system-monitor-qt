@@ -6,7 +6,6 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QCloseEvent>
-#include <QSplitter>
 #include <QSettings>
 
 #include <iostream>
@@ -23,9 +22,15 @@
 #include "resources/QSplitterResources.h"
 #include "constants.h"
 
-MainWindow::MainWindow(QWidget*) {
-    loadSettings();
+namespace SessionSettings {
+constexpr char MainWindow_geometry[] = "MainWindow/geometry";
+constexpr char MainWindow_windowState[] = "MainWindow/windowState";
+constexpr char MainWindow_utilizationSplitter[] = "MainWindow/utilizationSplitter";
+}
 
+using namespace SessionSettings;
+
+MainWindow::MainWindow(QWidget*) {
     setWindowTitle("NVIDIA System Monitor");
     setWindowIcon(QIcon(ICON_PATH));
 
@@ -53,13 +58,13 @@ MainWindow::MainWindow(QWidget*) {
     auto gpuUtilizationContainer = new GPUUtilizationContainer();
     auto memoryUtilizationContainer = new MemoryUtilizationContainer();
 
-    auto splitter = new QSplitter();
-    splitter->setOrientation(Qt::Vertical);
-    splitter->setStyleSheet(getSplitterStylesheet());
-    splitter->addWidget(gpuUtilizationContainer->getWidget());
-    splitter->addWidget(memoryUtilizationContainer->getWidget());
+    utilizationSplitter = new QSplitter();
+    utilizationSplitter->setOrientation(Qt::Vertical);
+    utilizationSplitter->setStyleSheet(getSplitterStylesheet());
+    utilizationSplitter->addWidget(gpuUtilizationContainer->getWidget());
+    utilizationSplitter->addWidget(memoryUtilizationContainer->getWidget());
 
-    utilizationLayout->addWidget(splitter);
+    utilizationLayout->addWidget(utilizationSplitter);
     utilizationLayout->setMargin(32);
 
     utilizationWidget->setLayout(utilizationLayout);
@@ -85,6 +90,8 @@ MainWindow::MainWindow(QWidget*) {
     workerThread->workers[1] = gpuUtilizationContainer->getWorker();
     workerThread->workers[2] = memoryUtilizationContainer->getWorker();
     workerThread->start();
+
+    loadSettings();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -123,14 +130,16 @@ QString MainWindow::getSplitterStylesheet() {
 
 void MainWindow::saveSettings() {
     QSettings settings("congard", "NVSM");
-    settings.setValue("MainWindow/geometry", saveGeometry());
-    settings.setValue("MainWindow/windowState", saveState());
+    settings.setValue(MainWindow_geometry, saveGeometry());
+    settings.setValue(MainWindow_windowState, saveState());
+    settings.setValue(MainWindow_utilizationSplitter, utilizationSplitter->saveState());
 }
 
 void MainWindow::loadSettings() {
     QSettings settings("congard", "NVSM");
-    restoreGeometry(settings.value("MainWindow/geometry").toByteArray());
-    restoreState(settings.value("MainWindow/windowState").toByteArray());
+    restoreGeometry(settings.value(MainWindow_geometry).toByteArray());
+    restoreState(settings.value(MainWindow_windowState).toByteArray());
+    utilizationSplitter->restoreState(settings.value(MainWindow_utilizationSplitter).toByteArray());
 }
 
 void MainWindow::about() {

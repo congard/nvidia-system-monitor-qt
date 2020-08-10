@@ -2,6 +2,7 @@
 #define QNVSM_MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSplitter>
 
 #include "core/WorkerThread.h"
 #include "core/Worker.h"
@@ -14,9 +15,10 @@ public:
 
     void closeEvent(QCloseEvent *event) override;
 
-public:
+private:
     WorkerThread *workerThread;
     QTabWidget *tabs;
+    QSplitter *utilizationSplitter;
 
 private:
     QString getSplitterStylesheet();
