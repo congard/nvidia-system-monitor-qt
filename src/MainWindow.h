@@ -20,6 +20,8 @@ public:
 
 private:
     QString getSplitterStylesheet();
+    void saveSettings();
+    void loadSettings();
 
 private slots:
     static void about();

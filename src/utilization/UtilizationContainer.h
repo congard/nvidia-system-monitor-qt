@@ -7,8 +7,12 @@
 
 class UtilizationContainer: public QVBoxLayout {
 public:
-    void build(const QString &name, UtilizationWidget *utilizationWidget);
+    void build(const QString &name);
     QWidget* getWidget();
+    UtilizationWorker* getWorker();
+
+protected:
+    UtilizationWidget *utilizationWidget;
 };
 
 #endif //QNVSM_UTILIZATIONCONTAINER_H

@@ -6,7 +6,7 @@
 #include "core/Utils.h"
 #include "Settings.h"
 
-void UtilizationContainer::build(const QString &name, UtilizationWidget *utilizationWidget) {
+void UtilizationContainer::build(const QString &name) {
     auto title = new QLabel();
     title->setText("<b><big>" + name + "</big></b>");
     addWidget(title);
@@ -42,4 +42,8 @@ QWidget* UtilizationContainer::getWidget() {
     widget->setLayout(this);
 
     return widget;
+}
+
+UtilizationWorker* UtilizationContainer::getWorker() {
+    return utilizationWidget->worker;
 }

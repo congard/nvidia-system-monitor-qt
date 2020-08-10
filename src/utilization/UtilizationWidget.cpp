@@ -27,10 +27,6 @@ void UtilizationWidget::paintEvent(QPaintEvent *) {
     painter.end();
 }
 
-void UtilizationWidget::onDataUpdated() {
-    update();
-}
-
 void UtilizationWidget::drawGrid() {
     const int graphHeight = size().height();
     const int graphWidth = size().width();

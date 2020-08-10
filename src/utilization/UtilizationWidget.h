@@ -7,8 +7,6 @@
 #include "UtilizationWorker.h"
 
 class UtilizationWidget: public QWidget {
-    Q_OBJECT
-
 public:
     UtilizationWidget();
     ~UtilizationWidget() override;
@@ -17,9 +15,6 @@ public:
 
 public:
     UtilizationWorker *worker = nullptr;
-
-public slots:
-    void onDataUpdated();
 
 private:
     void drawGrid();

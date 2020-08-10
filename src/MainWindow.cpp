@@ -7,13 +7,11 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QSplitter>
+#include <QSettings>
 
 #include <iostream>
 
 #include "processes/ProcessesView.h"
-
-#include "utilization/gpu/GPUUtilizationWidget.h"
-#include "utilization/memory/MemoryUtilizationWidget.h"
 
 #include "utilization/gpu/GPUUtilizationWorker.h"
 #include "utilization/memory/MemoryUtilizationWorker.h"
@@ -26,6 +24,9 @@
 #include "constants.h"
 
 MainWindow::MainWindow(QWidget*) {
+    loadSettings();
+
+    setWindowTitle("NVIDIA System Monitor");
     setWindowIcon(QIcon(ICON_PATH));
 
     auto layout = new QVBoxLayout;
@@ -49,14 +50,14 @@ MainWindow::MainWindow(QWidget*) {
 
     auto utilizationWidget = new QWidget();
     auto utilizationLayout = new QVBoxLayout();
-    auto gpuUtilizationWidget = new GPUUtilizationWidget();
-    auto memoryUtilizationWidget = new MemoryUtilizationWidget();
+    auto gpuUtilizationContainer = new GPUUtilizationContainer();
+    auto memoryUtilizationContainer = new MemoryUtilizationContainer();
 
     auto splitter = new QSplitter();
     splitter->setOrientation(Qt::Vertical);
     splitter->setStyleSheet(getSplitterStylesheet());
-    splitter->addWidget((new GPUUtilizationContainer(gpuUtilizationWidget))->getWidget());
-    splitter->addWidget((new MemoryUtilizationContainer(memoryUtilizationWidget))->getWidget());
+    splitter->addWidget(gpuUtilizationContainer->getWidget());
+    splitter->addWidget(memoryUtilizationContainer->getWidget());
 
     utilizationLayout->addWidget(splitter);
     utilizationLayout->setMargin(32);
@@ -74,20 +75,23 @@ MainWindow::MainWindow(QWidget*) {
     
     connect(processes->worker,
             &ProcessesWorker::dataUpdated, processes, &ProcessesView::onDataUpdated);
-    connect(gpuUtilizationWidget->worker,
-            &GPUUtilizationWorker::dataUpdated, gpuUtilizationWidget, &GPUUtilizationWidget::onDataUpdated);
-    connect(memoryUtilizationWidget->worker,
-            &MemoryUtilizationWorker::dataUpdated, memoryUtilizationWidget, &MemoryUtilizationWidget::onDataUpdated);
+    connect(gpuUtilizationContainer->getWorker(),
+            &GPUUtilizationWorker::dataUpdated, gpuUtilizationContainer, &GPUUtilizationContainer::onDataUpdated);
+    connect(memoryUtilizationContainer->getWorker(),
+            &MemoryUtilizationWorker::dataUpdated, memoryUtilizationContainer, &MemoryUtilizationContainer::onDataUpdated);
     
     workerThread = new WorkerThread;
     workerThread->workers[0] = processes->worker;
-    workerThread->workers[1] = gpuUtilizationWidget->worker;
-    workerThread->workers[2] = memoryUtilizationWidget->worker;
+    workerThread->workers[1] = gpuUtilizationContainer->getWorker();
+    workerThread->workers[2] = memoryUtilizationContainer->getWorker();
     workerThread->start();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
     hide();
+
+    saveSettings();
+
     workerThread->running = false;
     while (workerThread->isRunning()); // waiting for all workers to be safely removed
     event->accept();
@@ -115,6 +119,18 @@ QString MainWindow::getSplitterStylesheet() {
     splitterStylesheet.replace("/* QSplitter_pressed_border_color */", pressedSplitterColor.name());
 
     return splitterStylesheet;
+}
+
+void MainWindow::saveSettings() {
+    QSettings settings("congard", "NVSM");
+    settings.setValue("MainWindow/geometry", saveGeometry());
+    settings.setValue("MainWindow/windowState", saveState());
+}
+
+void MainWindow::loadSettings() {
+    QSettings settings("congard", "NVSM");
+    restoreGeometry(settings.value("MainWindow/geometry").toByteArray());
+    restoreState(settings.value("MainWindow/windowState").toByteArray());
 }
 
 void MainWindow::about() {

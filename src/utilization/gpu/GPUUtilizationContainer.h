@@ -1,12 +1,23 @@
 #ifndef QNVSM_GPUUTILIZATIONCONTAINER_H
 #define QNVSM_GPUUTILIZATIONCONTAINER_H
 
+#include <QLabel>
+#include <vector>
+#include <array>
+
 #include "utilization/UtilizationContainer.h"
-#include "GPUUtilizationWidget.h"
 
 class GPUUtilizationContainer: public UtilizationContainer {
+    Q_OBJECT
+
 public:
-    explicit GPUUtilizationContainer(GPUUtilizationWidget *utilizationWidget);
+    GPUUtilizationContainer();
+
+public slots:
+    void onDataUpdated();
+
+private:
+    std::vector<std::array<QLabel*, 2>> infoLabels;
 };
 
 
