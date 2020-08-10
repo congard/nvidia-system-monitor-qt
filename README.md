@@ -8,11 +8,13 @@ Task Manager for Linux for Nvidia graphics cards
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5a91f69b64a7459eb4aa788172595771)](https://www.codacy.com/manual/congard/nvidia-system-monitor-qt?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=congard/nvidia-system-monitor-qt&amp;utm_campaign=Badge_Grade)
 
 ## Dependencies
-Qt 5.11+ is required for work.
-* If you are an ArchLinux user, you can install from [here](https://wiki.archlinux.org/index.php/qt#Installation).
-* If you are Ubuntu user, it can be installed with `sudo apt install qtdeclarative5-dev`.
-
-Also in the system must be available `nvidia-smi`
+1. Qt 5.11+
+   * Arch: [`qt5-base`](https://www.archlinux.org/packages/extra/x86_64/qt5-base/)
+   * Debian: [`qtdeclarative5-dev`](https://packages.debian.org/en/sid/qtdeclarative5-dev)
+   * Ubuntu: [`qtdeclarative5-dev`](https://packages.ubuntu.com/focal/qtdeclarative5-dev)
+2. `nvidia-smi`
+3. `which`
+4. `cmake` (make dependence)
 
 ## Building
 **Note:** after a lot of refactoring you may be bumped into compilation errors because of missing headers.
