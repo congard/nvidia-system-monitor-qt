@@ -36,3 +36,10 @@ void UtilizationContainer::build(const QString &name, UtilizationWidget *utiliza
     addWidget(utilizationWidget);
     addLayout(footerLayout);
 }
+
+QWidget* UtilizationContainer::getWidget() {
+    auto widget = new QWidget();
+    widget->setLayout(this);
+
+    return widget;
+}

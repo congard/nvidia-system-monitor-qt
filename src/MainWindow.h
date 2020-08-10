@@ -18,6 +18,9 @@ public:
     WorkerThread *workerThread;
     QTabWidget *tabs;
 
+private:
+    QString getSplitterStylesheet();
+
 private slots:
     static void about();
     static void help();

@@ -27,6 +27,9 @@ file(READ ${CMAKE_CURRENT_BINARY_DIR}/src/resources/MainWindow_about.html.out Re
 file(READ src/resources/MainWindow_help.html Resources_MainWindow_Help)
 configure_file(src/resources/MainWindowResources.h.in src/resources/MainWindowResources.h)
 
+file(READ src/resources/QSplitter.qss Resources_QSplitter_Stylesheet)
+configure_file(src/resources/QSplitterResources.h.in src/resources/QSplitterResources.h)
+
 include_directories(src)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 
@@ -36,6 +39,7 @@ add_executable(qnvsm
         src/main.cpp
         src/MainWindow.cpp src/MainWindow.h
         src/resources/MainWindowResources.h.in src/resources/MainWindowResources.h
+        src/resources/QSplitterResources.h.in src/resources/QSplitterResources.h
         src/core/Utils.cpp src/core/Utils.h
         src/core/Worker.cpp src/core/Worker.h
         src/core/WorkerThread.cpp src/core/WorkerThread.h

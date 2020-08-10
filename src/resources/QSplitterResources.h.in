@@ -1,0 +1,13 @@
+#ifndef QNVSM_QSPLITTERRESOURCES_H_IN
+#define QNVSM_QSPLITTERRESOURCES_H_IN
+
+// Auto-generated file
+// DO NOT EDIT!
+
+namespace Resources {
+namespace QSplitter {
+constexpr char Stylesheet[] = R"(${Resources_QSplitter_Stylesheet})";
+}
+}
+
+#endif //QNVSM_QSPLITTERRESOURCES_H_IN

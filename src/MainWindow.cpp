@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QCloseEvent>
-#include <QLabel>
+#include <QSplitter>
 
 #include <iostream>
 
@@ -22,6 +22,7 @@
 #include "utilization/memory/MemoryUtilizationContainer.h"
 
 #include "resources/MainWindowResources.h"
+#include "resources/QSplitterResources.h"
 #include "constants.h"
 
 MainWindow::MainWindow(QWidget*) {
@@ -50,12 +51,18 @@ MainWindow::MainWindow(QWidget*) {
     auto utilizationLayout = new QVBoxLayout();
     auto gpuUtilizationWidget = new GPUUtilizationWidget();
     auto memoryUtilizationWidget = new MemoryUtilizationWidget();
-    utilizationLayout->addLayout(new GPUUtilizationContainer(gpuUtilizationWidget));
-    utilizationLayout->addWidget(new QLabel());
-    utilizationLayout->addLayout(new MemoryUtilizationContainer(memoryUtilizationWidget));
+
+    auto splitter = new QSplitter();
+    splitter->setOrientation(Qt::Vertical);
+    splitter->setStyleSheet(getSplitterStylesheet());
+    splitter->addWidget((new GPUUtilizationContainer(gpuUtilizationWidget))->getWidget());
+    splitter->addWidget((new MemoryUtilizationContainer(memoryUtilizationWidget))->getWidget());
+
+    utilizationLayout->addWidget(splitter);
     utilizationLayout->setMargin(32);
+
     utilizationWidget->setLayout(utilizationLayout);
-    
+
     tabs = new QTabWidget();
     tabs->addTab(processes, "Processes");
     tabs->addTab(utilizationWidget, "Utilization");
@@ -84,6 +91,27 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     workerThread->running = false;
     while (workerThread->isRunning()); // waiting for all workers to be safely removed
     event->accept();
+}
+
+QString MainWindow::getSplitterStylesheet() {
+    QColor splitterColor = palette().color(QPalette::Window);
+
+    if (splitterColor.black() >= 128) {
+        // dark theme
+        splitterColor.setRed(splitterColor.red() + 8);
+        splitterColor.setGreen(splitterColor.green() + 8);
+        splitterColor.setBlue(splitterColor.blue() + 8);
+    } else {
+        // light theme
+        splitterColor.setRed(splitterColor.red() - 8);
+        splitterColor.setGreen(splitterColor.green() - 8);
+        splitterColor.setBlue(splitterColor.blue() - 8);
+    }
+
+    QString splitterStylesheet = Resources::QSplitter::Stylesheet;
+    splitterStylesheet.replace("/* QSplitter_border_color */", splitterColor.name());
+
+    return splitterStylesheet;
 }
 
 void MainWindow::about() {
