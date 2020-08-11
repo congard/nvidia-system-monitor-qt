@@ -5,6 +5,7 @@
 
 #include "core/Utils.h"
 #include "Settings.h"
+#include "CircleWidget.h"
 
 void UtilizationContainer::build(const QString &name) {
     auto title = new QLabel();
@@ -46,4 +47,23 @@ QWidget* UtilizationContainer::getWidget() {
 
 UtilizationWorker* UtilizationContainer::getWorker() {
     return utilizationWidget->worker;
+}
+
+void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {
+    auto gpuName = new QLabel();
+    gpuName->setText("<b>GPU " + QString::number(gpuIndex + 1) + "</b>");
+
+    int fontHeight = gpuName->fontMetrics().height();
+
+    auto circle = new CircleWidget(Settings::GPUColors[gpuIndex]);
+    circle->setMinimumSize(fontHeight, fontHeight);
+
+    auto titleLayout = new QHBoxLayout();
+    titleLayout->setAlignment(Qt::AlignLeft);
+    titleLayout->setContentsMargins(0, fontHeight / 2, 0, 0);
+
+    titleLayout->addWidget(gpuName);
+    titleLayout->addWidget(circle);
+
+    addLayout(titleLayout);
 }

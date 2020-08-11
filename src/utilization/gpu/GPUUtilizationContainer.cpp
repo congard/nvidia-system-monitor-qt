@@ -12,10 +12,7 @@ GPUUtilizationContainer::GPUUtilizationContainer() {
     infoLabels.resize(Settings::GPUCount);
 
     for (uint i = 0; i < Settings::GPUCount; i++) {
-        auto gpuName = new QLabel();
-        gpuName->setContentsMargins(0, gpuName->fontMetrics().height() / 2, 0, 0);
-        gpuName->setText("<b>GPU " + QString::number(i + 1) + "</b>");
-        addWidget(gpuName);
+        addInfoTitleLayout(i);
 
         auto infoLayout = new QHBoxLayout();
         infoLayout->addWidget(infoLabels[i][0] = new QLabel());

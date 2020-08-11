@@ -47,6 +47,7 @@ add_executable(qnvsm
         src/processes/ProcessesWorker.cpp src/processes/ProcessesWorker.h
         src/processes/ProcessesView.cpp src/processes/ProcessesView.h
         src/utilization/Point.h src/utilization/Point.cpp
+        src/utilization/CircleWidget.cpp src/utilization/CircleWidget.h
         src/utilization/UtilizationData.h src/utilization/memory/MemoryData.h
         src/utilization/UtilizationWorker.cpp src/utilization/UtilizationWorker.h
         src/utilization/UtilizationWidget.cpp src/utilization/UtilizationWidget.h

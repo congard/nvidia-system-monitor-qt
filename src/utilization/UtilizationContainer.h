@@ -12,6 +12,9 @@ public:
     UtilizationWorker* getWorker();
 
 protected:
+    void addInfoTitleLayout(int gpuIndex);
+
+protected:
     UtilizationWidget *utilizationWidget;
 };
 
