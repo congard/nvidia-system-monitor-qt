@@ -5,16 +5,16 @@
 
 Task Manager for Linux for Nvidia graphics cards
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5a91f69b64a7459eb4aa788172595771)](https://www.codacy.com/manual/congard/nvidia-system-monitor-qt?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=congard/nvidia-system-monitor-qt&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5a91f69b64a7459eb4aa788172595771)](https://www.codacy.com/manual/congard/nvidia-system-monitor-qt?utm_source=github.com&utm_medium=referral&utm_content=congard/nvidia-system-monitor-qt&utm_campaign=Badge_Grade)
 
 ## Dependencies
-1. Qt 5.11+
-   * Arch: [`qt5-base`](https://www.archlinux.org/packages/extra/x86_64/qt5-base/)
-   * Debian: [`qtdeclarative5-dev`](https://packages.debian.org/en/sid/qtdeclarative5-dev)
-   * Ubuntu: [`qtdeclarative5-dev`](https://packages.ubuntu.com/focal/qtdeclarative5-dev)
-2. `nvidia-smi`
-3. `which`
-4. `cmake` (make dependence)
+1.  Qt 5.11+
+    *   Arch: [`qt5-base`](https://www.archlinux.org/packages/extra/x86_64/qt5-base/)
+    *   Debian: [`qtdeclarative5-dev`](https://packages.debian.org/en/sid/qtdeclarative5-dev)
+    *   Ubuntu: [`qtdeclarative5-dev`](https://packages.ubuntu.com/focal/qtdeclarative5-dev)
+2.  `nvidia-smi`
+3.  `which`
+4.  `cmake` (make dependence)
 
 ## Building
 **Note:** after a lot of refactoring you may be bumped into compilation errors because of missing headers.
@@ -40,6 +40,7 @@ cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" -B cmake-build-release
 cd cmake-build-release
 make -j4
 ```
+
 To launch type `cmake-build-release/qnvsm`
 
 The option -j describes the number of parallel processes for the build. In this case make will try to use 4 cores for the build.
@@ -48,7 +49,8 @@ If you want to use an IDE for Linux you can try CLion or QtCreator.
 
 ## Config
 Here example of simple config located in `~/.config/nvidia-system-monitor/config`:
-```
+
+```conf
 # time in ms
 updateDelay 500
 graphLength 120000
