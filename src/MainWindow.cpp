@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QSettings>
+#include <QScreen>
 
 #include <iostream>
 
@@ -135,9 +136,24 @@ void MainWindow::saveSettings() {
     settings.setValue(MainWindow_utilizationSplitter, utilizationSplitter->saveState());
 }
 
+inline QSize defaultWindowSize(const QRect &screenGeometry) {
+    return {
+        screenGeometry.width() / 2,
+        static_cast<int>(static_cast<float>(screenGeometry.height()) * 0.85f)
+    };
+}
+
 void MainWindow::loadSettings() {
     QSettings settings("congard", "NVSM");
-    restoreGeometry(settings.value(MainWindow_geometry).toByteArray());
+
+    auto geometryByteArray = settings.value(MainWindow_geometry).toByteArray();
+
+    if (!geometryByteArray.isEmpty()) {
+        restoreGeometry(geometryByteArray);
+    } else {
+        resize(defaultWindowSize(QGuiApplication::primaryScreen()->geometry()));
+    }
+
     restoreState(settings.value(MainWindow_windowState).toByteArray());
     utilizationSplitter->restoreState(settings.value(MainWindow_utilizationSplitter).toByteArray());
 }
