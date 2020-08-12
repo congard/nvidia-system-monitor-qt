@@ -65,6 +65,10 @@ void ProcessesView::mousePressEvent(QMouseEvent *event) {
 void ProcessesView::onDataUpdated() {
     QMutexLocker locker(&worker->mutex);
 
+    // In order to avoid performance and other issues, sorting will be enabled after inserting
+    // and updating the items in the tree: https://doc.qt.io/qt-5/qtreeview.html#sortingEnabled-prop
+    setSortingEnabled(false);
+
     // update existing processes list & remove finished processes
     // loop from more to less in order to delete rows
     for (int i = model()->rowCount() - 1; i >= 0; i--) {
@@ -103,6 +107,9 @@ void ProcessesView::onDataUpdated() {
             rowCount++;
         }
     }
+
+    setSortingEnabled(true);
+    sortByColumn(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 }
 
 void ProcessesView::addItem(int row, int column, const std::string &data) {
