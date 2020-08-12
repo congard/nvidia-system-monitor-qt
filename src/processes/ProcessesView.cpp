@@ -62,6 +62,19 @@ void ProcessesView::mousePressEvent(QMouseEvent *event) {
     }
 }
 
+// https://github.com/congard/nvidia-system-monitor-qt/pull/11/files#diff-cfa97a7a8d28043dcb063d203b8dba3cR130
+
+inline QVariant convertToInt(const string &str) {
+    char *end;
+    auto i = strtoll(str.c_str(), &end, 10); // check if value can be converted to integer
+
+    if (*end == '\0')  {
+        return i;
+    } else {
+        return str.c_str();
+    }
+}
+
 void ProcessesView::onDataUpdated() {
     QMutexLocker locker(&worker->mutex);
 
@@ -82,11 +95,11 @@ void ProcessesView::onDataUpdated() {
 
             // update what may change
             updateItem(i, NVSMColumns::Type, processList.type);
-            updateItem(i, NVSMColumns::Sm, processList.sm);
-            updateItem(i, NVSMColumns::Mem, processList.mem);
-            updateItem(i, NVSMColumns::Enc, processList.enc);
-            updateItem(i, NVSMColumns::Dec, processList.dec);
-            updateItem(i, NVSMColumns::FbMem, processList.fbmem);
+            updateItem(i, NVSMColumns::Sm, convertToInt(processList.sm));
+            updateItem(i, NVSMColumns::Mem, convertToInt(processList.mem));
+            updateItem(i, NVSMColumns::Enc, convertToInt(processList.enc));
+            updateItem(i, NVSMColumns::Dec, convertToInt(processList.dec));
+            updateItem(i, NVSMColumns::FbMem, convertToInt(processList.fbmem));
         }
     }
 
@@ -96,30 +109,38 @@ void ProcessesView::onDataUpdated() {
         if (getRowIndexByPid(process.pid) == -1) {
             addItem(rowCount, NVSMColumns::Name, process.name);
             addItem(rowCount, NVSMColumns::Type, process.type);
-            addItem(rowCount, NVSMColumns::GPUIdx, process.gpuIdx);
-            addItem(rowCount, NVSMColumns::PID, process.pid);
-            addItem(rowCount, NVSMColumns::Sm, process.sm);
-            addItem(rowCount, NVSMColumns::Mem, process.mem);
-            addItem(rowCount, NVSMColumns::Enc, process.enc);
-            addItem(rowCount, NVSMColumns::Dec, process.dec);
-            addItem(rowCount, NVSMColumns::FbMem, process.fbmem);
+            addItem(rowCount, NVSMColumns::GPUIdx, convertToInt(process.gpuIdx));
+            addItem(rowCount, NVSMColumns::PID, convertToInt(process.pid));
+            addItem(rowCount, NVSMColumns::Sm, convertToInt(process.sm));
+            addItem(rowCount, NVSMColumns::Mem, convertToInt(process.mem));
+            addItem(rowCount, NVSMColumns::Enc, convertToInt(process.enc));
+            addItem(rowCount, NVSMColumns::Dec, convertToInt(process.dec));
+            addItem(rowCount, NVSMColumns::FbMem, convertToInt(process.fbmem));
 
             rowCount++;
         }
     }
 
     setSortingEnabled(true);
-    sortByColumn(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 }
 
-void ProcessesView::addItem(int row, int column, const std::string &data) {
-    auto *qItem = new QStandardItem(QString(data.c_str()));
+void ProcessesView::addItem(int row, int column, const string &data) {
+    addItem(row, column, QVariant(data.c_str()));
+}
+
+void ProcessesView::addItem(int row, int column, const QVariant &data) {
+    auto *qItem = new QStandardItem();
+    qItem->setData(data, Qt::DisplayRole);
     qItem->setTextAlignment(Qt::AlignHCenter);
     ((QStandardItemModel*)model())->setItem(row, column, qItem);
 }
 
-void ProcessesView::updateItem(int row, int column, const std::string &data) {
-    model()->setData(model()->index(row, column), QString(data.c_str()));
+void ProcessesView::updateItem(int row, int column, const string &data) {
+    updateItem(row, column, QVariant(data.c_str()));
+}
+
+void ProcessesView::updateItem(int row, int column, const QVariant &data) {
+    model()->setData(model()->index(row, column), data, Qt::DisplayRole);
 }
 
 void ProcessesView::killProcess() {
