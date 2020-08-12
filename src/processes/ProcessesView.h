@@ -20,12 +20,10 @@ public slots:
     void onDataUpdated();
 
 private:
-    void addItem(int row, int column, const std::string &data);
     void addItem(int row, int column, const QVariant &data);
-    void updateItem(int row, int column, const std::string &data);
     void updateItem(int row, int column, const QVariant &data);
     void killProcess();
-    int getRowIndexByPid(const std::string &pid);
+    int getRowIndexByPid(const QString &pid);
 };
 
 #endif //QNVSM_PROCESSESVIEW_H

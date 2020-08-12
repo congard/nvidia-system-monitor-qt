@@ -7,7 +7,7 @@
 class ProcessesWorker: public Worker {
 public:
     void work() override;
-    int processesIndexByPid(const std::string &pid);
+    int processesIndexByPid(const QString &pid);
 
 public:
     std::vector<ProcessInfo> processes;

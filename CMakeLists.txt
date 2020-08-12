@@ -43,6 +43,7 @@ add_executable(qnvsm
         src/core/Utils.cpp src/core/Utils.h
         src/core/Worker.cpp src/core/Worker.h
         src/core/WorkerThread.cpp src/core/WorkerThread.h
+        src/core/NVSMIParser.cpp src/core/NVSMIParser.h
         src/processes/ProcessInfo.cpp src/processes/ProcessInfo.h
         src/processes/ProcessesWorker.cpp src/processes/ProcessesWorker.h
         src/processes/ProcessesView.cpp src/processes/ProcessesView.h

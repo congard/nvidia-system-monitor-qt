@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+#include "core/NVSMIParser.h"
+
 #include "processes/ProcessesView.h"
 
 #include "utilization/gpu/GPUUtilizationWorker.h"
@@ -85,7 +87,9 @@ MainWindow::MainWindow(QWidget*) {
             &GPUUtilizationWorker::dataUpdated, gpuUtilizationContainer, &GPUUtilizationContainer::onDataUpdated);
     connect(memoryUtilizationContainer->getWorker(),
             &MemoryUtilizationWorker::dataUpdated, memoryUtilizationContainer, &MemoryUtilizationContainer::onDataUpdated);
-    
+
+    NVSMIParser::init();
+
     workerThread = new WorkerThread;
     workerThread->workers[0] = processes->worker;
     workerThread->workers[1] = gpuUtilizationContainer->getWorker();

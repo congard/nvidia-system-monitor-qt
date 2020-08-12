@@ -64,14 +64,14 @@ void ProcessesView::mousePressEvent(QMouseEvent *event) {
 
 // https://github.com/congard/nvidia-system-monitor-qt/pull/11/files#diff-cfa97a7a8d28043dcb063d203b8dba3cR130
 
-inline QVariant convertToInt(const string &str) {
+inline QVariant convertToInt(const QString &str) {
     char *end;
-    auto i = strtoll(str.c_str(), &end, 10); // check if value can be converted to integer
+    auto i = strtoll(str.toLocal8Bit().constData(), &end, 10); // check if value can be converted to integer
 
     if (*end == '\0')  {
         return i;
     } else {
-        return str.c_str();
+        return str.toLocal8Bit().constData();
     }
 }
 
@@ -85,7 +85,7 @@ void ProcessesView::onDataUpdated() {
     // update existing processes list & remove finished processes
     // loop from more to less in order to delete rows
     for (int i = model()->rowCount() - 1; i >= 0; i--) {
-        string pid = qPrintable(model()->data(model()->index(i, NVSMColumns::PID)).toString());
+        QString pid = model()->data(model()->index(i, NVSMColumns::PID)).toString();
         int index = worker->processesIndexByPid(pid);
 
         if (index == -1) {
@@ -124,19 +124,11 @@ void ProcessesView::onDataUpdated() {
     setSortingEnabled(true);
 }
 
-void ProcessesView::addItem(int row, int column, const string &data) {
-    addItem(row, column, QVariant(data.c_str()));
-}
-
 void ProcessesView::addItem(int row, int column, const QVariant &data) {
     auto *qItem = new QStandardItem();
     qItem->setData(data, Qt::DisplayRole);
     qItem->setTextAlignment(Qt::AlignHCenter);
     ((QStandardItemModel*)model())->setItem(row, column, qItem);
-}
-
-void ProcessesView::updateItem(int row, int column, const string &data) {
-    updateItem(row, column, QVariant(data.c_str()));
 }
 
 void ProcessesView::updateItem(int row, int column, const QVariant &data) {
@@ -150,9 +142,9 @@ void ProcessesView::killProcess() {
     Utils::exec("kill " + string(qPrintable(selectedPid)));
 }
 
-int ProcessesView::getRowIndexByPid(const std::string &pid) {
+int ProcessesView::getRowIndexByPid(const QString &pid) {
     for (size_t i = 0; i < model()->rowCount(); i++) {
-        string row_pid = qPrintable(model()->data(model()->index(i, NVSMColumns::PID)).toString());
+        QString row_pid = model()->data(model()->index(i, NVSMColumns::PID)).toString();
 
         if (row_pid == pid) {
             return i;
