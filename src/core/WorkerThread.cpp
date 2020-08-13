@@ -7,7 +7,7 @@
 using namespace std;
 
 WorkerThread::WorkerThread() {
-    workers = new Worker*[NVSMMaxWorkers];
+    workers = new Worker*[WorkersCount];
 }
 
 WorkerThread::~WorkerThread() {
@@ -18,7 +18,7 @@ WorkerThread::~WorkerThread() {
 
 void WorkerThread::run() {
     while (running) {
-        for (uint i = 0; i < NVSMMaxWorkers; i++)
+        for (uint i = 0; i < WorkersCount; i++)
             workers[i]->work();
 
         usleep(UPDATE_DELAY_USEC);

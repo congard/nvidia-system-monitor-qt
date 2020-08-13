@@ -36,7 +36,6 @@ include_directories(src)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 
 add_executable(qnvsm
-        src/constants.h
         src/main.cpp
         src/Settings.cpp src/Settings.h
         src/MainWindow.cpp src/MainWindow.h

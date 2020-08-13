@@ -21,7 +21,6 @@
 
 #include "resources/MainWindowResources.h"
 #include "resources/QSplitterResources.h"
-#include "constants.h"
 
 namespace SessionSettings {
 constexpr char MainWindow_geometry[] = "MainWindow/geometry";

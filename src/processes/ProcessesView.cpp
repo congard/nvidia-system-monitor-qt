@@ -6,10 +6,25 @@
 #include <QMouseEvent>
 #include <QMutex>
 
-#include "constants.h"
 #include "core/Utils.h"
 
 using namespace std;
+
+// columns order
+namespace NVSMColumns {
+enum {
+    Name,
+    Type,
+    GPUIdx,
+    PID,
+    FbMem,
+    Sm,
+    Mem,
+    Enc,
+    Dec,
+    columns_count
+};
+}
 
 ProcessesView::ProcessesView(QWidget *parent): QTreeView(parent) {
     worker = new ProcessesWorker();

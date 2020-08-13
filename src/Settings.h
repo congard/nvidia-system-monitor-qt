@@ -5,8 +5,6 @@
 #include <QColor>
 #include <QVarLengthArray>
 
-#include "constants.h"
-
 #define UPDATE_DELAY_USEC (Settings::UpdateDelay * 1000)
 #define GRAPH_STEP ((float)Settings::UpdateDelay / (float)Settings::GraphLength)
 

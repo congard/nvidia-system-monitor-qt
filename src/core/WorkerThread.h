@@ -7,6 +7,9 @@
 
 class WorkerThread: public QThread {
 public:
+    constexpr static int WorkersCount = 3;
+
+public:
     WorkerThread();
     ~WorkerThread() override;
 
