@@ -79,7 +79,7 @@ void NVSMIParser::init() {
 QVector<ProcessInfo> NVSMIParser::getProcesses() {
     QVector<ProcessInfo> info;
 
-    QRegularExpressionMatchIterator i = processListRegex.globalMatch(exec(NVSMIProcess::Command).c_str());
+    QRegularExpressionMatchIterator i = processListRegex.globalMatch(exec(NVSMIProcess::Command));
 
     while (i.hasNext()) {
         QRegularExpressionMatch match = i.next();
@@ -100,7 +100,7 @@ QVector<ProcessInfo> NVSMIParser::getProcesses() {
 QVarLengthArray<int> NVSMIParser::getGPUUtilization() {
     QVarLengthArray<int> result(Settings::GPUCount);
 
-    auto utilizationStr = QString(exec(GPUUtilizationCommand).c_str()).split("\n");
+    auto utilizationStr = exec(GPUUtilizationCommand).split("\n");
 
     for (int i = 0; i < Settings::GPUCount; i++)
         result[i] = utilizationStr[i].toInt();
@@ -111,7 +111,7 @@ QVarLengthArray<int> NVSMIParser::getGPUUtilization() {
 QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
     QVarLengthArray<MemoryData> result(Settings::GPUCount);
 
-    auto allGPUsStr = QString(exec(NVSMIMemoryUtilization::Command).c_str()).split("\n");
+    auto allGPUsStr = exec(NVSMIMemoryUtilization::Command).split("\n");
 
     for (int i = 0; i < Settings::GPUCount; i++) {
         auto data = allGPUsStr[i].split(", ");
@@ -128,5 +128,5 @@ QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
 }
 
 int NVSMIParser::getGPUCount() {
-    return QString(exec(GPUCountCommand).c_str()).toInt();
+    return exec(GPUCountCommand).toInt();
 }

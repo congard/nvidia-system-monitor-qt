@@ -139,7 +139,7 @@ void ProcessesView::killProcess() {
     QModelIndex selectedIndex = currentIndex();
     QModelIndex pidIndex = selectedIndex.sibling(selectedIndex.row(), NVSMColumns::PID);
     QString selectedPid = model()->data(pidIndex).toString();
-    Utils::exec("kill " + string(qPrintable(selectedPid)));
+    Utils::exec("kill " + selectedPid);
 }
 
 int ProcessesView::getRowIndexByPid(const QString &pid) {

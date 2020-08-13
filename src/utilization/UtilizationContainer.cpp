@@ -16,7 +16,7 @@ void UtilizationContainer::build(const QString &name) {
     auto footerLayout = new QHBoxLayout();
 
     auto graphStep = new QLabel();
-    graphStep->setText((Utils::toString(Settings::UpdateDelay / 1000.0f) + " sec step").c_str());
+    graphStep->setText(QString::number(Settings::UpdateDelay / 1000.0f) + " sec step");
     headerLayout->addWidget(graphStep, 0, Qt::AlignLeft);
 
     auto fullUtilization = new QLabel();
@@ -24,7 +24,7 @@ void UtilizationContainer::build(const QString &name) {
     headerLayout->addWidget(fullUtilization, 0, Qt::AlignRight);
 
     auto graphTime = new QLabel();
-    graphTime->setText((Utils::toString(Settings::GraphLength / 1000.0f) + " sec").c_str());
+    graphTime->setText(QString::number(Settings::GraphLength / 1000.0f) + " sec");
     footerLayout->addWidget(graphTime, 0, Qt::AlignLeft);
 
     auto noUtilization = new QLabel();

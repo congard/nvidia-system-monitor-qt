@@ -20,12 +20,12 @@ void init() {
         QMessageBox::critical(nullptr, "Critical", "nvidia-smi not found. Are you have NVIDIA drivers?");
         exit(EXIT_FAILURE);
     } else {
-        string nvsmi_out = exec("nvidia-smi");
+        QString nvsmi_out = exec("nvidia-smi");
 
-        if (startsWith(split(nvsmi_out, "\n"), "NVIDIA-SMI has failed") != string::npos) {
-            cout << "nvidia-smi was found, but " << nvsmi_out;
+        if (linesStartsWith(nvsmi_out.split("\n"), "NVIDIA-SMI has failed") != -1) {
+            cout << "nvidia-smi was found, but " << qPrintable(nvsmi_out);
             QMessageBox::critical(nullptr, "Critical",
-                    (nvsmi_out + "If you using laptop with discrete NVIDIA GPU, launch this app with optirun").c_str());
+                    nvsmi_out + "If you using laptop with discrete NVIDIA GPU, launch this app with optirun");
             exit(EXIT_FAILURE);
         }
     }
