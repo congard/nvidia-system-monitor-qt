@@ -2,6 +2,7 @@
 #define QNVSM_WORKERTHREAD_H
 
 #include <QThread>
+#include <QVarLengthArray>
 
 #include "Worker.h"
 
@@ -17,7 +18,7 @@ public:
 
 public:
     bool running = true;
-    Worker **workers;
+    QVarLengthArray<Worker*> workers;
 };
 
 #endif //QNVSM_WORKERTHREAD_H

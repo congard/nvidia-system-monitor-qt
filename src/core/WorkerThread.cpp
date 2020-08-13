@@ -7,12 +7,10 @@
 using namespace std;
 
 WorkerThread::WorkerThread() {
-    workers = new Worker*[WorkersCount];
+    workers.resize(WorkersCount);
 }
 
 WorkerThread::~WorkerThread() {
-    delete[] workers;
-
     cout << "WorkerThread " << this << " deleted\n";
 }
 
