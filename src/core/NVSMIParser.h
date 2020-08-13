@@ -11,7 +11,7 @@ public:
     static void init();
 
     static QVector<ProcessInfo> getProcesses();
-    static QVector<int> getGPUUtilization();
+    static QVarLengthArray<int> getGPUUtilization();
     static int getGPUCount();
 
 private:

@@ -84,9 +84,8 @@ QVector<ProcessInfo> NVSMIParser::getProcesses() {
     return info;
 }
 
-QVector<int> NVSMIParser::getGPUUtilization() {
-    QVector<int> result;
-    result.resize(Settings::GPUCount);
+QVarLengthArray<int> NVSMIParser::getGPUUtilization() {
+    QVarLengthArray<int> result(Settings::GPUCount);
 
     auto utilizationStr = QString(exec(GPUUtilizationCommand).c_str()).split("\n");
 
