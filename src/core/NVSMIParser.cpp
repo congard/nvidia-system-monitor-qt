@@ -61,21 +61,22 @@ void NVSMIParser::init() {
     processListRegex.setPattern(processListPattern);
 }
 
-vector<ProcessInfo> NVSMIParser::getProcesses() {
-    vector<ProcessInfo> info;
+QVector<ProcessInfo> NVSMIParser::getProcesses() {
+    QVector<ProcessInfo> info;
 
     QRegularExpressionMatchIterator i = processListRegex.globalMatch(exec(NVSMIProcess::Command).c_str());
 
     while (i.hasNext()) {
         QRegularExpressionMatch match = i.next();
 
-        info.emplace_back(
-                match.captured(NVSMIProcess::Name), match.captured(NVSMIProcess::Type),
-                match.captured(NVSMIProcess::GPUIdx), match.captured(NVSMIProcess::PID),
-                match.captured(NVSMIProcess::Sm), match.captured(NVSMIProcess::Mem),
-                match.captured(NVSMIProcess::Enc), match.captured(NVSMIProcess::Dec),
-                match.captured(NVSMIProcess::FbMem)
-        );
+        info.append
+        ({
+                 match.captured(NVSMIProcess::Name), match.captured(NVSMIProcess::Type),
+                 match.captured(NVSMIProcess::GPUIdx), match.captured(NVSMIProcess::PID),
+                 match.captured(NVSMIProcess::Sm), match.captured(NVSMIProcess::Mem),
+                 match.captured(NVSMIProcess::Enc), match.captured(NVSMIProcess::Dec),
+                 match.captured(NVSMIProcess::FbMem)
+         });
     }
 
     return info;

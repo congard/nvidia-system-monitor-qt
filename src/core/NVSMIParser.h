@@ -3,7 +3,6 @@
 
 #include <QRegularExpression>
 #include <QString>
-#include <vector>
 
 #include "processes/ProcessInfo.h"
 
@@ -11,7 +10,7 @@ class NVSMIParser {
 public:
     static void init();
 
-    static std::vector<ProcessInfo> getProcesses();
+    static QVector<ProcessInfo> getProcesses();
     static int getGPUCount();
 
 private:

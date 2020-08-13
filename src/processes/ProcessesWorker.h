@@ -10,7 +10,7 @@ public:
     int processesIndexByPid(const QString &pid);
 
 public:
-    std::vector<ProcessInfo> processes;
+    QVector<ProcessInfo> processes;
 };
 
 #endif //QNVSM_PROCESSESWORKER_H
