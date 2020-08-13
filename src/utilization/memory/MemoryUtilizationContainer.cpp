@@ -40,10 +40,11 @@ void MemoryUtilizationContainer::onDataUpdated() {
                 "Max: " + QString::number(utilizationData.maxLevel) + "%");
 
         infoLabels[i][2]->setText(
-                "Total: " + QString::number(memoryData.total) + " MiB\n" +
-                "Free: " + QString::number(memoryData.free) + " MiB");
+                "IO Utilization: " + QString::number(memoryData.ioUtilization) + "%\n"
+                "Total: " + QString::number(memoryData.total) + " MiB");
 
         infoLabels[i][3]->setText(
+                "Free: " + QString::number(memoryData.free) + " MiB\n"
                 "Used: " + QString::number(memoryData.used) + " MiB");
     }
 

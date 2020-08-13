@@ -29,7 +29,7 @@ constant(Command, "nvidia-smi pmon -c 1 -s um");
 
 namespace NVSMIMemoryUtilization {
 enum {
-    Utilization,
+    IOUtilization,
     Total,
     Free,
     Used
@@ -117,6 +117,7 @@ QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
         auto data = allGPUsStr[i].split(", ");
 
         result[i] = {
+                data[NVSMIMemoryUtilization::IOUtilization].toInt(),
                 data[NVSMIMemoryUtilization::Total].toInt(),
                 data[NVSMIMemoryUtilization::Free].toInt(),
                 data[NVSMIMemoryUtilization::Used].toInt()

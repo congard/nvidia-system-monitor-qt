@@ -2,7 +2,7 @@
 #define QNVSM_MEMORYDATA_H
 
 struct MemoryData {
-    int total, free, used;
+    int ioUtilization, total, free, used;
 };
 
 #endif //QNVSM_MEMORYDATA_H
