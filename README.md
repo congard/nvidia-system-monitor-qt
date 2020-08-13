@@ -7,6 +7,8 @@ Task Manager for Linux for Nvidia graphics cards
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5a91f69b64a7459eb4aa788172595771)](https://www.codacy.com/manual/congard/nvidia-system-monitor-qt?utm_source=github.com&utm_medium=referral&utm_content=congard/nvidia-system-monitor-qt&utm_campaign=Badge_Grade)
 
+![preview](pics/preview.gif)
+
 ## Dependencies
 1.  Qt 5.11+
     *   Arch: [`qt5-base`](https://www.archlinux.org/packages/extra/x86_64/qt5-base/)
@@ -57,9 +59,6 @@ gpuColor    0       0    0      255
 gpuColor    1       0    255    0
 gpuColor    2       255  0      0
 ```
-
-## Screenshots
-[Open SCREENSHOTS.md](SCREENSHOTS.md)
 
 ## Donate
 <b>Payeer:</b> P36281059
