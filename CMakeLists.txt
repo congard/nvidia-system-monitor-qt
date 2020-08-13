@@ -35,8 +35,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 
 add_executable(qnvsm
         src/constants.h
-        src/Settings.h
         src/main.cpp
+        src/Settings.cpp src/Settings.h
         src/MainWindow.cpp src/MainWindow.h
         src/resources/MainWindowResources.h.in src/resources/MainWindowResources.h
         src/resources/QSplitterResources.h.in src/resources/QSplitterResources.h

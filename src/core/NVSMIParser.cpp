@@ -4,6 +4,10 @@
 using namespace std;
 using namespace Utils;
 
+#define constant(name, data) constexpr char name[] = data
+
+constant(GPUCountCommand, "nvidia-smi --query-gpu=count --format=csv,noheader");
+
 // nvidia-smi process output indices
 namespace NVSMIProcess {
 enum {
@@ -18,7 +22,7 @@ enum {
     Name
 };
 
-constexpr char Command[] = "nvidia-smi pmon -c 1 -s um";
+constant(Command, "nvidia-smi pmon -c 1 -s um");
 }
 
 QRegularExpression NVSMIParser::processListRegex;
@@ -75,4 +79,8 @@ vector<ProcessInfo> NVSMIParser::getProcesses() {
     }
 
     return info;
+}
+
+int NVSMIParser::getGPUCount() {
+    return QString(exec(GPUCountCommand).c_str()).toInt();
 }

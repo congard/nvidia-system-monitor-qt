@@ -12,6 +12,7 @@ public:
     static void init();
 
     static std::vector<ProcessInfo> getProcesses();
+    static int getGPUCount();
 
 private:
     static QRegularExpression processListRegex;

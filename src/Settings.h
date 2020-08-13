@@ -2,6 +2,7 @@
 #define QNVSM_SETTINGS_H
 
 #include <QColor>
+#include <QVector>
 
 #include "constants.h"
 
@@ -9,10 +10,12 @@
 #define GRAPH_STEP ((float)Settings::UpdateDelay / (float)Settings::GraphLength)
 
 namespace Settings {
-extern QColor GPUColors[8];
+extern QVector<QColor> GPUColors;
 extern uint UpdateDelay;
 extern uint GraphLength;
 extern int GPUCount;
+
+void load();
 }
 
 #endif

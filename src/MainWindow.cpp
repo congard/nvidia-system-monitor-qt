@@ -88,8 +88,6 @@ MainWindow::MainWindow(QWidget*) {
     connect(memoryUtilizationContainer->getWorker(),
             &MemoryUtilizationWorker::dataUpdated, memoryUtilizationContainer, &MemoryUtilizationContainer::onDataUpdated);
 
-    NVSMIParser::init();
-
     workerThread = new WorkerThread;
     workerThread->workers[0] = processes->worker;
     workerThread->workers[1] = gpuUtilizationContainer->getWorker();
