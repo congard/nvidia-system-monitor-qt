@@ -16,7 +16,8 @@ using namespace Utils;
 #define NVSM_CONF_GCOLOR "gpuColor"
 
 namespace Settings {
-QVector<QColor> GPUColors {};
+QVarLengthArray<QColor> GPUColors {};
+QVarLengthArray<QString> GPUNames {};
 uint UpdateDelay = 2000; // 2 sec
 uint GraphLength = 60000; // 60 sec
 int GPUCount = 0;
@@ -35,9 +36,12 @@ void load() {
 
     NVSMIParser::init();
     GPUCount = NVSMIParser::getGPUCount();
+    GPUNames = NVSMIParser::getGPUNames();
+
+    GPUColors.resize(GPUCount);
 
     for (int i = 0; i < GPUCount; i++)
-        GPUColors.append(defaultGPUColors[i % 8]);
+        GPUColors[i] = defaultGPUColors[i % 8];
 
     // TODO: use QSettings instead & add GUI settings
 

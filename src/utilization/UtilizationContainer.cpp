@@ -51,7 +51,7 @@ UtilizationWorker* UtilizationContainer::getWorker() {
 
 void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {
     auto gpuName = new QLabel();
-    gpuName->setText("<b>GPU " + QString::number(gpuIndex + 1) + "</b>");
+    gpuName->setText("<b>" + Settings::GPUNames[gpuIndex] + "</b>");
 
     int fontHeight = gpuName->fontMetrics().height();
 

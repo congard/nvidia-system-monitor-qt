@@ -9,6 +9,7 @@ using namespace Utils;
 
 constant(GPUCountCommand, "nvidia-smi --query-gpu=count --format=csv,noheader");
 constant(GPUUtilizationCommand, "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits");
+constant(GPUNamesCommand, "nvidia-smi --query-gpu=name --format=csv,noheader");
 
 // nvidia-smi process output indices
 namespace NVSMIProcess {
@@ -123,6 +124,17 @@ QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
                 data[NVSMIMemoryUtilization::Used].toInt()
         };
     }
+
+    return result;
+}
+
+QVarLengthArray<QString> NVSMIParser::getGPUNames() {
+    QVarLengthArray<QString> result(Settings::GPUCount);
+
+    auto names = exec(GPUNamesCommand).split("\n");
+
+    for (int i = 0; i < Settings::GPUCount; i++)
+        result[i] = names[i];
 
     return result;
 }
