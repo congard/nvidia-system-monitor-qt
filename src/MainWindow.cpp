@@ -11,8 +11,6 @@
 
 #include <iostream>
 
-#include "core/NVSMIParser.h"
-
 #include "processes/ProcessesView.h"
 
 #include "utilization/gpu/GPUUtilizationWorker.h"
