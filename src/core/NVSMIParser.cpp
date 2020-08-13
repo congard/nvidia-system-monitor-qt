@@ -1,5 +1,6 @@
 #include "NVSMIParser.h"
 #include "Utils.h"
+#include "Settings.h"
 
 using namespace std;
 using namespace Utils;
@@ -7,6 +8,7 @@ using namespace Utils;
 #define constant(name, data) constexpr char name[] = data
 
 constant(GPUCountCommand, "nvidia-smi --query-gpu=count --format=csv,noheader");
+constant(GPUUtilizationCommand, "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits");
 
 // nvidia-smi process output indices
 namespace NVSMIProcess {
@@ -80,6 +82,18 @@ QVector<ProcessInfo> NVSMIParser::getProcesses() {
     }
 
     return info;
+}
+
+QVector<int> NVSMIParser::getGPUUtilization() {
+    QVector<int> result;
+    result.resize(Settings::GPUCount);
+
+    auto utilizationStr = QString(exec(GPUUtilizationCommand).c_str()).split("\n");
+
+    for (int i = 0; i < Settings::GPUCount; i++)
+        result[i] = utilizationStr[i].toInt();
+
+    return result;
 }
 
 int NVSMIParser::getGPUCount() {
