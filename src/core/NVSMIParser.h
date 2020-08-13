@@ -5,6 +5,7 @@
 #include <QString>
 
 #include "processes/ProcessInfo.h"
+#include "utilization/memory/MemoryData.h"
 
 class NVSMIParser {
 public:
@@ -12,6 +13,7 @@ public:
 
     static QVector<ProcessInfo> getProcesses();
     static QVarLengthArray<int> getGPUUtilization();
+    static QVarLengthArray<MemoryData> getMemoryUtilization();
     static int getGPUCount();
 
 private:

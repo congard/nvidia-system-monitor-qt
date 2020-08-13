@@ -27,6 +27,19 @@ enum {
 constant(Command, "nvidia-smi pmon -c 1 -s um");
 }
 
+namespace NVSMIMemoryUtilization {
+enum {
+    Utilization,
+    Total,
+    Free,
+    Used
+};
+
+constant(Command,
+         "nvidia-smi --query-gpu=utilization.memory,memory.total,memory.free,memory.used "
+         "--format=csv,noheader,nounits");
+}
+
 QRegularExpression NVSMIParser::processListRegex;
 
 inline QString repeatString(const QString &str, int times) {
@@ -91,6 +104,24 @@ QVarLengthArray<int> NVSMIParser::getGPUUtilization() {
 
     for (int i = 0; i < Settings::GPUCount; i++)
         result[i] = utilizationStr[i].toInt();
+
+    return result;
+}
+
+QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
+    QVarLengthArray<MemoryData> result(Settings::GPUCount);
+
+    auto allGPUsStr = QString(exec(NVSMIMemoryUtilization::Command).c_str()).split("\n");
+
+    for (int i = 0; i < Settings::GPUCount; i++) {
+        auto data = allGPUsStr[i].split(", ");
+
+        result[i] = {
+                data[NVSMIMemoryUtilization::Total].toInt(),
+                data[NVSMIMemoryUtilization::Free].toInt(),
+                data[NVSMIMemoryUtilization::Used].toInt()
+        };
+    }
 
     return result;
 }

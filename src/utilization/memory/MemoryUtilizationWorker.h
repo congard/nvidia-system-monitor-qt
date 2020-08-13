@@ -6,13 +6,10 @@
 
 class MemoryUtilizationWorker: public UtilizationWorker {
 public:
-    MemoryUtilizationWorker();
-    ~MemoryUtilizationWorker() override;
-
     void receiveData() override;
 
 public:
-    MemoryData *memoryData;
+    QVarLengthArray<MemoryData> memoryData;
 };
 
 #endif //QNVSM_MEMORYUTILIZATIONWORKER_H
