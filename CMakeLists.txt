@@ -16,9 +16,11 @@ endif()
 find_package(Qt5Core)
 find_package(Qt5Widgets)
 
-if (Distributive STREQUAL "Arch")
-    add_definitions(-DICON_PATH="/usr/share/icons/hicolor/512x512/apps/nvidia-system-monitor-qt.png")
+if (NOT IconPath)
+    set(IconPath "")
 endif()
+
+add_definitions(-DICON_PATH="${IconPath}")
 
 set(QNVSM_Version "${Version} ${VersionPrefix}")
 configure_file(src/resources/MainWindow_about.html src/resources/MainWindow_about.html.out)

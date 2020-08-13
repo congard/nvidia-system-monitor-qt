@@ -24,21 +24,18 @@ Task Manager for Linux for Nvidia graphics cards
 You can install `nvidia-system-monitor-qt` directly from [AUR](https://aur.archlinux.org/packages/nvidia-system-monitor-qt/)
 <br>To launch enter `qnvsm` or just click on `.desktop` file
 
-#### From source
-The only difference from **Other** commands is that it will try to load the icon located in 
-`/usr/share/icons/hicolor/512x512/apps/nvidia-system-monitor-qt.png`
-
-```bash
-mkdir build
-cmake -DCMAKE_BUILD_TYPE=Release -B build -DDistributive=Arch -G "Unix Makefiles"
-cmake --build build --target qnvsm -- -j 2
-```
-
 ### Other
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" -B cmake-build-release
-cd cmake-build-release
-make -j4
+mkdir build
+cmake -DCMAKE_BUILD_TYPE=Release -B build -G "Unix Makefiles"
+cmake --build build --target qnvsm -- -j 4
+```
+
+You can specify icon path by passing CMake argument `IconPath`, for example:
+```bash
+mkdir build
+cmake -DCMAKE_BUILD_TYPE=Release -DIconPath=/usr/share/icons/hicolor/512x512/apps/nvidia-system-monitor-qt.png -B build -G "Unix Makefiles"
+cmake --build build --target qnvsm -- -j 4
 ```
 
 To launch type `cmake-build-release/qnvsm`
