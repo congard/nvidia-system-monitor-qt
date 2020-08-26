@@ -4,6 +4,10 @@
 
 using namespace std;
 
+// to keep compatibility with Qt <5.13:
+// QVector needs a default constructor
+ProcessInfo::ProcessInfo() = default;
+
 ProcessInfo::ProcessInfo(QString in_name, QString in_type, QString in_gpuIdx, QString in_pid,
                          QString in_sm, QString in_mem, QString in_enc, QString in_dec,
                          QString in_fbmem)

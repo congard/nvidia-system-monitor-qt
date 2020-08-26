@@ -5,6 +5,7 @@
 
 class ProcessInfo {
 public:
+    ProcessInfo();
     ProcessInfo(QString inName, QString type, QString gpuIdx, QString pid,
                 QString sm, QString mem, QString enc, QString dec,
                 QString fbmem);
