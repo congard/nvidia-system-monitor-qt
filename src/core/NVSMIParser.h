@@ -3,6 +3,7 @@
 
 #include <QRegularExpression>
 #include <QString>
+#include <QVector>
 
 #include "processes/ProcessInfo.h"
 #include "utilization/memory/MemoryData.h"

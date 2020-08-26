@@ -1,6 +1,8 @@
 #ifndef QNVSM_PROCESSESWORKER_H
 #define QNVSM_PROCESSESWORKER_H
 
+#include <QVector>
+
 #include "core/Worker.h"
 #include "ProcessInfo.h"
 
