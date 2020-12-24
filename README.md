@@ -46,20 +46,6 @@ The option -j describes the number of parallel processes for the build. In this 
 
 If you want to use an IDE for Linux you can try CLion or QtCreator.
 
-## Config
-Here example of simple config located in `~/.config/nvidia-system-monitor/config`:
-
-```conf
-# time in ms
-updateDelay 500
-graphLength 120000
-
-#           gpu id  red  green  blue
-gpuColor    0       0    0      255
-gpuColor    1       0    255    0
-gpuColor    2       255  0      0
-```
-
 ## Donate
 <b>Payeer:</b> P36281059
 
