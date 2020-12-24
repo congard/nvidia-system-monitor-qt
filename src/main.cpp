@@ -4,9 +4,8 @@
 #include <iostream>
 
 #include "MainWindow.h"
-#include "Settings.h"
+#include "core/SettingsManager.h"
 #include "core/Utils.h"
-#include "core/NVSMIParser.h"
 
 using namespace std;
 
@@ -30,8 +29,9 @@ void init() {
         }
     }
 
-    Settings::load();
-    cout << "GPU Count is " << Settings::GPUCount << "\n";
+    SettingsManager::init();
+    SettingsManager::load();
+    cout << "GPU Count is " << SettingsManager::getGPUCount() << "\n";
 }
 
 int main(int argc, char** argv) {

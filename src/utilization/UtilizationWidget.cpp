@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QPainterPath>
 
-#include "Settings.h"
+#include "core/SettingsManager.h"
 
 UtilizationWidget::UtilizationWidget() {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -40,14 +40,12 @@ void UtilizationWidget::drawGrid() {
 }
 
 void UtilizationWidget::drawGraph() {
-    using namespace Settings;
-
     QColor color;
     QPen pen;
     pen.setWidth(2);
 
-    for (int g = 0; g < GPUCount; g++) {
-        color = GPUColors[g];
+    for (int g = 0; g < SettingsManager::getGPUCount(); g++) {
+        color = SettingsManager::getGPUColor(g);
         pen.setColor(color);
         painter.setPen(pen);
 

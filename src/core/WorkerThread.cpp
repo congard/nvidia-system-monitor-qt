@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Settings.h"
+#include "SettingsManager.h"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ void WorkerThread::run() {
         for (uint i = 0; i < WorkersCount; i++)
             workers[i]->work();
 
-        usleep(UPDATE_DELAY_USEC);
+        usleep(SettingsManager::getUpdateDelay() * 1000);
     }
 
     cout << "WorkerThread done all work!\n";

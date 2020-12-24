@@ -4,7 +4,8 @@
 #include <QLabel>
 
 #include "core/Utils.h"
-#include "Settings.h"
+#include "core/SettingsManager.h"
+
 #include "CircleWidget.h"
 
 void UtilizationContainer::build(const QString &name) {
@@ -16,7 +17,7 @@ void UtilizationContainer::build(const QString &name) {
     auto footerLayout = new QHBoxLayout();
 
     auto graphStep = new QLabel();
-    graphStep->setText(QString::number(Settings::UpdateDelay / 1000.0f) + " sec step");
+    graphStep->setText(QString::number(SettingsManager::getUpdateDelay() / 1000.0f) + " sec step");
     headerLayout->addWidget(graphStep, 0, Qt::AlignLeft);
 
     auto fullUtilization = new QLabel();
@@ -24,7 +25,7 @@ void UtilizationContainer::build(const QString &name) {
     headerLayout->addWidget(fullUtilization, 0, Qt::AlignRight);
 
     auto graphTime = new QLabel();
-    graphTime->setText(QString::number(Settings::GraphLength / 1000.0f) + " sec");
+    graphTime->setText(QString::number(SettingsManager::getGraphLength() / 1000.0f) + " sec");
     footerLayout->addWidget(graphTime, 0, Qt::AlignLeft);
 
     auto noUtilization = new QLabel();
@@ -51,11 +52,11 @@ UtilizationWorker* UtilizationContainer::getWorker() {
 
 void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {
     auto gpuName = new QLabel();
-    gpuName->setText("<b>" + Settings::GPUNames[gpuIndex] + "</b>");
+    gpuName->setText("<b>" + SettingsManager::getGPUName(gpuIndex) + "</b>");
 
     int fontHeight = gpuName->fontMetrics().height();
 
-    auto circle = new CircleWidget(Settings::GPUColors[gpuIndex]);
+    auto circle = new CircleWidget(SettingsManager::getGPUColor(gpuIndex));
     circle->setMinimumSize(fontHeight, fontHeight);
 
     auto titleLayout = new QHBoxLayout();

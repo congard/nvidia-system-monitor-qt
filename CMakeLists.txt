@@ -37,7 +37,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 
 add_executable(qnvsm
         src/main.cpp
-        src/Settings.cpp src/Settings.h
         src/MainWindow.cpp src/MainWindow.h
         src/resources/MainWindowResources.h.in src/resources/MainWindowResources.h
         src/resources/QSplitterResources.h.in src/resources/QSplitterResources.h
@@ -45,6 +44,7 @@ add_executable(qnvsm
         src/core/Worker.cpp src/core/Worker.h
         src/core/WorkerThread.cpp src/core/WorkerThread.h
         src/core/NVSMIParser.cpp src/core/NVSMIParser.h
+        src/core/SettingsManager.cpp src/core/SettingsManager.h
         src/processes/ProcessInfo.cpp src/processes/ProcessInfo.h
         src/processes/ProcessesWorker.cpp src/processes/ProcessesWorker.h
         src/processes/ProcessesView.cpp src/processes/ProcessesView.h

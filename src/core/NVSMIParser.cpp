@@ -1,6 +1,6 @@
 #include "NVSMIParser.h"
 #include "Utils.h"
-#include "Settings.h"
+#include "SettingsManager.h"
 
 using namespace std;
 using namespace Utils;
@@ -85,36 +85,35 @@ QVector<ProcessInfo> NVSMIParser::getProcesses() {
     while (i.hasNext()) {
         QRegularExpressionMatch match = i.next();
 
-        info.append
-        ({
-                 match.captured(NVSMIProcess::Name), match.captured(NVSMIProcess::Type),
-                 match.captured(NVSMIProcess::GPUIdx), match.captured(NVSMIProcess::PID),
-                 match.captured(NVSMIProcess::Sm), match.captured(NVSMIProcess::Mem),
-                 match.captured(NVSMIProcess::Enc), match.captured(NVSMIProcess::Dec),
-                 match.captured(NVSMIProcess::FbMem)
-         });
+        info.append({
+             match.captured(NVSMIProcess::Name), match.captured(NVSMIProcess::Type),
+             match.captured(NVSMIProcess::GPUIdx), match.captured(NVSMIProcess::PID),
+             match.captured(NVSMIProcess::Sm), match.captured(NVSMIProcess::Mem),
+             match.captured(NVSMIProcess::Enc), match.captured(NVSMIProcess::Dec),
+             match.captured(NVSMIProcess::FbMem)
+        });
     }
 
     return info;
 }
 
 QVarLengthArray<int> NVSMIParser::getGPUUtilization() {
-    QVarLengthArray<int> result(Settings::GPUCount);
+    QVarLengthArray<int> result(SettingsManager::getGPUCount());
 
     auto utilizationStr = exec(GPUUtilizationCommand).split("\n");
 
-    for (int i = 0; i < Settings::GPUCount; i++)
+    for (int i = 0; i < result.size(); i++)
         result[i] = utilizationStr[i].toInt();
 
     return result;
 }
 
 QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
-    QVarLengthArray<MemoryData> result(Settings::GPUCount);
+    QVarLengthArray<MemoryData> result(SettingsManager::getGPUCount());
 
     auto allGPUsStr = exec(NVSMIMemoryUtilization::Command).split("\n");
 
-    for (int i = 0; i < Settings::GPUCount; i++) {
+    for (int i = 0; i < result.size(); i++) {
         auto data = allGPUsStr[i].split(", ");
 
         result[i] = {
@@ -129,11 +128,11 @@ QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
 }
 
 QVarLengthArray<QString> NVSMIParser::getGPUNames() {
-    QVarLengthArray<QString> result(Settings::GPUCount);
+    QVarLengthArray<QString> result(SettingsManager::getGPUCount());
 
     auto names = exec(GPUNamesCommand).split("\n");
 
-    for (int i = 0; i < Settings::GPUCount; i++)
+    for (int i = 0; i < result.size(); i++)
         result[i] = names[i];
 
     return result;

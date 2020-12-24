@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+#include "core/SettingsManager.h"
+
 #include "processes/ProcessesView.h"
 
 #include "utilization/gpu/GPUUtilizationWorker.h"
@@ -129,7 +131,7 @@ QString MainWindow::getSplitterStylesheet() {
 }
 
 void MainWindow::saveSettings() {
-    QSettings settings("congard", "NVSM");
+    QSettings settings(NVSM_SETTINGS);
     settings.setValue(MainWindow_geometry, saveGeometry());
     settings.setValue(MainWindow_windowState, saveState());
     settings.setValue(MainWindow_utilizationSplitter, utilizationSplitter->saveState());
@@ -143,7 +145,7 @@ inline QSize defaultWindowSize(const QRect &screenGeometry) {
 }
 
 void MainWindow::loadSettings() {
-    QSettings settings("congard", "NVSM");
+    QSettings settings(NVSM_SETTINGS);
 
     auto geometryByteArray = settings.value(MainWindow_geometry).toByteArray();
 
