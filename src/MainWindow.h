@@ -5,7 +5,6 @@
 #include <QSplitter>
 
 #include "core/WorkerThread.h"
-#include "core/Worker.h"
 
 class MainWindow: public QMainWindow {
     Q_OBJECT
@@ -26,6 +25,8 @@ private:
     void loadSettings();
 
 private slots:
+    void quit();
+
     static void about();
     static void help();
 };
