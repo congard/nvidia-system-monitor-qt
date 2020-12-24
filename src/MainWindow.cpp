@@ -97,13 +97,7 @@ MainWindow::MainWindow(QWidget*) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-    hide();
-
-    saveSettings();
-
-    workerThread->running = false;
-    while (workerThread->isRunning()); // waiting for all workers to be safely removed
-    event->accept();
+    quit();
 }
 
 QString MainWindow::getSplitterStylesheet() {
@@ -157,6 +151,17 @@ void MainWindow::loadSettings() {
 
     restoreState(settings.value(MainWindow_windowState).toByteArray());
     utilizationSplitter->restoreState(settings.value(MainWindow_utilizationSplitter).toByteArray());
+}
+
+void MainWindow::quit() {
+    hide();
+
+    saveSettings();
+
+    workerThread->running = false;
+    while (workerThread->isRunning()); // waiting for all workers to be safely removed
+
+    QApplication::quit();
 }
 
 void MainWindow::about() {
