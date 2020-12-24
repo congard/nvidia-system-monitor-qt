@@ -41,16 +41,19 @@ MainWindow::MainWindow(QWidget*) {
     layout->setMargin(0);
     
     auto menuBar = new QMenuBar;
-    auto menu = new QMenu("&Help");
 
-    menu->addAction("&About NVSM", this, SLOT(about()), Qt::CTRL + Qt::Key_A);
-    menu->addAction("&Help", this, SLOT(help()), Qt::CTRL + Qt::Key_H);
-    menu->addSeparator();
-    menu->addAction("&Settings", this, SLOT(help()));
-    menu->addSeparator();
-    menu->addAction("&Exit", qApp, SLOT(quit()));
+    auto fileMenu = new QMenu("&File");
+    fileMenu->addAction("&Settings", []() { printf("Has not been implemented yet\n"); }); // TODO: create SettingsDialog
+    fileMenu->addSeparator();
+    fileMenu->addAction("&Exit", this, SLOT(quit()));
 
-    menuBar->addMenu(menu);
+    auto helpMenu = new QMenu("&Help");
+    helpMenu->addAction("&About NVSM", this, SLOT(about()), Qt::CTRL + Qt::Key_A);
+    helpMenu->addAction("&Help", this, SLOT(help()), Qt::CTRL + Qt::Key_H);
+
+    menuBar->addMenu(fileMenu);
+    menuBar->addMenu(helpMenu);
+
     layout->addWidget(menuBar);
 
     auto processes = new ProcessesView();
