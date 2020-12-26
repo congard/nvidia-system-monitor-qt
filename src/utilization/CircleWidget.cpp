@@ -3,16 +3,21 @@
 #include <QPainter>
 #include <QPaintEvent>
 
-CircleWidget::CircleWidget(const QColor &color) {
+CircleWidget::CircleWidget() {
     pen.setWidth(2);
+
+    brush.setStyle(Qt::BrushStyle::SolidPattern);
+
+    setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+}
+
+void CircleWidget::setColor(const QColor &color) {
     pen.setColor(color);
 
     QColor brushColor = color;
     brushColor.setAlpha(64);
-    brush.setColor(brushColor);
-    brush.setStyle(Qt::BrushStyle::SolidPattern);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+    brush.setColor(brushColor);
 }
 
 void CircleWidget::paintEvent(QPaintEvent *event) {
@@ -20,6 +25,7 @@ void CircleWidget::paintEvent(QPaintEvent *event) {
 
     // pen.width() / 2 because when painting a shape with an outline, we have to factor in the width of the pen
     int offset = pen.width() / 2 + margin;
+
     if (offset >= width() / 2)
         offset -= margin;
 

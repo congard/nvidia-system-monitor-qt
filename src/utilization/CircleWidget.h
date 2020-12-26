@@ -7,7 +7,9 @@
 
 class CircleWidget: public QWidget {
 public:
-    explicit CircleWidget(const QColor &color);
+    CircleWidget();
+
+    void setColor(const QColor &color);
 
     void paintEvent(QPaintEvent*) override;
 
