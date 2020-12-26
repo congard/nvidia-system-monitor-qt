@@ -1,18 +1,21 @@
 #ifndef QNVSM_UTILIZATIONCONTAINER_H
 #define QNVSM_UTILIZATIONCONTAINER_H
 
-#include <QVBoxLayout>
-
 #include "UtilizationWidget.h"
 
-class UtilizationContainer: public QVBoxLayout {
+class QVBoxLayout;
+
+class UtilizationContainer: public QWidget {
 public:
     void build(const QString &name);
-    QWidget* getWidget();
+
+    void updateData();
+
     UtilizationWorker* getWorker();
 
 protected:
     void addInfoTitleLayout(int gpuIndex);
+    QVBoxLayout* getLayout();
 
 protected:
     UtilizationWidget *utilizationWidget;

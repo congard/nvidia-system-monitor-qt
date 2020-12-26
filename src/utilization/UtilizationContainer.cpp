@@ -8,16 +8,25 @@
 
 #include "CircleWidget.h"
 
+inline QString getGPUCircleWidgetName(uint index) {
+    return "gpuCircle_" + QString::number(index);
+}
+
+inline constexpr auto graphStepName = "graphStep";
+inline constexpr auto graphTimeName = "graphTime";
+
 void UtilizationContainer::build(const QString &name) {
+    auto layout = new QVBoxLayout();
+
     auto title = new QLabel();
     title->setText("<b><big>" + name + "</big></b>");
-    addWidget(title);
+    layout->addWidget(title);
 
     auto headerLayout = new QHBoxLayout();
     auto footerLayout = new QHBoxLayout();
 
     auto graphStep = new QLabel();
-    graphStep->setText(QString::number(SettingsManager::getUpdateDelay() / 1000.0f) + " sec step");
+    graphStep->setObjectName(graphStepName);
     headerLayout->addWidget(graphStep, 0, Qt::AlignLeft);
 
     auto fullUtilization = new QLabel();
@@ -25,25 +34,29 @@ void UtilizationContainer::build(const QString &name) {
     headerLayout->addWidget(fullUtilization, 0, Qt::AlignRight);
 
     auto graphTime = new QLabel();
-    graphTime->setText(QString::number(SettingsManager::getGraphLength() / 1000.0f) + " sec");
+    graphTime->setObjectName(graphTimeName);
     footerLayout->addWidget(graphTime, 0, Qt::AlignLeft);
 
     auto noUtilization = new QLabel();
     noUtilization->setText("0%");
     footerLayout->addWidget(noUtilization, 0, Qt::AlignRight);
 
-    setAlignment(Qt::AlignVCenter);
+    layout->setAlignment(Qt::AlignVCenter);
 
-    addLayout(headerLayout);
-    addWidget(utilizationWidget);
-    addLayout(footerLayout);
+    layout->addLayout(headerLayout);
+    layout->addWidget(utilizationWidget);
+    layout->addLayout(footerLayout);
+
+    setLayout(layout);
 }
 
-QWidget* UtilizationContainer::getWidget() {
-    auto widget = new QWidget();
-    widget->setLayout(this);
+void UtilizationContainer::updateData() {
+    findChild<QLabel *>(graphStepName)->setText(QString::number(SettingsManager::getUpdateDelay() / 1000.0f) + " sec step");
+    findChild<QLabel *>(graphTimeName)->setText(QString::number(SettingsManager::getGraphLength() / 1000.0f) + " sec");
 
-    return widget;
+    for (uint i = 0; i < SettingsManager::getGPUCount(); i++) {
+        findChild<CircleWidget *>(getGPUCircleWidgetName(i))->setColor(SettingsManager::getGPUColor(i));
+    }
 }
 
 UtilizationWorker* UtilizationContainer::getWorker() {
@@ -56,8 +69,9 @@ void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {
 
     int fontHeight = gpuName->fontMetrics().height();
 
-    auto circle = new CircleWidget(SettingsManager::getGPUColor(gpuIndex));
+    auto circle = new CircleWidget();
     circle->setMinimumSize(fontHeight, fontHeight);
+    circle->setObjectName(getGPUCircleWidgetName(gpuIndex));
 
     auto titleLayout = new QHBoxLayout();
     titleLayout->setAlignment(Qt::AlignLeft);
@@ -66,5 +80,9 @@ void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {
     titleLayout->addWidget(gpuName);
     titleLayout->addWidget(circle);
 
-    addLayout(titleLayout);
+    getLayout()->addLayout(titleLayout);
+}
+
+QVBoxLayout* UtilizationContainer::getLayout() {
+    return static_cast<QVBoxLayout *>(layout()); // static_cast because layout() is 100% QVBoxLayout
 }
