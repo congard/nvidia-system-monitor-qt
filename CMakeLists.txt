@@ -38,6 +38,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 add_executable(qnvsm
         src/main.cpp
         src/MainWindow.cpp src/MainWindow.h
+        src/SettingsDialog.cpp src/SettingsDialog.h
+        src/SelectColorButton.cpp src/SelectColorButton.h
         src/resources/MainWindowResources.h.in src/resources/MainWindowResources.h
         src/resources/QSplitterResources.h.in src/resources/QSplitterResources.h
         src/core/Utils.cpp src/core/Utils.h
@@ -53,11 +55,12 @@ add_executable(qnvsm
         src/utilization/UtilizationData.h src/utilization/memory/MemoryData.h
         src/utilization/UtilizationWorker.cpp src/utilization/UtilizationWorker.h
         src/utilization/UtilizationWidget.cpp src/utilization/UtilizationWidget.h
+        src/utilization/UtilizationContainer.cpp src/utilization/UtilizationContainer.h
+        src/utilization/UtilizationContainerCommon.h
         src/utilization/gpu/GPUUtilizationWorker.cpp src/utilization/gpu/GPUUtilizationWorker.h
         src/utilization/gpu/GPUUtilizationWidget.cpp src/utilization/gpu/GPUUtilizationWidget.h
         src/utilization/memory/MemoryUtilizationWorker.cpp src/utilization/memory/MemoryUtilizationWorker.h
         src/utilization/memory/MemoryUtilizationWidget.cpp src/utilization/memory/MemoryUtilizationWidget.h
-        src/utilization/UtilizationContainer.cpp src/utilization/UtilizationContainer.h
         src/utilization/gpu/GPUUtilizationContainer.cpp src/utilization/gpu/GPUUtilizationContainer.h
         src/utilization/memory/MemoryUtilizationContainer.cpp src/utilization/memory/MemoryUtilizationContainer.h)
 
