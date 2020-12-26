@@ -38,13 +38,11 @@ void SettingsManager::load() {
         m_gpuColors.resize(array.size());
 
         for (uint i = 0; i < array.size(); i++) {
-            m_gpuColors[i] = QColor(array[i].toInt());
+            m_gpuColors[i] = QColor(array[i].toString());
         }
     }
 
-    if (m_gpuColors.size() < m_gpuCount) {
-        auto gpuColorsSize = m_gpuColors.size();
-
+    if (auto gpuColorsSize = m_gpuColors.size(); gpuColorsSize < m_gpuCount) {
         m_gpuColors.resize(m_gpuCount);
 
         QColor defaultGPUColors[8] = {
@@ -74,7 +72,7 @@ void SettingsManager::save() {
         QJsonArray array;
 
         for (const auto &color : m_gpuColors)
-            array.append(color.value());
+            array.append(color.name());
 
         return array;
     }());
