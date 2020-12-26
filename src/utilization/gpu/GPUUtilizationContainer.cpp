@@ -5,34 +5,39 @@
 #include "GPUUtilizationWidget.h"
 
 #include "core/SettingsManager.h"
+#include "utilization/UtilizationContainerCommon.h"
 
 GPUUtilizationContainer::GPUUtilizationContainer() {
     utilizationWidget = new GPUUtilizationWidget();
     build("GPU Utilization");
 
-    infoLabels.resize(SettingsManager::getGPUCount());
-
-    for (uint i = 0; i < infoLabels.size(); i++) {
+    for (uint i = 0; i < SettingsManager::getGPUCount(); i++) {
         addInfoTitleLayout(i);
 
         auto infoLayout = new QHBoxLayout();
-        infoLayout->addWidget(infoLabels[i][0] = new QLabel());
-        infoLayout->addWidget(infoLabels[i][1] = new QLabel());
+        infoLayout->addWidget(getInfoLabel(i, 0));
+        infoLayout->addWidget(getInfoLabel(i, 1));
 
-        addLayout(infoLayout);
+        getLayout()->addLayout(infoLayout);
     }
+
+    updateData();
 }
 
 void GPUUtilizationContainer::onDataUpdated() {
-    for (uint i = 0; i < infoLabels.size(); i++) {
+    for (uint i = 0; i < SettingsManager::getGPUCount(); i++) {
         const auto &utilizationData = utilizationWidget->worker->udata[i];
 
-        infoLabels[i][0]->setText(
+        auto infoLabel = [&](uint gpuIndex, uint index) {
+            return findChild<QLabel *>(getInfoLabelName(gpuIndex, index));
+        };
+
+        infoLabel(i, 0)->setText(
             "Utilization: " + QString::number(utilizationData.level) + "%\n"
             "Average: " + QString::number(utilizationData.avgLevel) + "%"
         );
 
-        infoLabels[i][1]->setText(
+        infoLabel(i, 1)->setText(
             "Min: " + QString::number(utilizationData.minLevel) + "%\n"
             "Max: " + QString::number(utilizationData.maxLevel) + "%"
         );
