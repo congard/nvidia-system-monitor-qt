@@ -2,7 +2,6 @@
 #define QNVSM_MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSplitter>
 
 #include "core/WorkerThread.h"
 
@@ -16,8 +15,6 @@ public:
 
 private:
     WorkerThread *workerThread;
-    QTabWidget *tabs;
-    QSplitter *utilizationSplitter;
 
 private:
     QString getSplitterStylesheet();
@@ -26,6 +23,7 @@ private:
 
 private slots:
     void quit();
+    void settings();
 
     static void about();
     static void help();
