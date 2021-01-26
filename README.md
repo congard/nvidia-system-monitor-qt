@@ -40,7 +40,7 @@ cmake -DCMAKE_BUILD_TYPE=Release -DIconPath=/usr/share/icons/hicolor/512x512/app
 cmake --build build --target qnvsm -- -j 4
 ```
 
-To launch type `cmake-build-release/qnvsm`
+To launch type `build/qnvsm`
 
 The option -j describes the number of parallel processes for the build. In this case make will try to use 4 cores for the build.
 
