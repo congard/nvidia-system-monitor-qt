@@ -13,8 +13,8 @@ if (NOT VersionPrefix)
     set(VersionPrefix "(compiled from source)")
 endif()
 
-find_package(Qt5Core)
-find_package(Qt5Widgets)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 if (NOT IconPath)
     set(IconPath "")
@@ -35,7 +35,7 @@ configure_file(src/resources/QSplitterResources.h.in src/resources/QSplitterReso
 include_directories(src)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 
-add_executable(qnvsm
+set(PROJECT_SOURCES
         src/main.cpp
         src/MainWindow.cpp src/MainWindow.h
         src/SettingsDialog.cpp src/SettingsDialog.h
@@ -64,4 +64,10 @@ add_executable(qnvsm
         src/utilization/gpu/GPUUtilizationContainer.cpp src/utilization/gpu/GPUUtilizationContainer.h
         src/utilization/memory/MemoryUtilizationContainer.cpp src/utilization/memory/MemoryUtilizationContainer.h)
 
-target_link_libraries(qnvsm ${Qt5Core_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(qnvsm ${PROJECT_SOURCES})
+else()
+    add_executable(qnvsm ${PROJECT_SOURCES})
+endif()
+
+target_link_libraries(qnvsm PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

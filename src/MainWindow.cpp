@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget*) {
 
     auto layout = new QVBoxLayout;
     layout->setSpacing(0);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     // menu bar
     auto menuBar = new QMenuBar;
@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget*) {
 
     auto utilizationLayout = new QVBoxLayout();
     utilizationLayout->addWidget(utilizationSplitter);
-    utilizationLayout->setMargin(32);
+    utilizationLayout->setContentsMargins(32, 32, 32, 32);
 
     auto utilizationWidget = new QWidget();
     utilizationWidget->setLayout(utilizationLayout);
