@@ -139,5 +139,5 @@ QVarLengthArray<QString> NVSMIParser::getGPUNames() {
 }
 
 int NVSMIParser::getGPUCount() {
-    return exec(GPUCountCommand).toInt();
+    return exec(GPUCountCommand).split("\n")[0].toInt();
 }
