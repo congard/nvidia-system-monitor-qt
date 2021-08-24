@@ -22,9 +22,13 @@ Task Manager for Linux for Nvidia graphics cards
 **Note:** after a lot of refactoring you may be bumped into compilation errors because of missing headers.
 <br>If so, create new issue or write me email with compilation error: [dbcongard@gmail.com](mailto:dbcongard@gmail.com)
 
+### Debian / Ubuntu
+You can install deb package from [releases](https://github.com/congard/nvidia-system-monitor-qt/releases)
+<br>To launch execute `qnvsm` or just click on the `.desktop` file
+
 ### ArchLinux
 You can install `nvidia-system-monitor-qt` directly from [AUR](https://aur.archlinux.org/packages/nvidia-system-monitor-qt/)
-<br>To launch enter `qnvsm` or just click on `.desktop` file
+<br>To launch execute `qnvsm` or just click on the `.desktop` file
 
 ### Other
 ```bash
