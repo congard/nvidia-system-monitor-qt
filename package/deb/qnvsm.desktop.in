@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Exec={executable}
+Icon={icon}
+Name=Nvidia System Monitor QT
+Categories=System;Utility;
