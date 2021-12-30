@@ -8,7 +8,7 @@
 
 class WorkerThread: public QThread {
 public:
-    constexpr static int WorkersCount = 3;
+    constexpr static int WorkersCount = 4;
 
 public:
     WorkerThread();

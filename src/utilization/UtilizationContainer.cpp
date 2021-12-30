@@ -2,6 +2,9 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QEvent>
+#include <QHelpEvent>
+#include <QToolTip>
 
 #include "core/Utils.h"
 #include "core/SettingsManager.h"
@@ -61,6 +64,30 @@ void UtilizationContainer::updateData() {
 
 UtilizationWorker* UtilizationContainer::getWorker() {
     return utilizationWidget->worker;
+}
+
+bool UtilizationContainer::event(QEvent *event) {
+    if (event->type() == QEvent::ToolTip) {
+        auto *helpEvent = static_cast<QHelpEvent*>(event);
+
+        if (auto *child = childAt(helpEvent->pos()); child) {
+            auto name = child->objectName();
+
+            for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+                if (name == getInfoLabelName(i, UtInfoLabelId)) {
+                    QToolTip::showText(helpEvent->globalPos(), "Utilization: current (average / min / max)");
+                    return true;
+                }
+            }
+        }
+
+        QToolTip::hideText();
+        event->ignore();
+
+        return true;
+    }
+
+    return QWidget::event(event);
 }
 
 void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {

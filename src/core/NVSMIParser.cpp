@@ -2,6 +2,9 @@
 #include "Utils.h"
 #include "SettingsManager.h"
 
+#include <cmath>
+#include <unistd.h>
+
 using namespace std;
 using namespace Utils;
 
@@ -68,11 +71,9 @@ inline QString repeatString(const QString &str, int times) {
 void NVSMIParser::init() {
     QString processListPattern =
             repeatString(spacer "([0-9]+)", 2) + // gpu id, pid
-            spacer +
-            "([CG])" + // type
+            spacer "([CG])" + // type
             repeatString(spacer R"(([0-9\-]+))", 5) + // sm, mem, enc, dec, fb mem
-            spacer +
-            R"(([^ \t\n]+))"; // process name
+            spacer R"(([^ \t\n]+))"; // process name
 
     processListRegex.setPattern(processListPattern);
 }
@@ -122,6 +123,41 @@ QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
                 data[NVSMIMemoryUtilization::Free].toInt(),
                 data[NVSMIMemoryUtilization::Used].toInt()
         };
+    }
+
+    return result;
+}
+
+QVarLengthArray<PowerInfo> NVSMIParser::getPowerInfo() {
+    QVarLengthArray<PowerInfo> result(SettingsManager::getGPUCount());
+
+    // 123, 456, 78.7
+    auto cmd = "nvidia-smi --query-gpu=temperature.gpu,temperature.memory,power.draw --format=csv,noheader,nounits";
+    int attempt = 0;
+    QString data = exec(cmd);
+
+    // fix "[Unknown Error]" for power output
+    while (data.contains('[') && attempt < 3) {
+        usleep(50000);
+        data = exec(cmd);
+        ++attempt;
+    }
+
+    auto lines = data.split("\n");
+
+    for (int i = 0; i < result.size(); ++i) {
+        auto line = lines[i].split(", ");
+
+        bool ok;
+
+        int val = QString(line[0]).toInt(&ok);
+        result[i].gpuTemp = ok ? val : NVSMIParser::INT_NONE;
+
+        val = QString(line[1]).toInt(&ok);
+        result[i].memTemp = ok ? val : NVSMIParser::INT_NONE;
+
+        float power = QString(line[2]).toFloat(&ok);
+        result[i].power = ok ? power : NAN;
     }
 
     return result;

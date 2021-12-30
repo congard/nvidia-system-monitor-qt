@@ -6,6 +6,7 @@
 #include "MainWindow.h"
 #include "core/SettingsManager.h"
 #include "core/Utils.h"
+#include "power/PowerProvider.h"
 
 using namespace std;
 
@@ -31,6 +32,9 @@ void init() {
 
     SettingsManager::init();
     SettingsManager::load();
+
+    PowerProvider::init();
+
     cout << "GPU Count is " << SettingsManager::getGPUCount() << "\n";
 }
 

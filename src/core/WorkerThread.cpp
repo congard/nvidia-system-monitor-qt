@@ -16,8 +16,9 @@ WorkerThread::~WorkerThread() {
 
 void WorkerThread::run() {
     while (running) {
-        for (uint i = 0; i < WorkersCount; i++)
+        for (int i = 0; i < WorkersCount; i++) {
             workers[i]->work();
+        }
 
         usleep(SettingsManager::getUpdateDelay() * 1000);
     }

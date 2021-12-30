@@ -19,6 +19,8 @@
 #include "utilization/gpu/GPUUtilizationContainer.h"
 #include "utilization/memory/MemoryUtilizationContainer.h"
 
+#include "power/PowerProvider.h"
+
 #include "resources/MainWindowResources.h"
 #include "resources/QSplitterResources.h"
 
@@ -104,10 +106,11 @@ MainWindow::MainWindow(QWidget*) {
     connect(memoryUtilizationContainer->getWorker(),
             &MemoryUtilizationWorker::dataUpdated, memoryUtilizationContainer, &MemoryUtilizationContainer::onDataUpdated);
 
-    workerThread = new WorkerThread;
-    workerThread->workers[0] = processes->worker;
-    workerThread->workers[1] = gpuUtilizationContainer->getWorker();
-    workerThread->workers[2] = memoryUtilizationContainer->getWorker();
+    workerThread = new WorkerThread();
+    workerThread->workers[0] = PowerProvider::getWorker();
+    workerThread->workers[1] = processes->worker;
+    workerThread->workers[2] = gpuUtilizationContainer->getWorker();
+    workerThread->workers[3] = memoryUtilizationContainer->getWorker();
     workerThread->start();
 
     // load MainWindow settings
@@ -178,6 +181,8 @@ void MainWindow::quit() {
 
     workerThread->running = false;
     while (workerThread->isRunning()); // waiting for all workers to be safely removed
+
+    PowerProvider::destroy();
 
     QApplication::quit();
 }
