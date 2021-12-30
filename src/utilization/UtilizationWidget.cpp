@@ -50,13 +50,13 @@ void UtilizationWidget::drawGraph() {
         painter.setPen(pen);
 
         for (size_t i = 1; i < worker->gpoints[g].size(); i++) {
-            const int graphHeight = size().height();
-            const int graphWidth = size().width();
+            auto graphHeight = static_cast<float>(size().height());
+            auto graphWidth = static_cast<float>(size().width());
 
-            int x1 = worker->gpoints[g][i - 1].x * graphWidth;
-            int y1 = graphHeight - graphHeight / 100.0f * worker->gpoints[g][i - 1].y;
-            int x2 = worker->gpoints[g][i].x * graphWidth;
-            int y2 = graphHeight - graphHeight / 100.0f * worker->gpoints[g][i].y;
+            int x1 = static_cast<int>(worker->gpoints[g][i - 1].x * graphWidth);
+            int y1 = static_cast<int>(graphHeight - graphHeight / 100.0f * (float) worker->gpoints[g][i - 1].y);
+            int x2 = static_cast<int>(worker->gpoints[g][i].x * graphWidth);
+            int y2 = static_cast<int>(graphHeight - graphHeight / 100.0f * (float) worker->gpoints[g][i].y);
 
             QPainterPath filling;
             filling.moveTo(x1, y1);

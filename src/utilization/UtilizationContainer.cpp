@@ -54,11 +54,11 @@ void UtilizationContainer::build(const QString &name) {
 }
 
 void UtilizationContainer::updateData() {
-    findChild<QLabel *>(graphStepName)->setText(QString::number(SettingsManager::getUpdateDelay() / 1000.0f) + " sec step");
-    findChild<QLabel *>(graphTimeName)->setText(QString::number(SettingsManager::getGraphLength() / 1000.0f) + " sec");
+    findChild<QLabel*>(graphStepName)->setText(QString::number(SettingsManager::getUpdateDelay() / 1000.0f) + " sec step");
+    findChild<QLabel*>(graphTimeName)->setText(QString::number(SettingsManager::getGraphLength() / 1000.0f) + " sec");
 
-    for (uint i = 0; i < SettingsManager::getGPUCount(); i++) {
-        findChild<CircleWidget *>(getGPUCircleWidgetName(i))->setColor(SettingsManager::getGPUColor(i));
+    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+        findChild<CircleWidget*>(getGPUCircleWidgetName(i))->setColor(SettingsManager::getGPUColor(i));
     }
 }
 

@@ -7,6 +7,8 @@
 
 #define NVSM_SETTINGS "congard", "NVSM"
 
+// TODO: move getGPUNames, getGPUName, getGPUCount to class InfoProvider
+
 class SettingsManager {
 public:
     static void init();
@@ -14,27 +16,27 @@ public:
     static void save();
 
     static void setGPUColors(const QVarLengthArray<QColor> &gpuColors);
-    static void setUpdateDelay(uint updateDelay);
-    static void setGraphLength(uint graphLength);
+    static void setUpdateDelay(int updateDelay);
+    static void setGraphLength(int graphLength);
 
-    static void setGPUColor(uint index, const QColor &color);
+    static void setGPUColor(int index, const QColor &color);
 
     static const QVarLengthArray<QString>& getGPUNames();
     static const QVarLengthArray<QColor>& getGPUColors();
 
-    static const QString& getGPUName(uint index);
-    static const QColor& getGPUColor(uint index);
+    static const QString& getGPUName(int index);
+    static const QColor& getGPUColor(int index);
 
-    static uint getUpdateDelay();
-    static uint getGraphLength();
-    static uint getGPUCount();
+    static int getUpdateDelay();
+    static int getGraphLength();
+    static int getGPUCount();
 
 private:
     static QVarLengthArray<QString> m_gpuNames;
     static QVarLengthArray<QColor> m_gpuColors;
-    static uint m_updateDelay;
-    static uint m_graphLength;
-    static uint m_gpuCount;
+    static int m_updateDelay;
+    static int m_graphLength;
+    static int m_gpuCount;
 };
 
 #endif //QNVSM_SETTINGSMANAGER_H

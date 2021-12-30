@@ -26,11 +26,11 @@ void UtilizationWorker::work() {
 
     receiveData();
 
-    auto graphStep = (float) SettingsManager::getUpdateDelay() / SettingsManager::getGraphLength();
-    float step = (float)(getTime() - lastTime) / SettingsManager::getUpdateDelay() * graphStep;
+    auto graphStep = (float) SettingsManager::getUpdateDelay() / (float) SettingsManager::getGraphLength();
+    auto step = (float)(getTime() - lastTime) / (float) SettingsManager::getUpdateDelay() * graphStep;
 
     // g means gpu
-    for (uint g = 0; g < SettingsManager::getGPUCount(); g++) {
+    for (int g = 0; g < SettingsManager::getGPUCount(); g++) {
         for (Point &i : gpoints[g])
             i.x -= step;
 
@@ -54,7 +54,7 @@ void UtilizationWorker::work() {
             }
         }
 
-        udata[g].avgLevel /= gpoints[g].size();
+        udata[g].avgLevel /= static_cast<int>(gpoints[g].size());
     }
 
     mutex.unlock();
@@ -63,7 +63,7 @@ void UtilizationWorker::work() {
     lastTime = getTime();
 }
 
-void UtilizationWorker::deleteSuperfluousPoints(uint index) {
+void UtilizationWorker::deleteSuperfluousPoints(int index) {
     if (gpoints[index].size() > 2 && gpoints[index][0].x < 0 && gpoints[index][1].x <= 0) {
         gpoints[index].erase(gpoints[index].begin());
     }

@@ -11,7 +11,7 @@ public:
     ~UtilizationWorker() override;
 
     void work() override;
-    void deleteSuperfluousPoints(uint index);
+    void deleteSuperfluousPoints(int index);
     virtual void receiveData() = 0;
 
 public:

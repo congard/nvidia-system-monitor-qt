@@ -13,9 +13,9 @@ constant(length);
 
 QVarLengthArray<QString> SettingsManager::m_gpuNames;
 QVarLengthArray<QColor> SettingsManager::m_gpuColors;
-uint SettingsManager::m_updateDelay;
-uint SettingsManager::m_graphLength;
-uint SettingsManager::m_gpuCount;
+int SettingsManager::m_updateDelay;
+int SettingsManager::m_graphLength;
+int SettingsManager::m_gpuCount;
 
 void SettingsManager::init() {
     NVSMIParser::init();
@@ -28,8 +28,8 @@ void SettingsManager::load() {
 
     QSettings settings(NVSM_SETTINGS);
 
-    m_updateDelay = settings.value(updateDelay, 2000).toUInt();
-    m_graphLength = settings.value(length, 60000).toUInt();
+    m_updateDelay = settings.value(updateDelay, 2000).toInt();
+    m_graphLength = settings.value(length, 60000).toInt();
 
     // load gpu colors
     {
@@ -37,7 +37,7 @@ void SettingsManager::load() {
 
         m_gpuColors.resize(array.size());
 
-        for (uint i = 0; i < array.size(); i++) {
+        for (int i = 0; i < array.size(); i++) {
             m_gpuColors[i] = QColor(array[i].toString());
         }
     }
@@ -56,7 +56,7 @@ void SettingsManager::load() {
             {32, 32, 32}
         };
 
-        for (uint i = gpuColorsSize; i < m_gpuCount; i++) {
+        for (int i = gpuColorsSize; i < m_gpuCount; i++) {
             m_gpuColors[i] = defaultGPUColors[i % 8];
         }
     }
@@ -82,15 +82,15 @@ void SettingsManager::setGPUColors(const QVarLengthArray<QColor> &gpuColors) {
     m_gpuColors = gpuColors;
 }
 
-void SettingsManager::setUpdateDelay(uint updateDelay) {
+void SettingsManager::setUpdateDelay(int updateDelay) {
     m_updateDelay = updateDelay;
 }
 
-void SettingsManager::setGraphLength(uint graphLength) {
+void SettingsManager::setGraphLength(int graphLength) {
     m_graphLength = graphLength;
 }
 
-void SettingsManager::setGPUColor(uint index, const QColor &color) {
+void SettingsManager::setGPUColor(int index, const QColor &color) {
     m_gpuColors[index] = color;
 }
 
@@ -102,22 +102,22 @@ const QVarLengthArray<QColor>& SettingsManager::getGPUColors() {
     return m_gpuColors;
 }
 
-const QString& SettingsManager::getGPUName(uint index) {
+const QString& SettingsManager::getGPUName(int index) {
     return m_gpuNames[index];
 }
 
-const QColor& SettingsManager::getGPUColor(uint index) {
+const QColor& SettingsManager::getGPUColor(int index) {
     return m_gpuColors[index];
 }
 
-uint SettingsManager::getUpdateDelay() {
+int SettingsManager::getUpdateDelay() {
     return m_updateDelay;
 }
 
-uint SettingsManager::getGraphLength() {
+int SettingsManager::getGraphLength() {
     return m_graphLength;
 }
 
-uint SettingsManager::getGPUCount() {
+int SettingsManager::getGPUCount() {
     return m_gpuCount;
 }

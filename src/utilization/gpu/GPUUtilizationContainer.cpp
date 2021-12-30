@@ -40,8 +40,8 @@ void GPUUtilizationContainer::onDataUpdated() {
     for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
         const auto &data = utilizationWidget->worker->udata[i];
 
-        auto infoLabel = [&](int gpuIndex, auto t) {
-            return findChild<QLabel*>(getInfoLabelName(gpuIndex, t));
+        auto infoLabel = [&](int gpuIndex, int index) {
+            return findChild<QLabel*>(getInfoLabelName(gpuIndex, index));
         };
 
         infoLabel(i, 0)->setText(QString::asprintf("Utilization: %i%% (%i%% / %i%% / %i%%)",

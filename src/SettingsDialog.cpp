@@ -12,7 +12,7 @@
 inline constexpr auto graphLengthName = "graphLength";
 inline constexpr auto graphUpdateFrequencyName = "graphUpdateFrequency";
 
-inline QString getColorButtonName(uint gpuIndex) {
+inline QString getColorButtonName(int gpuIndex) {
     return "colorButton_" + QString::number(gpuIndex);
 }
 
@@ -45,7 +45,7 @@ SettingsDialog::SettingsDialog() {
 
     layout->addWidget(new QLabel("<br><b>Colors</b>"));
 
-    for (uint i = 0; i < SettingsManager::getGPUCount(); i++) {
+    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
         auto colorButton = new SelectColorButton(SettingsManager::getGPUColor(i));
         colorButton->setObjectName(getColorButtonName(i));
 
@@ -58,11 +58,11 @@ SettingsDialog::SettingsDialog() {
 }
 
 void SettingsDialog::closeEvent(QCloseEvent *event) {
-    SettingsManager::setGraphLength(findChild<QSpinBox *>(graphLengthName)->value());
-    SettingsManager::setUpdateDelay(findChild<QSpinBox *>(graphUpdateFrequencyName)->value());
+    SettingsManager::setGraphLength(findChild<QSpinBox*>(graphLengthName)->value());
+    SettingsManager::setUpdateDelay(findChild<QSpinBox*>(graphUpdateFrequencyName)->value());
 
-    for (uint i = 0; i < SettingsManager::getGPUCount(); i++) {
-        SettingsManager::setGPUColor(i, findChild<SelectColorButton *>(getColorButtonName(i))->getColor());
+    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+        SettingsManager::setGPUColor(i, findChild<SelectColorButton*>(getColorButtonName(i))->getColor());
     }
 
     SettingsManager::save();
