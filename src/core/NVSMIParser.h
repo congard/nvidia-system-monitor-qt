@@ -9,6 +9,8 @@
 #include "utilization/memory/MemoryData.h"
 #include "power/PowerInfo.h"
 
+// TODO: merge NVSMIParser with InfoProvider
+
 class NVSMIParser {
 public:
     constexpr static int INT_NONE = INT32_MIN;
@@ -25,6 +27,13 @@ public:
 
 private:
     static QRegularExpression processListRegex;
+
+    static QString m_infoQueryCmd;
+
+    // indexes
+    static int m_tempGpu;
+    static int m_tempMem;
+    static int m_power;
 };
 
 #endif //QNVSM_NVSMIPARSER_H

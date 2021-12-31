@@ -45,6 +45,10 @@ constant(Command,
 }
 
 QRegularExpression NVSMIParser::processListRegex;
+QString NVSMIParser::m_infoQueryCmd;
+int NVSMIParser::m_tempGpu {INT_NONE};
+int NVSMIParser::m_tempMem {INT_NONE};
+int NVSMIParser::m_power {INT_NONE};
 
 inline QString repeatString(const QString &str, int times) {
     QString result;
@@ -76,6 +80,23 @@ void NVSMIParser::init() {
             spacer R"(([^ \t\n]+))"; // process name
 
     processListRegex.setPattern(processListPattern);
+
+    auto queryHelp = exec("nvidia-smi --help-query-gpu");
+    const char *options[] = {"temperature.gpu", "temperature.memory", "power.draw"};
+    int *indexes[] = {&m_tempGpu, &m_tempMem, &m_power};
+    int index = 0;
+    QString availableOptions;
+
+    for (int i = 0; i < sizeof(options) / sizeof(options[0]); ++i) {
+        if (queryHelp.contains(options[i])) {
+            *indexes[i] = index;
+            availableOptions.append(options[i]);
+            availableOptions.append(',');
+            ++index;
+        }
+    }
+
+    m_infoQueryCmd = QString::asprintf("nvidia-smi --query-gpu=%s --format=csv,noheader,nounits", qPrintable(availableOptions));
 }
 
 QVector<ProcessInfo> NVSMIParser::getProcesses() {
@@ -131,15 +152,13 @@ QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
 QVarLengthArray<PowerInfo> NVSMIParser::getPowerInfo() {
     QVarLengthArray<PowerInfo> result(SettingsManager::getGPUCount());
 
-    // 123, 456, 78.7
-    auto cmd = "nvidia-smi --query-gpu=temperature.gpu,temperature.memory,power.draw --format=csv,noheader,nounits";
     int attempt = 0;
-    QString data = exec(cmd);
+    QString data = exec(m_infoQueryCmd);
 
     // fix "[Unknown Error]" for power output
     while (data.contains('[') && attempt < 3) {
         usleep(50000);
-        data = exec(cmd);
+        data = exec(m_infoQueryCmd);
         ++attempt;
     }
 
@@ -150,13 +169,15 @@ QVarLengthArray<PowerInfo> NVSMIParser::getPowerInfo() {
 
         bool ok;
 
-        int val = QString(line[0]).toInt(&ok);
+        int val = QString(line[m_tempGpu]).toInt(&ok);
         result[i].gpuTemp = ok ? val : NVSMIParser::INT_NONE;
 
-        val = QString(line[1]).toInt(&ok);
-        result[i].memTemp = ok ? val : NVSMIParser::INT_NONE;
+        if (m_tempMem != INT_NONE) {
+            val = QString(line[m_tempMem]).toInt(&ok);
+            result[i].memTemp = ok ? val : NVSMIParser::INT_NONE;
+        }
 
-        float power = QString(line[2]).toFloat(&ok);
+        float power = QString(line[m_power]).toFloat(&ok);
         result[i].power = ok ? power : NAN;
     }
 
