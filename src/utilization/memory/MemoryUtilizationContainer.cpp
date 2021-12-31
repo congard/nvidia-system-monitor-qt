@@ -6,7 +6,7 @@
 #include "MemoryUtilizationWidget.h"
 
 #include "core/SettingsManager.h"
-#include "power/PowerProvider.h"
+#include "core/InfoProvider.h"
 
 MemoryUtilizationContainer::MemoryUtilizationContainer() {
     utilizationWidget = new MemoryUtilizationWidget();
@@ -47,8 +47,8 @@ void MemoryUtilizationContainer::onDataUpdated() {
 
         auto label2 = QString::asprintf("Used: %i MiB", memoryData.used);
 
-        if (PowerProvider::isMemTempSupported(i)) {
-            label2.append(QString::asprintf("\nTemperature: %i °C", PowerProvider::getMemTemp(i)));
+        if (InfoProvider::isMemTempSupported(i)) {
+            label2.append(QString::asprintf("\nTemperature: %i °C", InfoProvider::getMemTemp(i)));
         }
 
         infoLabel(i, 2)->setText(label2);

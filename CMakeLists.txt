@@ -62,9 +62,8 @@ set(PROJECT_SOURCES
         src/utilization/memory/MemoryUtilizationWidget.cpp src/utilization/memory/MemoryUtilizationWidget.h
         src/utilization/gpu/GPUUtilizationContainer.cpp src/utilization/gpu/GPUUtilizationContainer.h
         src/utilization/memory/MemoryUtilizationContainer.cpp src/utilization/memory/MemoryUtilizationContainer.h
-        src/power/PowerWorker.cpp src/power/PowerWorker.h
-        src/power/PowerProvider.cpp src/power/PowerProvider.h
-        src/power/PowerInfo.h)
+        src/core/InfoProvider.cpp src/core/InfoProvider.h
+        src/core/GPUInfo.h)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(qnvsm ${PROJECT_SOURCES})

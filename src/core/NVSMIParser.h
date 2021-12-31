@@ -7,7 +7,7 @@
 
 #include "processes/ProcessInfo.h"
 #include "utilization/memory/MemoryData.h"
-#include "power/PowerInfo.h"
+#include "GPUInfo.h"
 
 // TODO: merge NVSMIParser with InfoProvider
 
@@ -21,7 +21,7 @@ public:
     static QVector<ProcessInfo> getProcesses();
     static QVarLengthArray<int> getGPUUtilization();
     static QVarLengthArray<MemoryData> getMemoryUtilization();
-    static QVarLengthArray<PowerInfo> getPowerInfo();
+    static QVarLengthArray<GPUInfo> getPowerInfo();
     static QVarLengthArray<QString> getGPUNames();
     static int getGPUCount();
 

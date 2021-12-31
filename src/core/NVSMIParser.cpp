@@ -149,8 +149,8 @@ QVarLengthArray<MemoryData> NVSMIParser::getMemoryUtilization() {
     return result;
 }
 
-QVarLengthArray<PowerInfo> NVSMIParser::getPowerInfo() {
-    QVarLengthArray<PowerInfo> result(SettingsManager::getGPUCount());
+QVarLengthArray<GPUInfo> NVSMIParser::getPowerInfo() {
+    QVarLengthArray<GPUInfo> result(SettingsManager::getGPUCount());
 
     int attempt = 0;
     QString data = exec(m_infoQueryCmd);

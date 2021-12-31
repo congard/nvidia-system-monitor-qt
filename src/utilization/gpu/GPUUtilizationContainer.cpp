@@ -5,7 +5,7 @@
 #include "GPUUtilizationWidget.h"
 
 #include "core/SettingsManager.h"
-#include "power/PowerProvider.h"
+#include "core/InfoProvider.h"
 
 #define temp 1
 #define power 2
@@ -20,11 +20,11 @@ GPUUtilizationContainer::GPUUtilizationContainer() {
         auto infoLayout = new QHBoxLayout();
         infoLayout->addWidget(getInfoLabel(i, UtInfoLabelId));
 
-        if (PowerProvider::isGPUTempSupported(i)) {
+        if (InfoProvider::isGPUTempSupported(i)) {
             infoLayout->addWidget(getInfoLabel(i, temp));
         }
 
-        if (PowerProvider::isPowerSupported(i)) {
+        if (InfoProvider::isPowerSupported(i)) {
             infoLayout->addWidget(getInfoLabel(i, power));
         }
 
@@ -48,11 +48,11 @@ void GPUUtilizationContainer::onDataUpdated() {
                                                    data.level, data.avgLevel, data.minLevel, data.maxLevel));
 
         if (auto label = infoLabel(i, temp); label) {
-            label->setText(QString::asprintf("Temperature: %i °C", PowerProvider::getGPUTemp(i)));
+            label->setText(QString::asprintf("Temperature: %i °C", InfoProvider::getGPUTemp(i)));
         }
 
         if (auto label = infoLabel(i, power); label) {
-            infoLabel(i, power)->setText(QString::asprintf("Power: %.2f W", PowerProvider::getPower(i)));
+            infoLabel(i, power)->setText(QString::asprintf("Power: %.2f W", InfoProvider::getPower(i)));
         }
     }
 
