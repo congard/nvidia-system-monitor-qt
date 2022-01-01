@@ -27,6 +27,14 @@ bool InfoProvider::isMemTempSupported(int id) {
     return m_info[id].memTemp != NVSMIParser::INT_NONE;
 }
 
+bool InfoProvider::isGPUFreqSupported(int id) {
+    return m_info[id].gpuFreq != NVSMIParser::INT_NONE;
+}
+
+bool InfoProvider::isMemFreqSupported(int id) {
+    return m_info[id].memFreq != NVSMIParser::INT_NONE;
+}
+
 bool InfoProvider::isPowerSupported(int id) {
     return !std::isnan(m_info[id].power);
 }
@@ -37,6 +45,14 @@ int InfoProvider::getGPUTemp(int id) {
 
 int InfoProvider::getMemTemp(int id) {
     return m_info[id].memTemp;
+}
+
+int InfoProvider::getGPUFreq(int id) {
+    return m_info[id].gpuFreq;
+}
+
+int InfoProvider::getMemFreq(int id) {
+    return m_info[id].memFreq;
 }
 
 float InfoProvider::getPower(int id) {

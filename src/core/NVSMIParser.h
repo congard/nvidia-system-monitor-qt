@@ -33,6 +33,8 @@ private:
     // indexes
     static int m_tempGpu;
     static int m_tempMem;
+    static int m_freqGpu;
+    static int m_freqMem;
     static int m_power;
 };
 

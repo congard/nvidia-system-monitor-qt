@@ -1,24 +1,50 @@
 #include "MemoryUtilizationContainer.h"
 
-#include <QHBoxLayout>
+#include <QGridLayout>
 
 #include "MemoryUtilizationWorker.h"
 #include "MemoryUtilizationWidget.h"
 
 #include "core/SettingsManager.h"
 #include "core/InfoProvider.h"
+#include "utilization/Grid.h"
+
+enum {
+    ioUtilization = 1,
+    totalMem,
+    freeMem,
+    usedMem,
+    memTemp,
+    memFreq
+};
 
 MemoryUtilizationContainer::MemoryUtilizationContainer() {
     utilizationWidget = new MemoryUtilizationWidget();
     build("Memory Utilization");
 
+    Grid grid(2);
+
     for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
         addInfoTitleLayout(i);
 
-        auto infoLayout = new QHBoxLayout();
-        infoLayout->addWidget(getInfoLabel(i, 0));
-        infoLayout->addWidget(getInfoLabel(i, 1));
-        infoLayout->addWidget(getInfoLabel(i, 2));
+        auto infoLayout = new QGridLayout();
+        infoLayout->setSpacing(0);
+
+        auto addInfoLabel = [&](int id) {
+            infoLayout->addWidget(getInfoLabel(i, id), grid.row(), grid.column());
+            ++grid;
+        };
+
+        addInfoLabel(UtInfoLabelId);
+        addInfoLabel(ioUtilization);
+        addInfoLabel(totalMem);
+        addInfoLabel(freeMem);
+        addInfoLabel(usedMem);
+
+        if (InfoProvider::isMemTempSupported(i))
+            addInfoLabel(memTemp);
+
+        addInfoLabel(memFreq);
 
         getLayout()->addLayout(infoLayout);
     }
@@ -32,26 +58,29 @@ void MemoryUtilizationContainer::onDataUpdated() {
         const auto &memoryData =
                 reinterpret_cast<MemoryUtilizationWorker*>(utilizationWidget->worker)->memoryData[i];
 
-        auto infoLabel = [&](int gpuIndex, int index) {
-            return findChild<QLabel *>(getInfoLabelName(gpuIndex, index));
+        auto infoLabel = [&](int index) {
+            return findChild<QLabel*>(getInfoLabelName(i, index));
         };
 
-        infoLabel(i, UtInfoLabelId)->setText(
-            QString::asprintf("Utilization: %i%% (%i%% / %i%% / %i%%)\nIO Utilization: %i%%",
-                utilizationData.level, utilizationData.avgLevel, utilizationData.minLevel, utilizationData.maxLevel,
-                memoryData.ioUtilization
+        infoLabel(UtInfoLabelId)->setText(
+            QString::asprintf("Utilization: %i%% (%i%% / %i%% / %i%%)",
+                utilizationData.level, utilizationData.avgLevel, utilizationData.minLevel, utilizationData.maxLevel
             )
         );
 
-        infoLabel(i, 1)->setText(QString::asprintf("Total: %i MiB\nFree: %i MiB", memoryData.total, memoryData.free));
+        infoLabel(ioUtilization)->setText(QString::asprintf("IO Utilization: %i%%", memoryData.ioUtilization));
 
-        auto label2 = QString::asprintf("Used: %i MiB", memoryData.used);
+        infoLabel(totalMem)->setText(QString::asprintf("Total: %i MiB", memoryData.total));
+        infoLabel(freeMem)->setText(QString::asprintf("Free: %i MiB", memoryData.free));
+        infoLabel(usedMem)->setText(QString::asprintf("Used: %i MiB", memoryData.used));
 
         if (InfoProvider::isMemTempSupported(i)) {
-            label2.append(QString::asprintf("\nTemperature: %i °C", InfoProvider::getMemTemp(i)));
+            infoLabel(memTemp)->setText(QString::asprintf("Temperature: %i °C", InfoProvider::getMemTemp(i)));
         }
 
-        infoLabel(i, 2)->setText(label2);
+        if (InfoProvider::isMemFreqSupported(i)) {
+            infoLabel(memFreq)->setText(QString::asprintf("Frequency: %i MHz", InfoProvider::getMemFreq(i)));
+        }
     }
 
     utilizationWidget->update();

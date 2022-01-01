@@ -1,32 +1,46 @@
 #include "GPUUtilizationContainer.h"
 
-#include <QHBoxLayout>
+#include <QGridLayout>
 
 #include "GPUUtilizationWidget.h"
 
 #include "core/SettingsManager.h"
 #include "core/InfoProvider.h"
+#include "utilization/Grid.h"
 
-#define temp 1
-#define power 2
+enum {
+    power = 1,
+    temp,
+    freq
+};
 
 GPUUtilizationContainer::GPUUtilizationContainer() {
     utilizationWidget = new GPUUtilizationWidget();
     build("GPU Utilization");
 
+    Grid grid(2);
+
     for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
         addInfoTitleLayout(i);
 
-        auto infoLayout = new QHBoxLayout();
-        infoLayout->addWidget(getInfoLabel(i, UtInfoLabelId));
+        auto infoLayout = new QGridLayout();
+        infoLayout->setSpacing(0);
 
-        if (InfoProvider::isGPUTempSupported(i)) {
-            infoLayout->addWidget(getInfoLabel(i, temp));
-        }
+        auto addInfoLabel = [&](int id) {
+            infoLayout->addWidget(getInfoLabel(i, id), grid.row(), grid.column());
+            ++grid;
+        };
 
-        if (InfoProvider::isPowerSupported(i)) {
-            infoLayout->addWidget(getInfoLabel(i, power));
-        }
+        addInfoLabel(UtInfoLabelId);
+
+        if (InfoProvider::isPowerSupported(i))
+            addInfoLabel(power);
+
+        if (InfoProvider::isGPUTempSupported(i))
+            addInfoLabel(temp);
+
+        if (InfoProvider::isGPUFreqSupported(i))
+            addInfoLabel(freq);
 
         getLayout()->addLayout(infoLayout);
     }
@@ -40,19 +54,23 @@ void GPUUtilizationContainer::onDataUpdated() {
     for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
         const auto &data = utilizationWidget->worker->udata[i];
 
-        auto infoLabel = [&](int gpuIndex, int index) {
-            return findChild<QLabel*>(getInfoLabelName(gpuIndex, index));
+        auto infoLabel = [&](int index) {
+            return findChild<QLabel*>(getInfoLabelName(i, index));
         };
 
-        infoLabel(i, 0)->setText(QString::asprintf("Utilization: %i%% (%i%% / %i%% / %i%%)",
-                                                   data.level, data.avgLevel, data.minLevel, data.maxLevel));
+        infoLabel(0)->setText(QString::asprintf("Utilization: %i%% (%i%% / %i%% / %i%%)",
+                                                data.level, data.avgLevel, data.minLevel, data.maxLevel));
 
-        if (auto label = infoLabel(i, temp); label) {
-            label->setText(QString::asprintf("Temperature: %i °C", InfoProvider::getGPUTemp(i)));
+        if (InfoProvider::isGPUTempSupported(i)) {
+            infoLabel(temp)->setText(QString::asprintf("Temperature: %i °C", InfoProvider::getGPUTemp(i)));
         }
 
-        if (auto label = infoLabel(i, power); label) {
-            infoLabel(i, power)->setText(QString::asprintf("Power: %.2f W", InfoProvider::getPower(i)));
+        if (InfoProvider::isPowerSupported(i)) {
+            infoLabel(power)->setText(QString::asprintf("Power: %.2f W", InfoProvider::getPower(i)));
+        }
+
+        if (InfoProvider::isGPUFreqSupported(i)) {
+            infoLabel(freq)->setText(QString::asprintf("Frequency: %i MHz", InfoProvider::getGPUFreq(i)));
         }
     }
 

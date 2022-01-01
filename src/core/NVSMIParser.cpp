@@ -48,6 +48,8 @@ QRegularExpression NVSMIParser::processListRegex;
 QString NVSMIParser::m_infoQueryCmd;
 int NVSMIParser::m_tempGpu {INT_NONE};
 int NVSMIParser::m_tempMem {INT_NONE};
+int NVSMIParser::m_freqGpu {INT_NONE};
+int NVSMIParser::m_freqMem {INT_NONE};
 int NVSMIParser::m_power {INT_NONE};
 
 inline QString repeatString(const QString &str, int times) {
@@ -82,8 +84,8 @@ void NVSMIParser::init() {
     processListRegex.setPattern(processListPattern);
 
     auto queryHelp = exec("nvidia-smi --help-query-gpu");
-    const char *options[] = {"temperature.gpu", "temperature.memory", "power.draw"};
-    int *indexes[] = {&m_tempGpu, &m_tempMem, &m_power};
+    const char *options[] = {"temperature.gpu", "temperature.memory", "clocks.gr", "clocks.mem", "power.draw"};
+    int *indexes[] = {&m_tempGpu, &m_tempMem, &m_freqGpu, &m_freqMem, &m_power};
     int index = 0;
     QString availableOptions;
 
@@ -167,18 +169,27 @@ QVarLengthArray<GPUInfo> NVSMIParser::getPowerInfo() {
     for (int i = 0; i < result.size(); ++i) {
         auto line = lines[i].split(", ");
 
-        bool ok;
+        auto parseIndex = [&](int index, auto &writeTo) {
+            using T = remove_reference_t<decltype(writeTo)>;
 
-        int val = QString(line[m_tempGpu]).toInt(&ok);
-        result[i].gpuTemp = ok ? val : NVSMIParser::INT_NONE;
+            if (index != INT_NONE) {
+                bool ok;
 
-        if (m_tempMem != INT_NONE) {
-            val = QString(line[m_tempMem]).toInt(&ok);
-            result[i].memTemp = ok ? val : NVSMIParser::INT_NONE;
-        }
+                if constexpr (is_same_v<T, int>) {
+                    auto val = QString(line[index]).toInt(&ok);
+                    writeTo = ok ? val : NVSMIParser::INT_NONE;
+                } else if constexpr(is_same_v<T, float>) {
+                    auto val = QString(line[index]).toFloat(&ok);
+                    writeTo = ok ? val : NAN;
+                }
+            }
+        };
 
-        float power = QString(line[m_power]).toFloat(&ok);
-        result[i].power = ok ? power : NAN;
+        parseIndex(m_tempGpu, result[i].gpuTemp);
+        parseIndex(m_tempMem, result[i].memTemp);
+        parseIndex(m_freqGpu, result[i].gpuFreq);
+        parseIndex(m_freqMem, result[i].memFreq);
+        parseIndex(m_power, result[i].power);
     }
 
     return result;

@@ -63,7 +63,8 @@ set(PROJECT_SOURCES
         src/utilization/gpu/GPUUtilizationContainer.cpp src/utilization/gpu/GPUUtilizationContainer.h
         src/utilization/memory/MemoryUtilizationContainer.cpp src/utilization/memory/MemoryUtilizationContainer.h
         src/core/InfoProvider.cpp src/core/InfoProvider.h
-        src/core/GPUInfo.h)
+        src/core/GPUInfo.h
+        src/utilization/Grid.h)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(qnvsm ${PROJECT_SOURCES})

@@ -25,10 +25,14 @@ public:
 
     static bool isGPUTempSupported(int id);
     static bool isMemTempSupported(int id);
+    static bool isGPUFreqSupported(int id);
+    static bool isMemFreqSupported(int id);
     static bool isPowerSupported(int id);
 
     static int getGPUTemp(int id);
     static int getMemTemp(int id);
+    static int getGPUFreq(int id);
+    static int getMemFreq(int id);
     static float getPower(int id);
 
     static Worker* getWorker();
