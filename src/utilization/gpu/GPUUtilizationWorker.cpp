@@ -4,6 +4,6 @@
 
 void GPUUtilizationWorker::receiveData() {
     for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
-        udata[i].level = InfoProvider::getGPUUtil(i);
+        utilizationData[i].level = InfoProvider::getGPUUtil(i);
     }
 }

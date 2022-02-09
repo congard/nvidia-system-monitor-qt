@@ -8,15 +8,13 @@
 class UtilizationWorker: public Worker {
 public:
     UtilizationWorker();
-    ~UtilizationWorker() override;
 
     void work() override;
-    void deleteSuperfluousPoints(int index);
     virtual void receiveData() = 0;
 
 public:
-    std::vector<Point> *gpoints; // graph points
-    UtilizationData *udata;
+    QVarLengthArray<std::vector<Point>> graphPoints;
+    QVarLengthArray<UtilizationData> utilizationData;
 
 private:
     long lastTime = 0;

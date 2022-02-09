@@ -213,7 +213,7 @@ void MainWindow::settings() {
             QMutexLocker locker(&worker->mutex);
 
             for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
-                worker->gpoints[i] = {};
+                worker->graphPoints[i] = {};
             }
         };
 
