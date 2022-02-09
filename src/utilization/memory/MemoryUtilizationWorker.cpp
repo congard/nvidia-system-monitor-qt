@@ -1,10 +1,9 @@
 #include "MemoryUtilizationWorker.h"
 
-#include "core/NVSMIParser.h"
+#include "core/InfoProvider.h"
 
 void MemoryUtilizationWorker::receiveData() {
-    memoryData = NVSMIParser::getMemoryUtilization();
-
-    for (int i = 0; i < memoryData.size(); i++)
-        udata[i].level = memoryData[i].used * 100 / memoryData[i].total;
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
+        udata[i].level = InfoProvider::getMemUsed(i) * 100 / InfoProvider::getMemTotal(i);
+    }
 }

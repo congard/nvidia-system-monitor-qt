@@ -20,7 +20,7 @@ GPUUtilizationContainer::GPUUtilizationContainer() {
 
     Grid grid(2);
 
-    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
         addInfoTitleLayout(i);
 
         auto infoLayout = new QGridLayout();
@@ -51,7 +51,7 @@ GPUUtilizationContainer::GPUUtilizationContainer() {
 }
 
 void GPUUtilizationContainer::onDataUpdated() {
-    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
         const auto &data = utilizationWidget->worker->udata[i];
 
         auto infoLabel = [&](int index) {

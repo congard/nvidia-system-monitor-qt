@@ -1,13 +1,14 @@
 #include "UtilizationWorker.h"
 
 #include "core/SettingsManager.h"
+#include "core/InfoProvider.h"
 #include "core/Utils.h"
 
 using namespace Utils;
 
 UtilizationWorker::UtilizationWorker() {
-    gpoints = new std::vector<Point>[SettingsManager::getGPUCount()];
-    udata = new UtilizationData[SettingsManager::getGPUCount()];
+    gpoints = new std::vector<Point>[InfoProvider::getGPUCount()];
+    udata = new UtilizationData[InfoProvider::getGPUCount()];
 }
 
 UtilizationWorker::~UtilizationWorker() {
@@ -16,12 +17,12 @@ UtilizationWorker::~UtilizationWorker() {
 }
 
 void UtilizationWorker::work() {
+    // TODO: move this code directly to UtilizationWidget?
+
     mutex.lock();
 
     if (lastTime == 0) {
         lastTime = getTime();
-        mutex.unlock();
-        return;
     }
 
     receiveData();
@@ -30,7 +31,7 @@ void UtilizationWorker::work() {
     auto step = (float)(getTime() - lastTime) / (float) SettingsManager::getUpdateDelay() * graphStep;
 
     // g means gpu
-    for (int g = 0; g < SettingsManager::getGPUCount(); g++) {
+    for (int g = 0; g < InfoProvider::getGPUCount(); g++) {
         for (Point &i : gpoints[g])
             i.x -= step;
 

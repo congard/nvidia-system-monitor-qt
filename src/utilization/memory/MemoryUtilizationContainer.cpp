@@ -24,7 +24,7 @@ MemoryUtilizationContainer::MemoryUtilizationContainer() {
 
     Grid grid(2);
 
-    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
         addInfoTitleLayout(i);
 
         auto infoLayout = new QGridLayout();
@@ -53,10 +53,8 @@ MemoryUtilizationContainer::MemoryUtilizationContainer() {
 }
 
 void MemoryUtilizationContainer::onDataUpdated() {
-    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
         const auto &utilizationData = utilizationWidget->worker->udata[i];
-        const auto &memoryData =
-                reinterpret_cast<MemoryUtilizationWorker*>(utilizationWidget->worker)->memoryData[i];
 
         auto infoLabel = [&](int index) {
             return findChild<QLabel*>(getInfoLabelName(i, index));
@@ -68,11 +66,11 @@ void MemoryUtilizationContainer::onDataUpdated() {
             )
         );
 
-        infoLabel(ioUtilization)->setText(QString::asprintf("IO Utilization: %i%%", memoryData.ioUtilization));
+        infoLabel(ioUtilization)->setText(QString::asprintf("IO Utilization: %i%%", InfoProvider::getMemUtil(i)));
 
-        infoLabel(totalMem)->setText(QString::asprintf("Total: %i MiB", memoryData.total));
-        infoLabel(freeMem)->setText(QString::asprintf("Free: %i MiB", memoryData.free));
-        infoLabel(usedMem)->setText(QString::asprintf("Used: %i MiB", memoryData.used));
+        infoLabel(totalMem)->setText(QString::asprintf("Total: %i MiB", InfoProvider::getMemTotal(i)));
+        infoLabel(freeMem)->setText(QString::asprintf("Free: %i MiB", InfoProvider::getMemFree(i)));
+        infoLabel(usedMem)->setText(QString::asprintf("Used: %i MiB", InfoProvider::getMemUsed(i)));
 
         if (InfoProvider::isMemTempSupported(i)) {
             infoLabel(memTemp)->setText(QString::asprintf("Temperature: %i °C", InfoProvider::getMemTemp(i)));

@@ -7,6 +7,7 @@
 #include <QCloseEvent>
 
 #include "core/SettingsManager.h"
+#include "core/InfoProvider.h"
 #include "SelectColorButton.h"
 
 inline constexpr auto graphLengthName = "graphLength";
@@ -45,12 +46,12 @@ SettingsDialog::SettingsDialog() {
 
     layout->addWidget(new QLabel("<br><b>Colors</b>"));
 
-    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
         auto colorButton = new SelectColorButton(SettingsManager::getGPUColor(i));
         colorButton->setObjectName(getColorButtonName(i));
 
         auto row = layout->rowCount();
-        layout->addWidget(new QLabel(SettingsManager::getGPUName(i)), row, 0);
+        layout->addWidget(new QLabel(InfoProvider::getGPUName(i)), row, 0);
         layout->addWidget(colorButton, row, 1);
     }
 
@@ -61,7 +62,7 @@ void SettingsDialog::closeEvent(QCloseEvent *event) {
     SettingsManager::setGraphLength(findChild<QSpinBox*>(graphLengthName)->value());
     SettingsManager::setUpdateDelay(findChild<QSpinBox*>(graphUpdateFrequencyName)->value());
 
-    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
         SettingsManager::setGPUColor(i, findChild<SelectColorButton*>(getColorButtonName(i))->getColor());
     }
 

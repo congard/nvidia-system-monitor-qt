@@ -1,10 +1,9 @@
 #include "GPUUtilizationWorker.h"
 
-#include "core/NVSMIParser.h"
+#include "core/InfoProvider.h"
 
 void GPUUtilizationWorker::receiveData() {
-    auto gpuUtilization = NVSMIParser::getGPUUtilization();
-
-    for (int i = 0; i < gpuUtilization.size(); i++)
-        udata[i].level = gpuUtilization[i];
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
+        udata[i].level = InfoProvider::getGPUUtil(i);
+    }
 }

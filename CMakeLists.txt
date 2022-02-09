@@ -45,14 +45,13 @@ set(PROJECT_SOURCES
         src/core/Utils.cpp src/core/Utils.h
         src/core/Worker.cpp src/core/Worker.h
         src/core/WorkerThread.cpp src/core/WorkerThread.h
-        src/core/NVSMIParser.cpp src/core/NVSMIParser.h
         src/core/SettingsManager.cpp src/core/SettingsManager.h
         src/processes/ProcessInfo.cpp src/processes/ProcessInfo.h
         src/processes/ProcessesWorker.cpp src/processes/ProcessesWorker.h
         src/processes/ProcessesView.cpp src/processes/ProcessesView.h
         src/utilization/Point.h src/utilization/Point.cpp
         src/utilization/CircleWidget.cpp src/utilization/CircleWidget.h
-        src/utilization/UtilizationData.h src/utilization/memory/MemoryData.h
+        src/utilization/UtilizationData.h
         src/utilization/UtilizationWorker.cpp src/utilization/UtilizationWorker.h
         src/utilization/UtilizationWidget.cpp src/utilization/UtilizationWidget.h
         src/utilization/UtilizationContainer.cpp src/utilization/UtilizationContainer.h
@@ -63,7 +62,6 @@ set(PROJECT_SOURCES
         src/utilization/gpu/GPUUtilizationContainer.cpp src/utilization/gpu/GPUUtilizationContainer.h
         src/utilization/memory/MemoryUtilizationContainer.cpp src/utilization/memory/MemoryUtilizationContainer.h
         src/core/InfoProvider.cpp src/core/InfoProvider.h
-        src/core/GPUInfo.h
         src/utilization/Grid.h)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

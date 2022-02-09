@@ -4,6 +4,7 @@
 #include <QPainterPath>
 
 #include "core/SettingsManager.h"
+#include "core/InfoProvider.h"
 
 UtilizationWidget::UtilizationWidget() {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -44,7 +45,7 @@ void UtilizationWidget::drawGraph() {
     QPen pen;
     pen.setWidth(2);
 
-    for (int g = 0; g < SettingsManager::getGPUCount(); g++) {
+    for (int g = 0; g < InfoProvider::getGPUCount(); g++) {
         color = SettingsManager::getGPUColor(g);
         pen.setColor(color);
         painter.setPen(pen);

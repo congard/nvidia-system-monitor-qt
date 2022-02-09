@@ -8,6 +8,7 @@
 
 #include "core/Utils.h"
 #include "core/SettingsManager.h"
+#include "core/InfoProvider.h"
 
 #include "CircleWidget.h"
 
@@ -57,7 +58,7 @@ void UtilizationContainer::updateData() {
     findChild<QLabel*>(graphStepName)->setText(QString::number(SettingsManager::getUpdateDelay() / 1000.0f) + " sec step");
     findChild<QLabel*>(graphTimeName)->setText(QString::number(SettingsManager::getGraphLength() / 1000.0f) + " sec");
 
-    for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
         findChild<CircleWidget*>(getGPUCircleWidgetName(i))->setColor(SettingsManager::getGPUColor(i));
     }
 }
@@ -73,7 +74,7 @@ bool UtilizationContainer::event(QEvent *event) {
         if (auto *child = childAt(helpEvent->pos()); child) {
             auto name = child->objectName();
 
-            for (int i = 0; i < SettingsManager::getGPUCount(); i++) {
+            for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
                 if (name == getInfoLabelName(i, UtInfoLabelId)) {
                     QToolTip::showText(helpEvent->globalPos(), "Utilization: current (average / min / max)");
                     return true;
@@ -92,7 +93,7 @@ bool UtilizationContainer::event(QEvent *event) {
 
 void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {
     auto gpuName = new QLabel();
-    gpuName->setText("<b>" + SettingsManager::getGPUName(gpuIndex) + "</b>");
+    gpuName->setText("<b>" + InfoProvider::getGPUName(gpuIndex) + "</b>");
 
     int fontHeight = gpuName->fontMetrics().height();
 
@@ -111,5 +112,5 @@ void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {
 }
 
 QVBoxLayout* UtilizationContainer::getLayout() {
-    return static_cast<QVBoxLayout *>(layout()); // static_cast because layout() is 100% QVBoxLayout
+    return static_cast<QVBoxLayout*>(layout()); // static_cast because layout() is 100% QVBoxLayout
 }

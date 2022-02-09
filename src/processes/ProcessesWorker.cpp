@@ -1,11 +1,11 @@
 #include "ProcessesWorker.h"
 
-#include "core/NVSMIParser.h"
+#include "core/InfoProvider.h"
 
 void ProcessesWorker::work() {
     {
         QMutexLocker locker(&mutex);
-        processes = NVSMIParser::getProcesses();
+        processes = InfoProvider::getProcesses(); // TODO: extra copy
     }
 
     dataUpdated();

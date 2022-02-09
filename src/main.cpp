@@ -30,12 +30,11 @@ void init() {
         }
     }
 
-    SettingsManager::init();
-    SettingsManager::load();
-
     InfoProvider::init();
 
-    cout << "GPU Count is " << SettingsManager::getGPUCount() << "\n";
+    SettingsManager::load();
+
+    cout << "GPU Count is " << InfoProvider::getGPUCount() << "\n";
 }
 
 int main(int argc, char** argv) {

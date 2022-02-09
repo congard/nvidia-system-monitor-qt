@@ -1,5 +1,5 @@
 #include "SettingsManager.h"
-#include "NVSMIParser.h"
+#include "InfoProvider.h"
 
 #include <QJsonArray>
 
@@ -11,17 +11,9 @@ constant(updateDelay);
 constant(length);
 }
 
-QVarLengthArray<QString> SettingsManager::m_gpuNames;
 QVarLengthArray<QColor> SettingsManager::m_gpuColors;
 int SettingsManager::m_updateDelay;
 int SettingsManager::m_graphLength;
-int SettingsManager::m_gpuCount;
-
-void SettingsManager::init() {
-    NVSMIParser::init();
-    m_gpuCount = NVSMIParser::getGPUCount();
-    m_gpuNames = NVSMIParser::getGPUNames();
-}
 
 void SettingsManager::load() {
     using namespace Constants;
@@ -30,6 +22,8 @@ void SettingsManager::load() {
 
     m_updateDelay = settings.value(updateDelay, 2000).toInt();
     m_graphLength = settings.value(length, 60000).toInt();
+
+    int gpuCount = InfoProvider::getGPUCount();
 
     // load gpu colors
     {
@@ -42,8 +36,8 @@ void SettingsManager::load() {
         }
     }
 
-    if (auto gpuColorsSize = m_gpuColors.size(); gpuColorsSize < m_gpuCount) {
-        m_gpuColors.resize(m_gpuCount);
+    if (auto gpuColorsSize = m_gpuColors.size(); gpuColorsSize < gpuCount) {
+        m_gpuColors.resize(gpuCount);
 
         QColor defaultGPUColors[8] = {
             {0, 255, 0},
@@ -56,7 +50,7 @@ void SettingsManager::load() {
             {32, 32, 32}
         };
 
-        for (int i = gpuColorsSize; i < m_gpuCount; i++) {
+        for (int i = gpuColorsSize; i < gpuCount; i++) {
             m_gpuColors[i] = defaultGPUColors[i % 8];
         }
     }
@@ -94,16 +88,8 @@ void SettingsManager::setGPUColor(int index, const QColor &color) {
     m_gpuColors[index] = color;
 }
 
-const QVarLengthArray<QString>& SettingsManager::getGPUNames() {
-    return m_gpuNames;
-}
-
 const QVarLengthArray<QColor>& SettingsManager::getGPUColors() {
     return m_gpuColors;
-}
-
-const QString& SettingsManager::getGPUName(int index) {
-    return m_gpuNames[index];
 }
 
 const QColor& SettingsManager::getGPUColor(int index) {
@@ -116,8 +102,4 @@ int SettingsManager::getUpdateDelay() {
 
 int SettingsManager::getGraphLength() {
     return m_graphLength;
-}
-
-int SettingsManager::getGPUCount() {
-    return m_gpuCount;
 }
