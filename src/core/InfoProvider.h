@@ -16,6 +16,7 @@ public:
     public:
         inline void work() override {
             InfoProvider::updateData();
+            dataUpdated();
         }
     };
 

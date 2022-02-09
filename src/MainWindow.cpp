@@ -36,6 +36,7 @@ constant MainWindow_utilizationSplitter = "MainWindow/utilizationSplitter";
 
 using namespace SessionSettings;
 
+constant processesViewName = "processesView";
 constant gpuUtilizationContainerName = "gpuUtilizationContainer";
 constant memoryUtilizationContainerName = "memoryUtilizationContainer";
 constant utilizationSplitterName = "utilizationSplitter";
@@ -65,6 +66,7 @@ MainWindow::MainWindow(QWidget*) {
 
     // tabs
     auto processes = new ProcessesView();
+    processes->setObjectName(processesViewName);
 
     auto gpuUtilizationContainer = new GPUUtilizationContainer();
     gpuUtilizationContainer->setObjectName(gpuUtilizationContainerName);
@@ -99,8 +101,8 @@ MainWindow::MainWindow(QWidget*) {
     setCentralWidget(window);
 
     // configure
-    connect(processes->worker,
-            &ProcessesWorker::dataUpdated, processes, &ProcessesView::onDataUpdated);
+    connect(InfoProvider::getWorker(),
+            &InfoProvider::Worker::dataUpdated, this, &MainWindow::onDataUpdated);
     connect(gpuUtilizationContainer->getWorker(),
             &GPUUtilizationWorker::dataUpdated, gpuUtilizationContainer, &GPUUtilizationContainer::onDataUpdated);
     connect(memoryUtilizationContainer->getWorker(),
@@ -108,9 +110,8 @@ MainWindow::MainWindow(QWidget*) {
 
     workerThread = new WorkerThread();
     workerThread->workers[0] = InfoProvider::getWorker();
-    workerThread->workers[1] = processes->worker;
-    workerThread->workers[2] = gpuUtilizationContainer->getWorker();
-    workerThread->workers[3] = memoryUtilizationContainer->getWorker();
+    workerThread->workers[1] = gpuUtilizationContainer->getWorker();
+    workerThread->workers[2] = memoryUtilizationContainer->getWorker();
     workerThread->start();
 
     // load MainWindow settings
@@ -172,6 +173,10 @@ void MainWindow::loadSettings() {
 
     restoreState(settings.value(MainWindow_windowState).toByteArray());
     findChild<QSplitter *>(utilizationSplitterName)->restoreState(settings.value(MainWindow_utilizationSplitter).toByteArray());
+}
+
+void MainWindow::onDataUpdated() {
+    findChild<ProcessesView*>(processesViewName)->onDataUpdated();
 }
 
 void MainWindow::quit() {

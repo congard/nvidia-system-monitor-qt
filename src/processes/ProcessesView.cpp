@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QMutex>
 
+#include "core/InfoProvider.h"
 #include "core/Utils.h"
 
 using namespace std;
@@ -27,8 +28,6 @@ enum {
 }
 
 ProcessesView::ProcessesView(QWidget *parent): QTreeView(parent) {
-    worker = new ProcessesWorker();
-
     auto *model = new QStandardItemModel();
 
     // Column titles
@@ -53,10 +52,6 @@ ProcessesView::ProcessesView(QWidget *parent): QTreeView(parent) {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setAutoScroll(false);
     setRootIsDecorated(false);
-}
-
-ProcessesView::~ProcessesView() {
-    delete worker;
 }
 
 void ProcessesView::mousePressEvent(QMouseEvent *event) {
@@ -91,36 +86,44 @@ inline QVariant convertToInt(const QString &str) {
 }
 
 void ProcessesView::onDataUpdated() {
-    QMutexLocker locker(&worker->mutex);
-
     // In order to avoid performance and other issues, sorting will be enabled after inserting
     // and updating the items in the tree: https://doc.qt.io/qt-5/qtreeview.html#sortingEnabled-prop
     setSortingEnabled(false);
+
+    const auto &processes = InfoProvider::getProcesses();
 
     // update existing processes list & remove finished processes
     // loop from more to less in order to delete rows
     for (int i = model()->rowCount() - 1; i >= 0; i--) {
         QString pid = model()->data(model()->index(i, NVSMColumns::PID)).toString();
-        int index = worker->processesIndexByPid(pid);
+
+        int index = -1;
+
+        for (int j = 0; j < processes.size(); ++j) {
+            if (processes[j].pid == pid) {
+                index = j;
+                break;
+            }
+        }
 
         if (index == -1) {
             model()->removeRow(i);
         } else {
-            const ProcessInfo &processList = worker->processes[index];
+            const ProcessInfo &processInfo = processes[index];
 
             // update what may change
-            updateItem(i, NVSMColumns::Type, processList.type);
-            updateItem(i, NVSMColumns::Sm, convertToInt(processList.sm));
-            updateItem(i, NVSMColumns::Mem, convertToInt(processList.mem));
-            updateItem(i, NVSMColumns::Enc, convertToInt(processList.enc));
-            updateItem(i, NVSMColumns::Dec, convertToInt(processList.dec));
-            updateItem(i, NVSMColumns::FbMem, convertToInt(processList.fbmem));
+            updateItem(i, NVSMColumns::Type, processInfo.type);
+            updateItem(i, NVSMColumns::Sm, convertToInt(processInfo.sm));
+            updateItem(i, NVSMColumns::Mem, convertToInt(processInfo.mem));
+            updateItem(i, NVSMColumns::Enc, convertToInt(processInfo.enc));
+            updateItem(i, NVSMColumns::Dec, convertToInt(processInfo.dec));
+            updateItem(i, NVSMColumns::FbMem, convertToInt(processInfo.fbmem));
         }
     }
 
     // add new processes to the list, if there are any
     int rowCount = model()->rowCount();
-    for (auto & process : worker->processes) {
+    for (auto &process : processes) {
         if (getRowIndexByPid(process.pid) == -1) {
             addItem(rowCount, NVSMColumns::Name, process.name);
             addItem(rowCount, NVSMColumns::Type, process.type);
@@ -158,7 +161,7 @@ void ProcessesView::killProcess() {
 }
 
 int ProcessesView::getRowIndexByPid(const QString &pid) {
-    for (size_t i = 0; i < model()->rowCount(); i++) {
+    for (int i = 0; i < model()->rowCount(); i++) {
         QString row_pid = model()->data(model()->index(i, NVSMColumns::PID)).toString();
 
         if (row_pid == pid) {
