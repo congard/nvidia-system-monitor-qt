@@ -16,7 +16,7 @@ public:
 
     void updateData();
 
-    UtilizationWorker* getWorker();
+    UtilizationWidget* getUtilizationWidget() const;
 
 protected:
     bool event(QEvent *event) override;

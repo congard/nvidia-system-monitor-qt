@@ -13,9 +13,6 @@
 
 #include "processes/ProcessesView.h"
 
-#include "utilization/gpu/GPUUtilizationWorker.h"
-#include "utilization/memory/MemoryUtilizationWorker.h"
-
 #include "utilization/gpu/GPUUtilizationContainer.h"
 #include "utilization/memory/MemoryUtilizationContainer.h"
 
@@ -103,15 +100,9 @@ MainWindow::MainWindow(QWidget*) {
     // configure
     connect(InfoProvider::getWorker(),
             &InfoProvider::Worker::dataUpdated, this, &MainWindow::onDataUpdated);
-    connect(gpuUtilizationContainer->getWorker(),
-            &GPUUtilizationWorker::dataUpdated, gpuUtilizationContainer, &GPUUtilizationContainer::onDataUpdated);
-    connect(memoryUtilizationContainer->getWorker(),
-            &MemoryUtilizationWorker::dataUpdated, memoryUtilizationContainer, &MemoryUtilizationContainer::onDataUpdated);
 
     workerThread = new WorkerThread();
     workerThread->workers[0] = InfoProvider::getWorker();
-    workerThread->workers[1] = gpuUtilizationContainer->getWorker();
-    workerThread->workers[2] = memoryUtilizationContainer->getWorker();
     workerThread->start();
 
     // load MainWindow settings
@@ -172,11 +163,14 @@ void MainWindow::loadSettings() {
     }
 
     restoreState(settings.value(MainWindow_windowState).toByteArray());
-    findChild<QSplitter *>(utilizationSplitterName)->restoreState(settings.value(MainWindow_utilizationSplitter).toByteArray());
+    findChild<QSplitter*>(utilizationSplitterName)->restoreState(settings.value(MainWindow_utilizationSplitter).toByteArray());
 }
 
 void MainWindow::onDataUpdated() {
+    QMutexLocker locker(&InfoProvider::getWorker()->mutex);
     findChild<ProcessesView*>(processesViewName)->onDataUpdated();
+    findChild<GPUUtilizationContainer*>(gpuUtilizationContainerName)->onDataUpdated();
+    findChild<MemoryUtilizationContainer*>(memoryUtilizationContainerName)->onDataUpdated();
 }
 
 void MainWindow::quit() {
@@ -198,25 +192,21 @@ void MainWindow::settings() {
     SettingsDialog dialog;
     dialog.exec();
 
-    auto gpuUtilizationContainer = findChild<GPUUtilizationContainer *>(gpuUtilizationContainerName);
-    auto memoryUtilizationContainer = findChild<MemoryUtilizationContainer *>(memoryUtilizationContainerName);
+    auto gpuUtilizationContainer = findChild<GPUUtilizationContainer*>(gpuUtilizationContainerName);
+    auto memoryUtilizationContainer = findChild<MemoryUtilizationContainer*>(memoryUtilizationContainerName);
 
     gpuUtilizationContainer->updateData();
     memoryUtilizationContainer->updateData();
 
     // we need to reset graphs if graph length has been changed
     if (oldGraphLength != SettingsManager::getGraphLength()) {
-        auto resetGraph = [](UtilizationContainer *container)
-        {
-            auto worker = container->getWorker();
-
-            QMutexLocker locker(&worker->mutex);
-
+        auto resetGraph = [](UtilizationContainer *container) {
             for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
-                worker->graphPoints[i] = {};
+                container->getUtilizationWidget()->graphPoints[i] = {};
             }
         };
 
+        QMutexLocker locker(&InfoProvider::getWorker()->mutex);
         resetGraph(gpuUtilizationContainer);
         resetGraph(memoryUtilizationContainer);
     }

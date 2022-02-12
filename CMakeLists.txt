@@ -51,12 +51,9 @@ set(PROJECT_SOURCES
         src/utilization/Point.h src/utilization/Point.cpp
         src/utilization/CircleWidget.cpp src/utilization/CircleWidget.h
         src/utilization/UtilizationData.h
-        src/utilization/UtilizationWorker.cpp src/utilization/UtilizationWorker.h
         src/utilization/UtilizationWidget.cpp src/utilization/UtilizationWidget.h
         src/utilization/UtilizationContainer.cpp src/utilization/UtilizationContainer.h
-        src/utilization/gpu/GPUUtilizationWorker.cpp src/utilization/gpu/GPUUtilizationWorker.h
         src/utilization/gpu/GPUUtilizationWidget.cpp src/utilization/gpu/GPUUtilizationWidget.h
-        src/utilization/memory/MemoryUtilizationWorker.cpp src/utilization/memory/MemoryUtilizationWorker.h
         src/utilization/memory/MemoryUtilizationWidget.cpp src/utilization/memory/MemoryUtilizationWidget.h
         src/utilization/gpu/GPUUtilizationContainer.cpp src/utilization/gpu/GPUUtilizationContainer.h
         src/utilization/memory/MemoryUtilizationContainer.cpp src/utilization/memory/MemoryUtilizationContainer.h

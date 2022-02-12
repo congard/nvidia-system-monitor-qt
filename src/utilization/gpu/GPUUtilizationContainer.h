@@ -4,12 +4,9 @@
 #include "utilization/UtilizationContainer.h"
 
 class GPUUtilizationContainer: public UtilizationContainer {
-    Q_OBJECT
-
 public:
     GPUUtilizationContainer();
 
-public slots:
     void onDataUpdated();
 };
 

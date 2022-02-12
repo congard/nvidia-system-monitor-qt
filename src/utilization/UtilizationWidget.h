@@ -4,17 +4,21 @@
 #include <QWidget>
 #include <QPainter>
 
-#include "UtilizationWorker.h"
+#include "UtilizationData.h"
+#include "Point.h"
 
 class UtilizationWidget: public QWidget {
 public:
     UtilizationWidget();
     ~UtilizationWidget() override;
 
+    virtual void onDataUpdated();
+
     void paintEvent(QPaintEvent*) override;
 
 public:
-    UtilizationWorker *worker = nullptr;
+    QVarLengthArray<UtilizationData> utilizationData;
+    QVarLengthArray<std::vector<Point>> graphPoints;
 
 private:
     void drawGrid();
@@ -22,6 +26,7 @@ private:
 
 private:
     QPainter painter;
+    long lastTime {0};
 };
 
 #endif //QNVSM_UTILIZATIONWIDGET_H

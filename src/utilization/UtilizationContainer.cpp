@@ -63,8 +63,8 @@ void UtilizationContainer::updateData() {
     }
 }
 
-UtilizationWorker* UtilizationContainer::getWorker() {
-    return utilizationWidget->worker;
+UtilizationWidget* UtilizationContainer::getUtilizationWidget() const {
+    return utilizationWidget;
 }
 
 bool UtilizationContainer::event(QEvent *event) {

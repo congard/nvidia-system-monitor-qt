@@ -5,7 +5,7 @@
 
 class MemoryUtilizationWidget: public UtilizationWidget {
 public:
-    MemoryUtilizationWidget();
+    void onDataUpdated() override;
 };
 
 #endif //QNVSM_MEMORYUTILIZATIONWIDGET_H

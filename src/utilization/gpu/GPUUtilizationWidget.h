@@ -5,7 +5,7 @@
 
 class GPUUtilizationWidget: public UtilizationWidget {
 public:
-    GPUUtilizationWidget();
+    void onDataUpdated() override;
 };
 
 #endif //QNVSM_GPUUTILIZATIONWIDGET_H

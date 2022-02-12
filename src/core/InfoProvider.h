@@ -15,7 +15,9 @@ public:
     class Worker: public ::Worker {
     public:
         inline void work() override {
+            mutex.lock();
             InfoProvider::updateData();
+            mutex.unlock();
             dataUpdated();
         }
     };

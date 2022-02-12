@@ -1,9 +1,11 @@
 #include "MemoryUtilizationWidget.h"
 
-#include <QMouseEvent>
+#include "core/InfoProvider.h"
 
-#include "MemoryUtilizationWorker.h"
+void MemoryUtilizationWidget::onDataUpdated() {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
+        utilizationData[i].level = InfoProvider::getMemUsed(i) * 100 / InfoProvider::getMemTotal(i);
+    }
 
-MemoryUtilizationWidget::MemoryUtilizationWidget() {
-    worker = new MemoryUtilizationWorker();
+    UtilizationWidget::onDataUpdated();
 }

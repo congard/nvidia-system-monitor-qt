@@ -4,12 +4,9 @@
 #include "utilization/UtilizationContainer.h"
 
 class MemoryUtilizationContainer: public UtilizationContainer {
-    Q_OBJECT
-
 public:
     MemoryUtilizationContainer();
 
-public slots:
     void onDataUpdated();
 };
 

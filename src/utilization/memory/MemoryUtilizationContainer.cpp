@@ -2,10 +2,8 @@
 
 #include <QGridLayout>
 
-#include "MemoryUtilizationWorker.h"
 #include "MemoryUtilizationWidget.h"
 
-#include "core/SettingsManager.h"
 #include "core/InfoProvider.h"
 #include "utilization/Grid.h"
 
@@ -53,8 +51,10 @@ MemoryUtilizationContainer::MemoryUtilizationContainer() {
 }
 
 void MemoryUtilizationContainer::onDataUpdated() {
+    utilizationWidget->onDataUpdated();
+
     for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
-        const auto &utilizationData = utilizationWidget->worker->utilizationData[i];
+        const auto &utilizationData = utilizationWidget->utilizationData[i];
 
         auto infoLabel = [&](int index) {
             return findChild<QLabel*>(getInfoLabelName(i, index));

@@ -1,9 +1,11 @@
 #include "GPUUtilizationWidget.h"
 
-#include <QMouseEvent>
+#include "core/InfoProvider.h"
 
-#include "GPUUtilizationWorker.h"
+void GPUUtilizationWidget::onDataUpdated() {
+    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
+        utilizationData[i].level = InfoProvider::getGPUUtil(i);
+    }
 
-GPUUtilizationWidget::GPUUtilizationWidget() {
-    worker = new GPUUtilizationWorker();
+    UtilizationWidget::onDataUpdated();
 }

@@ -51,8 +51,10 @@ GPUUtilizationContainer::GPUUtilizationContainer() {
 }
 
 void GPUUtilizationContainer::onDataUpdated() {
+    utilizationWidget->onDataUpdated();
+
     for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
-        const auto &data = utilizationWidget->worker->utilizationData[i];
+        const auto &data = utilizationWidget->utilizationData[i];
 
         auto infoLabel = [&](int index) {
             return findChild<QLabel*>(getInfoLabelName(i, index));
