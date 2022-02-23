@@ -24,7 +24,9 @@ public:
 
     struct GPUInfo {
         int gpuFreq {0};
+        int gpuFreqMax {0};
         int memFreq {0};
+        int memFreqMax {0};
         int gpuTemp {0};
         int memTemp {0};
         float power {0};
@@ -54,7 +56,9 @@ public:
     static int getGPUTemp(int id);
     static int getMemTemp(int id);
     static int getGPUFreq(int id);
+    static int getGPUFreqMax(int id);
     static int getMemFreq(int id);
+    static int getMemFreqMax(int id);
     static float getPower(int id);
     static int getGPUUtil(int id);
     static int getMemUtil(int id);
@@ -80,7 +84,9 @@ private:
     static int m_iGpuTemp;
     static int m_iMemTemp;
     static int m_iGpuFreq;
+    static int m_iGpuFreqMax;
     static int m_iMemFreq;
+    static int m_iMemFreqMax;
     static int m_iPower;
     static int m_iGpuUtil;
     static int m_iMemUtil;

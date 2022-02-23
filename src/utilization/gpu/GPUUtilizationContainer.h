@@ -8,6 +8,9 @@ public:
     GPUUtilizationContainer();
 
     void onDataUpdated();
+
+protected:
+    bool showToolTip(const QPoint& pos, const QString &name, int gpuId) override;
 };
 
 

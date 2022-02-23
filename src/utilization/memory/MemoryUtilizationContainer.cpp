@@ -1,6 +1,7 @@
 #include "MemoryUtilizationContainer.h"
 
 #include <QGridLayout>
+#include <QToolTip>
 
 #include "MemoryUtilizationWidget.h"
 
@@ -82,4 +83,18 @@ void MemoryUtilizationContainer::onDataUpdated() {
     }
 
     utilizationWidget->update();
+}
+
+bool MemoryUtilizationContainer::showToolTip(const QPoint &pos, const QString &name, int gpuId) {
+    if (name == getInfoLabelName(gpuId, memFreq)) {
+        auto freq = InfoProvider::getMemFreq(gpuId);
+        auto maxFreq = InfoProvider::getMemFreqMax(gpuId);
+
+        QToolTip::showText(pos, QString::asprintf(
+                "%i MHz / %i MHz - %i%%", freq, maxFreq, freq * 100 / maxFreq));
+
+        return true;
+    }
+
+    return false;
 }

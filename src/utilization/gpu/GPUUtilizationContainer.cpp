@@ -1,10 +1,10 @@
 #include "GPUUtilizationContainer.h"
 
 #include <QGridLayout>
+#include <QToolTip>
 
 #include "GPUUtilizationWidget.h"
 
-#include "core/SettingsManager.h"
 #include "core/InfoProvider.h"
 #include "utilization/Grid.h"
 
@@ -77,4 +77,18 @@ void GPUUtilizationContainer::onDataUpdated() {
     }
 
     utilizationWidget->update();
+}
+
+bool GPUUtilizationContainer::showToolTip(const QPoint& pos, const QString &name, int gpuId) {
+    if (name == getInfoLabelName(gpuId, freq)) {
+        auto freq = InfoProvider::getGPUFreq(gpuId);
+        auto maxFreq = InfoProvider::getGPUFreqMax(gpuId);
+
+        QToolTip::showText(pos, QString::asprintf(
+                "%i MHz / %i MHz - %i%%", freq, maxFreq, freq * 100 / maxFreq));
+
+        return true;
+    }
+
+    return false;
 }

@@ -78,6 +78,8 @@ bool UtilizationContainer::event(QEvent *event) {
                 if (name == getInfoLabelName(i, UtInfoLabelId)) {
                     QToolTip::showText(helpEvent->globalPos(), "Utilization: current (average / min / max)");
                     return true;
+                } else if (showToolTip(helpEvent->globalPos(), name, i)) {
+                    return true;
                 }
             }
         }

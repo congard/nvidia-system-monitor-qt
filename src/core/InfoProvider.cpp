@@ -19,7 +19,9 @@ QString InfoProvider::m_infoQueryCmd;
 int InfoProvider::m_iGpuTemp {INT_NONE};
 int InfoProvider::m_iMemTemp {INT_NONE};
 int InfoProvider::m_iGpuFreq {INT_NONE};
+int InfoProvider::m_iGpuFreqMax {INT_NONE};
 int InfoProvider::m_iMemFreq {INT_NONE};
+int InfoProvider::m_iMemFreqMax {INT_NONE};
 int InfoProvider::m_iPower {INT_NONE};
 int InfoProvider::m_iGpuUtil {INT_NONE};
 int InfoProvider::m_iMemUtil {INT_NONE};
@@ -77,12 +79,12 @@ void InfoProvider::init() {
 
     auto queryHelp = exec("nvidia-smi --help-query-gpu");
     const char *options[] = {
-            "temperature.gpu", "temperature.memory", "clocks.gr", "clocks.mem", "power.draw",
-            "utilization.gpu", "utilization.memory", "memory.total", "memory.free", "memory.used"
+            "temperature.gpu", "temperature.memory", "clocks.gr", "clocks.max.gr", "clocks.mem", "clocks.max.mem",
+            "power.draw", "utilization.gpu", "utilization.memory", "memory.total", "memory.free", "memory.used"
     };
     int *indexes[] = {
-            &m_iGpuTemp, &m_iMemTemp, &m_iGpuFreq, &m_iMemFreq, &m_iPower,
-            &m_iGpuUtil, &m_iMemUtil, &m_iMemTotal, &m_iMemFree, &m_iMemUsed
+            &m_iGpuTemp, &m_iMemTemp, &m_iGpuFreq, &m_iGpuFreqMax, &m_iMemFreq, &m_iMemFreqMax,
+            &m_iPower, &m_iGpuUtil, &m_iMemUtil, &m_iMemTotal, &m_iMemFree, &m_iMemUsed
     };
     int index = 0;
     QString availableOptions;
@@ -167,7 +169,9 @@ void InfoProvider::updateData() {
         parseIndex(m_iGpuTemp, m_info[i].gpuTemp);
         parseIndex(m_iMemTemp, m_info[i].memTemp);
         parseIndex(m_iGpuFreq, m_info[i].gpuFreq);
+        parseIndex(m_iGpuFreqMax, m_info[i].gpuFreqMax);
         parseIndex(m_iMemFreq, m_info[i].memFreq);
+        parseIndex(m_iMemFreqMax, m_info[i].memFreqMax);
         parseIndex(m_iPower, m_info[i].power);
         parseIndex(m_iGpuUtil, m_info[i].gpuUtil);
         parseIndex(m_iMemUtil, m_info[i].memUtil);
@@ -213,8 +217,16 @@ int InfoProvider::getGPUFreq(int id) {
     return m_info[id].gpuFreq;
 }
 
+int InfoProvider::getGPUFreqMax(int id) {
+    return m_info[id].gpuFreqMax;
+}
+
 int InfoProvider::getMemFreq(int id) {
     return m_info[id].memFreq;
+}
+
+int InfoProvider::getMemFreqMax(int id) {
+    return m_info[id].memFreqMax;
 }
 
 float InfoProvider::getPower(int id) {

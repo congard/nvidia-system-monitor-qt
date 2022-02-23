@@ -19,6 +19,8 @@ public:
     UtilizationWidget* getUtilizationWidget() const;
 
 protected:
+    virtual bool showToolTip(const QPoint& pos, const QString &name, int gpuId) = 0;
+
     bool event(QEvent *event) override;
     void addInfoTitleLayout(int gpuIndex);
     QVBoxLayout* getLayout();

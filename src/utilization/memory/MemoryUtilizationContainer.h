@@ -8,6 +8,9 @@ public:
     MemoryUtilizationContainer();
 
     void onDataUpdated();
+
+protected:
+    bool showToolTip(const QPoint &pos, const QString &name, int gpuId) override;
 };
 
 #endif //QNVSM_MEMORYUTILIZATIONCONTAINER_H
