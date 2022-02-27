@@ -3,6 +3,7 @@
 
 #include <QRegularExpression>
 #include <QVarLengthArray>
+#include <QVector>
 
 #include "processes/ProcessInfo.h"
 #include "Worker.h"
