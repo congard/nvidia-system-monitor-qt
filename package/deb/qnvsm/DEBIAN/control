@@ -1,0 +1,7 @@
+Package: qnvsm
+Version: 1.5
+Architecture: amd64
+Maintainer: Daniel <dbcongard@gmail.com>
+Description: Task Manager for Linux for Nvidia graphics cards
+Homepage: https://github.com/congard/nvidia-system-monitor-qt
+Depends: nvidia-smi, qtdeclarative5-dev

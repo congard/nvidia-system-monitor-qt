@@ -1,7 +1,3 @@
-*
-!/.gitignore
-!/build.py
-!/config.py
-!/file.py
-!/qnvsm.desktop.in
-!/README.md
+/build
+/qnvsm/usr
+/*.deb
