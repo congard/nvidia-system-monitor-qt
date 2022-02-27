@@ -23,7 +23,7 @@ Task Manager for Linux for Nvidia graphics cards
 
 ## Building
 
-### Debian / Ubuntu
+### Fedora / Debian / Ubuntu
 
 You can install deb package from [releases](https://github.com/congard/nvidia-system-monitor-qt/releases)
 <br>To launch execute `qnvsm` or just click on the `.desktop` file
