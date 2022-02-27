@@ -16,8 +16,8 @@ void init() {
     cout << "Connecting to nvidia-smi...\n";
 
     if (system("which nvidia-smi > /dev/null 2>&1")) {
-        cout << "nvidia-smi not found. Are you have NVIDIA drivers?\n";
-        QMessageBox::critical(nullptr, "Critical", "nvidia-smi not found. Are you have NVIDIA drivers?");
+        cout << "nvidia-smi not found. Have you installed NVIDIA drivers?\n";
+        QMessageBox::critical(nullptr, "Critical", "nvidia-smi not found. Have you installed NVIDIA drivers?");
         exit(EXIT_FAILURE);
     } else {
         QString nvsmi_out = exec("nvidia-smi");
@@ -25,7 +25,7 @@ void init() {
         if (linesStartsWith(nvsmi_out.split("\n"), "NVIDIA-SMI has failed") != -1) {
             cout << "nvidia-smi was found, but " << qPrintable(nvsmi_out);
             QMessageBox::critical(nullptr, "Critical",
-                    nvsmi_out + "If you using laptop with discrete NVIDIA GPU, launch this app with optirun");
+                    nvsmi_out + "Possible solution: If you are using a laptop with discrete NVIDIA GPU, launch this program with optirun");
             exit(EXIT_FAILURE);
         }
     }
