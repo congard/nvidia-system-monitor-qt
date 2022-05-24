@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop">
+    <id>io.github.congard.qnvsm</id>
+    <developer_name>congard</developer_name>
+    <launchable type="desktop-id">io.github.congard.qnvsm.desktop</launchable>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>MIT</project_license>
+    <name>Nvidia System Monitor</name>
+    <summary>Nvidia System Monitor Qt</summary>
+    <description>
+        <p>Task Manager for Nvidia GPUs</p>
+        <p xml:lang="en-GB">Task Manager for Nvidia GPUs</p>
+    </description>
+    <releases>
+        <release version="1.5" date="2022-02-27"/>
+    </releases>
+    <screenshots>
+        <screenshot type="default">
+            <image type="source">https://raw.githubusercontent.com/congard/nvidia-system-monitor-qt/master/package/flatpak/screenshots/screenshot_0.png</image>
+            <image type="source">https://raw.githubusercontent.com/congard/nvidia-system-monitor-qt/master/package/flatpak/screenshots/screenshot_1.png</image>
+        </screenshot>
+    </screenshots>
+    <categories>
+        <category>Utility</category>
+        <category>System</category>
+        <category>Qt</category>
+    </categories>
+    <url type="homepage">https://github.com/congard/nvidia-system-monitor-qt</url>
+    <url type="bugtracker">https://github.com/congard/nvidia-system-monitor-qt/issues</url>
+    <update_contact>dbcongard@gmail.com</update_contact>
+    <provides>
+        <binary>qnvsm</binary>
+    </provides>
+</component>
