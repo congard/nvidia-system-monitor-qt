@@ -67,3 +67,11 @@ else()
 endif()
 
 target_link_libraries(qnvsm PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+if (FLATPAK_BUILD)
+    target_compile_definitions(qnvsm PRIVATE FLATPAK_BUILD)
+
+    install(TARGETS qnvsm DESTINATION bin)
+    install(FILES icon.png DESTINATION share/icons/hicolor/512x512/apps RENAME io.github.congard.qnvsm.png)
+    install(FILES package/flatpak/io.github.congard.qnvsm.desktop DESTINATION share/applications)
+endif()

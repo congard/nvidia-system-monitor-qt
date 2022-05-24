@@ -32,10 +32,10 @@ int InfoProvider::m_iMemUsed {INT_NONE};
 void InfoProvider::init() {
     // init values
 
-    m_gpuCount = exec("nvidia-smi --query-gpu=count --format=csv,noheader").split("\n")[0].toInt();
+    m_gpuCount = exec_cmd("nvidia-smi --query-gpu=count --format=csv,noheader").split("\n")[0].toInt();
     m_gpuNames.resize(m_gpuCount);
 
-    auto names = exec("nvidia-smi --query-gpu=name --format=csv,noheader").split("\n");
+    auto names = exec_cmd("nvidia-smi --query-gpu=name --format=csv,noheader").split("\n");
 
     for (int i = 0; i < m_gpuCount; i++) {
         m_gpuNames[i] = names[i];
@@ -77,7 +77,7 @@ void InfoProvider::init() {
 
     // build info command
 
-    auto queryHelp = exec("nvidia-smi --help-query-gpu");
+    auto queryHelp = exec_cmd("nvidia-smi --help-query-gpu");
     const char *options[] = {
             "temperature.gpu", "temperature.memory", "clocks.gr", "clocks.max.gr", "clocks.mem", "clocks.max.mem",
             "power.draw", "utilization.gpu", "utilization.memory", "memory.total", "memory.free", "memory.used"
@@ -119,7 +119,7 @@ void InfoProvider::updateData() {
 
     m_processes = {};
 
-    QRegularExpressionMatchIterator procIt = m_processListRegex.globalMatch(exec("nvidia-smi pmon -c 1 -s um"));
+    QRegularExpressionMatchIterator procIt = m_processListRegex.globalMatch(exec_cmd("nvidia-smi pmon -c 1 -s um"));
 
     while (procIt.hasNext()) {
         QRegularExpressionMatch match = procIt.next();
@@ -136,12 +136,12 @@ void InfoProvider::updateData() {
     // query gpu info
 
     int attempt = 0;
-    QString data = exec(m_infoQueryCmd);
+    QString data = exec_cmd_s(m_infoQueryCmd);
 
     // fix "[Unknown Error]" for power output
     while (data.contains('[') && attempt < 3) {
         usleep(50000);
-        data = exec(m_infoQueryCmd);
+        data = exec_cmd_s(m_infoQueryCmd);
         ++attempt;
     }
 

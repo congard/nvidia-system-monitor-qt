@@ -1,0 +1,20 @@
+app-id: io.github.congard.qnvsm
+runtime: org.kde.Platform
+runtime-version: '5.15-21.08'
+sdk: org.kde.Sdk
+command: qnvsm
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --talk-name=org.freedesktop.Flatpak
+modules:
+  - name: qnvsm
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DFLATPAK_BUILD=ON
+      - -DVersionPrefix=flatpak
+    sources:
+      - type: dir
+        path: ../../

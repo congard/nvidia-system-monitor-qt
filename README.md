@@ -10,6 +10,12 @@ Task Manager for Linux for Nvidia graphics cards
 
 ![preview](pics/preview.gif)
 
+## Packages
+
+* Flatpak: <span style="font-size:0.5em">in progress, can be built [manually](package/flatpak/README.md)</span>
+* RPM: see [releases](https://github.com/congard/nvidia-system-monitor-qt/releases)
+* [AUR](https://aur.archlinux.org/packages/nvidia-system-monitor-qt/): `nvidia-system-monitor-qt`
+
 ## Dependencies
 
 1.  Qt 5.11+
@@ -23,15 +29,15 @@ Task Manager for Linux for Nvidia graphics cards
 
 ## Building
 
-### Fedora / Debian / Ubuntu
+### Fedora
 
-You can install deb package from [releases](https://github.com/congard/nvidia-system-monitor-qt/releases)
-<br>To launch execute `qnvsm` or just click on the `.desktop` file
+You can install rpm package from [releases](https://github.com/congard/nvidia-system-monitor-qt/releases)
+<br>To launch type `qnvsm` or just click on the `.desktop` file
 
 ### ArchLinux
 
 You can install `nvidia-system-monitor-qt` directly from [AUR](https://aur.archlinux.org/packages/nvidia-system-monitor-qt/)
-<br>To launch execute `qnvsm` or just click on the `.desktop` file
+<br>To launch type `qnvsm` or just click on the `.desktop` file
 
 ### Other
 

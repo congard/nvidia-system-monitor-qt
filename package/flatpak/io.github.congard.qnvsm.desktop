@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Exec=qnvsm
+Icon=io.github.congard.qnvsm
+Name=Nvidia System Monitor Qt
+Categories=System;Utility;
