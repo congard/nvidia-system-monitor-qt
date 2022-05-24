@@ -1,5 +1,7 @@
 # RPM package
 
+Maintainer: [congard](https://github.com/congard)
+
 ## Requirements
 
 ```bash
