@@ -4,4 +4,4 @@ Type=Application
 Exec=qnvsm
 Icon=io.github.congard.qnvsm
 Name=Nvidia System Monitor Qt
-Categories=System;Utility;
+Categories=System;Utility;Qt;
