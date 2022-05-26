@@ -12,7 +12,7 @@ Task Manager for Linux for Nvidia graphics cards
 
 ## Packages
 
-* Flatpak: <span style="font-size:0.5em">in progress, can be built [manually](package/flatpak/README.md)</span>
+* [Flatpak](https://flathub.org/apps/details/io.github.congard.qnvsm)
 * RPM: see [releases](https://github.com/congard/nvidia-system-monitor-qt/releases)
 * [AUR](https://aur.archlinux.org/packages/nvidia-system-monitor-qt/): `nvidia-system-monitor-qt`
 
