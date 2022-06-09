@@ -69,7 +69,7 @@ void InfoProvider::init() {
 
     QString processListPattern =
     repeatString(spacer "([0-9]+)", 2) + // gpu id, pid
-            spacer "([CG])" + // type
+            spacer R"((C(?:\+G)?|G))" + // type
                    repeatString(spacer R"(([0-9\-]+))", 5) + // sm, mem, enc, dec, fb mem
             spacer R"(([^ \t\n]+))"; // process name
 
