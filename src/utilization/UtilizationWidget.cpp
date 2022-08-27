@@ -32,7 +32,7 @@ void UtilizationWidget::onDataUpdated() {
         auto &points = graphPoints[g];
         auto &data = utilizationData[g];
 
-        for (Point &point : points)
+        for (PointF &point : points)
             point.x -= step;
 
         points.emplace_back(1.0f, data.level);

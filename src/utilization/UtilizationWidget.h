@@ -18,7 +18,7 @@ public:
 
 public:
     QVarLengthArray<UtilizationData> utilizationData;
-    QVarLengthArray<std::vector<Point>> graphPoints;
+    QVarLengthArray<std::vector<PointF>> graphPoints;
 
 private:
     void drawGrid();
