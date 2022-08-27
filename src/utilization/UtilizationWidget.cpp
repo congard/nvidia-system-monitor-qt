@@ -15,9 +15,7 @@ UtilizationWidget::UtilizationWidget() {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
-UtilizationWidget::~UtilizationWidget() {
-
-}
+UtilizationWidget::~UtilizationWidget() = default;
 
 void UtilizationWidget::onDataUpdated() {
     if (lastTime == 0) {
@@ -35,7 +33,7 @@ void UtilizationWidget::onDataUpdated() {
         for (PointF &point : points)
             point.x -= step;
 
-        points.emplace_back(1.0f, data.level);
+        points.emplace_back(1.0f, (float) data.level / 100.0f);
 
         // deleteSuperfluousPoints(g)
         if (points.size() > 2 && points[0].x < 0 && points[1].x <= 0) {
@@ -80,9 +78,10 @@ void UtilizationWidget::drawGrid() {
 
     painter.setPen(QColor(100, 100, 100));
 
-    for (float i = 0; i <= 1.0f; i += 0.25f) {
-        painter.drawLine(graphWidth * i, 0, graphWidth * i, graphHeight);
-        painter.drawLine(0, graphHeight * i, graphWidth, graphHeight * i);
+    for (int i = 0; i <= 4; ++i) {
+        float k = (float) i / 4.0f;
+        painter.drawLine(graphWidth * k, 0, graphWidth * k, graphHeight); // vertical
+        painter.drawLine(0, graphHeight * k, graphWidth, graphHeight * k); // horizontal
     }
 }
 
@@ -97,27 +96,30 @@ void UtilizationWidget::drawGraph() {
         painter.setPen(pen);
 
         auto &points = graphPoints[g];
+        QPainterPath filling;
 
-        for (size_t i = 1; i < points.size(); i++) {
+        auto pointPos = [this](PointF point) -> QPoint {
             auto graphHeight = static_cast<float>(size().height());
             auto graphWidth = static_cast<float>(size().width());
+            return {
+                static_cast<int>(point.x * graphWidth),
+                static_cast<int>(graphHeight - graphHeight * point.y)
+            };
+        };
 
-            int x1 = static_cast<int>(points[i - 1].x * graphWidth);
-            int y1 = static_cast<int>(graphHeight - graphHeight / 100.0f * (float) points[i - 1].y);
-            int x2 = static_cast<int>(points[i].x * graphWidth);
-            int y2 = static_cast<int>(graphHeight - graphHeight / 100.0f * (float) points[i].y);
+        filling.moveTo(pointPos(points[0]));
 
-            QPainterPath filling;
-            filling.moveTo(x1, y1);
-            filling.lineTo(x2, y2);
-            filling.lineTo(x2, graphHeight);
-            filling.lineTo(x1, graphHeight);
-            filling.lineTo(x1, y1);
-            color.setAlpha(64);
-            painter.fillPath(filling, QBrush(color));
+        for (size_t i = 1; i < points.size(); i++)
+            filling.lineTo(pointPos(points[i]));
 
-            painter.drawLine(x1, y1, x2, y2);
-        }
+        painter.drawPath(filling);
+
+        filling.lineTo(pointPos({1.0f, 0.0f}));
+        filling.lineTo(pointPos({points[0].x, 0.0f}));
+        filling.lineTo(pointPos({points[0].x, points[0].y}));
+
+        color.setAlpha(64);
+        painter.fillPath(filling, QBrush(color));
     }
 }
 
