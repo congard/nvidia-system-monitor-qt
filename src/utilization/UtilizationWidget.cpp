@@ -6,6 +6,7 @@
 #include "core/SettingsManager.h"
 #include "core/InfoProvider.h"
 #include "core/Utils.h"
+#include "core/PCHIPInterpolator.h"
 
 using namespace Utils;
 
@@ -45,14 +46,15 @@ void UtilizationWidget::onDataUpdated() {
         data.minLevel = 100;
 
         for (auto &point : points) {
-            data.avgLevel += point.y;
+            auto level = static_cast<int>(point.y * 100.0f);
+            data.avgLevel += level;
 
-            if (data.maxLevel < point.y) {
-                data.maxLevel = point.y;
+            if (data.maxLevel < level) {
+                data.maxLevel = level;
             }
 
-            if (data.minLevel > point.y) {
-                data.minLevel = point.y;
+            if (data.minLevel > level) {
+                data.minLevel = level;
             }
         }
 
@@ -86,25 +88,21 @@ void UtilizationWidget::drawGrid() {
 }
 
 void UtilizationWidget::drawGraph() {
+    auto graphWidth = static_cast<float>(size().width());
+    auto graphHeight = static_cast<float>(size().height());
+
     QColor color;
     QPen pen;
     pen.setWidth(2);
 
-    for (int g = 0; g < InfoProvider::getGPUCount(); g++) {
-        color = SettingsManager::getGPUColor(g);
-        pen.setColor(color);
-        painter.setPen(pen);
+    auto xPos = [graphWidth](float x) { return x * graphWidth; };
+    auto yPos = [graphHeight](float y) { return graphHeight - graphHeight * y; };
 
-        auto &points = graphPoints[g];
+    auto drawGraph = [&](const std::vector<PointF> &points) {
         QPainterPath filling;
 
-        auto pointPos = [this](PointF point) -> QPoint {
-            auto graphHeight = static_cast<float>(size().height());
-            auto graphWidth = static_cast<float>(size().width());
-            return {
-                static_cast<int>(point.x * graphWidth),
-                static_cast<int>(graphHeight - graphHeight * point.y)
-            };
+        auto pointPos = [&](PointF point) -> QPointF {
+            return {xPos(point.x), yPos(point.y)};
         };
 
         filling.moveTo(pointPos(points[0]));
@@ -120,6 +118,29 @@ void UtilizationWidget::drawGraph() {
 
         color.setAlpha(64);
         painter.fillPath(filling, QBrush(color));
+    };
+
+    for (int g = 0; g < InfoProvider::getGPUCount(); g++) {
+        color = SettingsManager::getGPUColor(g);
+        pen.setColor(color);
+        painter.setPen(pen);
+
+        auto &gPoints = graphPoints[g];
+
+        if (SettingsManager::isSmoothGraph()) {
+            int count = std::max(
+                static_cast<int>(gPoints.size()),
+                static_cast<int>(xPos(gPoints.back().x - gPoints.front().x) / 3)
+            );
+
+            if (count > gPoints.size()) {
+                auto points = PCHIPInterpolator::getInterpolatedPoints(gPoints, {graphWidth, graphHeight}, count);
+                drawGraph(points);
+            } else {
+                drawGraph(gPoints);
+            }
+        } else {
+            drawGraph(gPoints);
+        }
     }
 }
-

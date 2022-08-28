@@ -9,11 +9,13 @@ namespace Constants {
 constant(gpuColors);
 constant(updateDelay);
 constant(length);
+constant(smoothGraph);
 }
 
 QVarLengthArray<QColor> SettingsManager::m_gpuColors;
 int SettingsManager::m_updateDelay;
 int SettingsManager::m_graphLength;
+bool SettingsManager::m_smoothGraph;
 
 void SettingsManager::load() {
     using namespace Constants;
@@ -22,6 +24,7 @@ void SettingsManager::load() {
 
     m_updateDelay = settings.value(updateDelay, 2000).toInt();
     m_graphLength = settings.value(length, 60000).toInt();
+    m_smoothGraph = settings.value(smoothGraph, true).toBool();
 
     int gpuCount = InfoProvider::getGPUCount();
 
@@ -62,6 +65,7 @@ void SettingsManager::save() {
     QSettings settings(NVSM_SETTINGS);
     settings.setValue(updateDelay, m_updateDelay);
     settings.setValue(length, m_graphLength);
+    settings.setValue(smoothGraph, m_smoothGraph);
     settings.setValue(gpuColors, [&]() {
         QJsonArray array;
 
@@ -84,6 +88,10 @@ void SettingsManager::setGraphLength(int graphLength) {
     m_graphLength = graphLength;
 }
 
+void SettingsManager::setSmoothGraph(bool smoothGraph) {
+    m_smoothGraph = smoothGraph;
+}
+
 void SettingsManager::setGPUColor(int index, const QColor &color) {
     m_gpuColors[index] = color;
 }
@@ -102,4 +110,8 @@ int SettingsManager::getUpdateDelay() {
 
 int SettingsManager::getGraphLength() {
     return m_graphLength;
+}
+
+bool SettingsManager::isSmoothGraph() {
+    return m_smoothGraph;
 }

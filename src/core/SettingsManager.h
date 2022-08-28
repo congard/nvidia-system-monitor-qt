@@ -15,6 +15,7 @@ public:
     static void setGPUColors(const QVarLengthArray<QColor> &gpuColors);
     static void setUpdateDelay(int updateDelay);
     static void setGraphLength(int graphLength);
+    static void setSmoothGraph(bool smoothGraph);
 
     static void setGPUColor(int index, const QColor &color);
 
@@ -23,11 +24,13 @@ public:
 
     static int getUpdateDelay();
     static int getGraphLength();
+    static bool isSmoothGraph();
 
 private:
     static QVarLengthArray<QColor> m_gpuColors;
     static int m_updateDelay;
     static int m_graphLength;
+    static bool m_smoothGraph;
 };
 
 #endif //QNVSM_SETTINGSMANAGER_H
