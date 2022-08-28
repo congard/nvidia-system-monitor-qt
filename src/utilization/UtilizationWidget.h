@@ -5,7 +5,7 @@
 #include <QPainter>
 
 #include "UtilizationData.h"
-#include "Point.h"
+#include "core/Point.h"
 
 class UtilizationWidget: public QWidget {
 public:
