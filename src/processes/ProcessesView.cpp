@@ -59,14 +59,37 @@ void ProcessesView::mousePressEvent(QMouseEvent *event) {
     int row = indexAt(event->pos()).row();
 
     if (event->button() == Qt::RightButton && row != -1) {
-        QMenu contextMenu(tr("Context menu"), this);
-
         QString name = model()->data(model()->index(row, NVSMColumns::Name)).toString();
         QString pid = model()->data(model()->index(row, NVSMColumns::PID)).toString();
-        QAction action1("Kill " + name + " (pid " + pid + ")", this);
 
-        connect(&action1, &QAction::triggered, this, &ProcessesView::killProcess);
-        contextMenu.addAction(&action1);
+        QMenu contextMenu(tr("Context menu"), this);
+
+        QAction *kill = contextMenu.addAction("Terminate " + name + " (pid " + pid + ")");
+        connect(kill, &QAction::triggered, [pid]() {
+            Utils::exec_cmd("kill " + pid);
+        });
+
+        contextMenu.addSeparator();
+
+        QPair<const char*, const char*> signalsList[] = {
+            {"Suspend", "STOP"},
+            {"Continue", "CONT"},
+            {"Hangup", "HUP"},
+            {"Interrupt", "INT"},
+            {"Terminate", "TERM"},
+            {"Kill", "KILL"},
+            {"User 1", "USR1"},
+            {"User 2", "USR2"}
+        };
+
+        QMenu *signalMenu = contextMenu.addMenu("Send signal");
+
+        for (auto &sig : signalsList) {
+            QAction *act = signalMenu->addAction(QString(sig.first) + " (" + sig.second + ")");
+            connect(act, &QAction::triggered, [pid, signal = sig.second]() {
+                Utils::exec_cmd("kill -" + QString(signal) + " " + pid);
+            });
+        }
 
         contextMenu.exec(mapToGlobal(event->pos()));
     }
@@ -151,13 +174,6 @@ void ProcessesView::addItem(int row, int column, const QVariant &data) {
 
 void ProcessesView::updateItem(int row, int column, const QVariant &data) {
     model()->setData(model()->index(row, column), data, Qt::DisplayRole);
-}
-
-void ProcessesView::killProcess() {
-    QModelIndex selectedIndex = currentIndex();
-    QModelIndex pidIndex = selectedIndex.sibling(selectedIndex.row(), NVSMColumns::PID);
-    QString selectedPid = model()->data(pidIndex).toString();
-    Utils::exec_cmd("kill " + selectedPid);
 }
 
 int ProcessesView::getRowIndexByPid(const QString &pid) {
