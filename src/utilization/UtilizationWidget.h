@@ -7,18 +7,26 @@
 #include "UtilizationData.h"
 #include "core/Point.h"
 
+class UtilizationContainer;
+
 class UtilizationWidget: public QWidget {
+    Q_OBJECT
+
 public:
-    UtilizationWidget();
+    explicit UtilizationWidget(UtilizationContainer *container);
     ~UtilizationWidget() override;
 
-    virtual void onDataUpdated();
-
     void paintEvent(QPaintEvent*) override;
+
+signals:
+    void onUpdated();
 
 public:
     QVarLengthArray<UtilizationData> utilizationData;
     QVarLengthArray<std::vector<PointF>> graphPoints;
+
+protected slots:
+    virtual void onDataUpdated();
 
 private:
     void drawGrid();

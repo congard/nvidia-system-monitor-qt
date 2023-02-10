@@ -97,10 +97,6 @@ MainWindow::MainWindow(QWidget*) {
     window->setLayout(layout);
     setCentralWidget(window);
 
-    // configure
-    connect(InfoProvider::getWorker(),
-            &InfoProvider::Worker::dataUpdated, this, &MainWindow::onDataUpdated);
-
     workerThread = new WorkerThread();
     workerThread->workers[0] = InfoProvider::getWorker();
     workerThread->start();
@@ -166,13 +162,6 @@ void MainWindow::loadSettings() {
     findChild<QSplitter*>(utilizationSplitterName)->restoreState(settings.value(MainWindow_utilizationSplitter).toByteArray());
 }
 
-void MainWindow::onDataUpdated() {
-    QMutexLocker locker(&InfoProvider::getWorker()->mutex);
-    findChild<ProcessesView*>(processesViewName)->onDataUpdated();
-    findChild<GPUUtilizationContainer*>(gpuUtilizationContainerName)->onDataUpdated();
-    findChild<MemoryUtilizationContainer*>(memoryUtilizationContainerName)->onDataUpdated();
-}
-
 void MainWindow::quit() {
     hide();
 
@@ -195,8 +184,8 @@ void MainWindow::settings() {
     auto gpuUtilizationContainer = findChild<GPUUtilizationContainer*>(gpuUtilizationContainerName);
     auto memoryUtilizationContainer = findChild<MemoryUtilizationContainer*>(memoryUtilizationContainerName);
 
-    gpuUtilizationContainer->updateData();
-    memoryUtilizationContainer->updateData();
+    gpuUtilizationContainer->updateLegend();
+    memoryUtilizationContainer->updateLegend();
 
     // we need to reset graphs if graph length has been changed
     if (oldGraphLength != SettingsManager::getGraphLength()) {

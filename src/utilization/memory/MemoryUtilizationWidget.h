@@ -5,6 +5,8 @@
 
 class MemoryUtilizationWidget: public UtilizationWidget {
 public:
+    explicit MemoryUtilizationWidget(UtilizationContainer *container);
+
     void onDataUpdated() override;
 };
 

@@ -1,20 +1,9 @@
 #include "UtilizationContainer.h"
 
-#include <QHBoxLayout>
 #include <QLabel>
-#include <QEvent>
-#include <QHelpEvent>
-#include <QToolTip>
 
-#include "core/Utils.h"
 #include "core/SettingsManager.h"
 #include "core/InfoProvider.h"
-
-#include "CircleWidget.h"
-
-inline QString getGPUCircleWidgetName(uint index) {
-    return "gpuCircle_" + QString::number(index);
-}
 
 inline constexpr auto graphStepName = "graphStep";
 inline constexpr auto graphTimeName = "graphTime";
@@ -51,68 +40,28 @@ void UtilizationContainer::build(const QString &name) {
     layout->addWidget(utilizationWidget);
     layout->addLayout(footerLayout);
 
+    m_descLayout = new FlowLayout(0, 12, 12);
+    layout->addLayout(m_descLayout);
+
     setLayout(layout);
+
+    connect(InfoProvider::getWorker(), &InfoProvider::Worker::dataUpdated, this, &UtilizationContainer::dataUpdated);
 }
 
-void UtilizationContainer::updateData() {
+void UtilizationContainer::updateLegend() {
     findChild<QLabel*>(graphStepName)->setText(QString::number(SettingsManager::getUpdateDelay() / 1000.0f) + " sec step");
     findChild<QLabel*>(graphTimeName)->setText(QString::number(SettingsManager::getGraphLength() / 1000.0f) + " sec");
+    emit onLegendUpdate();
+}
 
-    for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
-        findChild<CircleWidget*>(getGPUCircleWidgetName(i))->setColor(SettingsManager::getGPUColor(i));
-    }
+void UtilizationContainer::dataUpdated() {
+    emit onDataUpdated();
 }
 
 UtilizationWidget* UtilizationContainer::getUtilizationWidget() const {
     return utilizationWidget;
 }
 
-bool UtilizationContainer::event(QEvent *event) {
-    if (event->type() == QEvent::ToolTip) {
-        auto *helpEvent = static_cast<QHelpEvent*>(event);
-
-        if (auto *child = childAt(helpEvent->pos()); child) {
-            auto name = child->objectName();
-
-            for (int i = 0; i < InfoProvider::getGPUCount(); i++) {
-                if (name == getInfoLabelName(i, UtInfoLabelId)) {
-                    QToolTip::showText(helpEvent->globalPos(), "Utilization: current (average / min / max)");
-                    return true;
-                } else if (showToolTip(helpEvent->globalPos(), name, i)) {
-                    return true;
-                }
-            }
-        }
-
-        QToolTip::hideText();
-        event->ignore();
-
-        return true;
-    }
-
-    return QWidget::event(event);
-}
-
-void UtilizationContainer::addInfoTitleLayout(int gpuIndex) {
-    auto gpuName = new QLabel();
-    gpuName->setText("<b>" + InfoProvider::getGPUName(gpuIndex) + "</b>");
-
-    int fontHeight = gpuName->fontMetrics().height();
-
-    auto circle = new CircleWidget();
-    circle->setMinimumSize(fontHeight, fontHeight);
-    circle->setObjectName(getGPUCircleWidgetName(gpuIndex));
-
-    auto titleLayout = new QHBoxLayout();
-    titleLayout->setAlignment(Qt::AlignLeft);
-    titleLayout->setContentsMargins(0, fontHeight / 2, 0, 0);
-
-    titleLayout->addWidget(gpuName);
-    titleLayout->addWidget(circle);
-
-    getLayout()->addLayout(titleLayout);
-}
-
-QVBoxLayout* UtilizationContainer::getLayout() {
-    return static_cast<QVBoxLayout*>(layout()); // static_cast because layout() is 100% QVBoxLayout
+FlowLayout* UtilizationContainer::getDescLayout() {
+    return m_descLayout;
 }

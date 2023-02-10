@@ -5,6 +5,8 @@
 
 class GPUUtilizationWidget: public UtilizationWidget {
 public:
+    explicit GPUUtilizationWidget(UtilizationContainer *container);
+
     void onDataUpdated() override;
 };
 

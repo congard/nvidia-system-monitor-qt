@@ -21,8 +21,6 @@ private:
     void saveSettings();
     void loadSettings();
 
-    void onDataUpdated();
-
 private slots:
     void quit();
     void settings();

@@ -1,42 +1,37 @@
 #ifndef QNVSM_UTILIZATIONCONTAINER_H
 #define QNVSM_UTILIZATIONCONTAINER_H
 
-#include <QLabel>
-
 #include "UtilizationWidget.h"
+#include "FlowLayout.h"
 
 class QVBoxLayout;
 
 class UtilizationContainer: public QWidget {
+    Q_OBJECT
+
 public:
     constexpr static int UtInfoLabelId = 0;
 
 public:
     void build(const QString &name);
 
-    void updateData();
+    void updateLegend();
 
     UtilizationWidget* getUtilizationWidget() const;
 
+public slots:
+    void dataUpdated();
+
+signals:
+    void onLegendUpdate();
+    void onDataUpdated();
+
 protected:
-    virtual bool showToolTip(const QPoint& pos, const QString &name, int gpuId) = 0;
-
-    bool event(QEvent *event) override;
-    void addInfoTitleLayout(int gpuIndex);
-    QVBoxLayout* getLayout();
-
-    inline static QString getInfoLabelName(int gpuIndex, int index) {
-        return "il_" + QString::number(gpuIndex) + "_" + QString::number(index);
-    }
-
-    inline static QLabel* getInfoLabel(int gpuIndex, int index) {
-        auto label = new QLabel();
-        label->setObjectName(getInfoLabelName(gpuIndex, index));
-        return label;
-    }
+    FlowLayout* getDescLayout();
 
 protected:
     UtilizationWidget *utilizationWidget;
+    FlowLayout *m_descLayout;
 };
 
 #endif //QNVSM_UTILIZATIONCONTAINER_H

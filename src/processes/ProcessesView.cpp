@@ -52,6 +52,8 @@ ProcessesView::ProcessesView(QWidget *parent): QTreeView(parent) {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setAutoScroll(false);
     setRootIsDecorated(false);
+
+    connect(InfoProvider::getWorker(), &InfoProvider::Worker::dataUpdated, this, &ProcessesView::onDataUpdated);
 }
 
 void ProcessesView::mousePressEvent(QMouseEvent *event) {

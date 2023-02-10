@@ -7,13 +7,17 @@
 #include "core/InfoProvider.h"
 #include "core/Utils.h"
 #include "core/PCHIPInterpolator.h"
+#include "UtilizationContainer.h"
 
 using namespace Utils;
 
-UtilizationWidget::UtilizationWidget() {
+UtilizationWidget::UtilizationWidget(UtilizationContainer *container) {
     graphPoints.resize(InfoProvider::getGPUCount());
     utilizationData.resize(InfoProvider::getGPUCount());
+
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    connect(container, &UtilizationContainer::onDataUpdated, this, &UtilizationWidget::onDataUpdated);
 }
 
 UtilizationWidget::~UtilizationWidget() = default;
@@ -62,6 +66,10 @@ void UtilizationWidget::onDataUpdated() {
     }
 
     lastTime = getTime();
+
+    update();
+
+    emit onUpdated();
 }
 
 void UtilizationWidget::paintEvent(QPaintEvent *) {

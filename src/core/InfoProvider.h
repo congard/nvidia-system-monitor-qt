@@ -16,9 +16,8 @@ public:
     class Worker: public ::Worker {
     public:
         inline void work() override {
-            mutex.lock();
+            QMutexLocker locker(&mutex);
             InfoProvider::updateData();
-            mutex.unlock();
             dataUpdated();
         }
     };

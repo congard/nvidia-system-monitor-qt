@@ -59,7 +59,11 @@ set(PROJECT_SOURCES
         src/utilization/memory/MemoryUtilizationContainer.cpp src/utilization/memory/MemoryUtilizationContainer.h
         src/core/InfoProvider.cpp src/core/InfoProvider.h
         src/utilization/Grid.h
-        src/core/PCHIPInterpolator.cpp src/core/PCHIPInterpolator.h)
+        src/core/PCHIPInterpolator.cpp src/core/PCHIPInterpolator.h
+        src/utilization/FlowLayout.cpp src/utilization/FlowLayout.h
+        src/utilization/GPUDetailsWidget.cpp src/utilization/GPUDetailsWidget.h
+        src/utilization/gpu/GPUUtDetailsWidget.cpp src/utilization/gpu/GPUUtDetailsWidget.h
+        src/utilization/memory/GPUMemDetailsWidget.cpp src/utilization/memory/GPUMemDetailsWidget.h)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(qnvsm ${PROJECT_SOURCES})
