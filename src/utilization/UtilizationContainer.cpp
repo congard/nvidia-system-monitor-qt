@@ -40,7 +40,7 @@ void UtilizationContainer::build(const QString &name) {
     layout->addWidget(utilizationWidget);
     layout->addLayout(footerLayout);
 
-    m_descLayout = new FlowLayout(0, 12, 12);
+    m_descLayout = new FlowLayout(0, 12, 6);
     layout->addLayout(m_descLayout);
 
     setLayout(layout);
