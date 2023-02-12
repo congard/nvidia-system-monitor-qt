@@ -16,6 +16,7 @@ UtilizationWidget::UtilizationWidget(UtilizationContainer *container) {
     utilizationData.resize(InfoProvider::getGPUCount());
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setMinimumHeight(96);
 
     connect(container, &UtilizationContainer::onDataUpdated, this, &UtilizationWidget::onDataUpdated);
 }

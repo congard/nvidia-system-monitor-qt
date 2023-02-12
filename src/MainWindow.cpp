@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QSplitter>
 #include <QMessageBox>
+#include <QScrollArea>
 
 #include "core/SettingsManager.h"
 
@@ -85,10 +86,14 @@ MainWindow::MainWindow(QWidget*) {
     auto utilizationWidget = new QWidget();
     utilizationWidget->setLayout(utilizationLayout);
 
+    auto utWidgetScroll = new QScrollArea();
+    utWidgetScroll->setWidget(utilizationWidget);
+    utWidgetScroll->setWidgetResizable(true);
+
     // add tabs
     auto tabs = new QTabWidget();
     tabs->addTab(processes, "Processes");
-    tabs->addTab(utilizationWidget, "Utilization");
+    tabs->addTab(utWidgetScroll, "Utilization");
 
     layout->addWidget(menuBar);
     layout->addWidget(tabs);
