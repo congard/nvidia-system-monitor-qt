@@ -14,7 +14,7 @@ public:
     void closeEvent(QCloseEvent *event) override;
 
 private:
-    WorkerThread *workerThread;
+    WorkerThread workerThread;
 
 private:
     QString getSplitterStylesheet();

@@ -102,9 +102,8 @@ MainWindow::MainWindow(QWidget*) {
     window->setLayout(layout);
     setCentralWidget(window);
 
-    workerThread = new WorkerThread();
-    workerThread->workers[0] = InfoProvider::getWorker();
-    workerThread->start();
+    workerThread.workers[0] = InfoProvider::getWorker();
+    workerThread.start();
 
     // load MainWindow settings
     loadSettings();
@@ -172,8 +171,8 @@ void MainWindow::quit() {
 
     saveSettings();
 
-    workerThread->running = false;
-    while (workerThread->isRunning()); // waiting for all workers to be safely removed
+    workerThread.running = false;
+    workerThread.wait(); // waiting for all workers to be safely removed
 
     InfoProvider::destroy();
 
