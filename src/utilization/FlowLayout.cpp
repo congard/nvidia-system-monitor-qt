@@ -89,11 +89,14 @@ QSize FlowLayout::sizeHint() const {
 QSize FlowLayout::minimumSize() const {
     QSize size;
 
-    for (const QLayoutItem *item : std::as_const(itemList))
+    for (const QLayoutItem *item : itemList)
         size = size.expandedTo(item->minimumSize());
 
     const QMargins margins = contentsMargins();
     size += QSize(margins.left() + margins.right(), margins.top() + margins.bottom());
+
+    auto layoutSize = this->contentsRect();
+    size.setHeight(heightForWidth(layoutSize.width()));
 
     return size;
 }
