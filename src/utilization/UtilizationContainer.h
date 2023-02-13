@@ -2,7 +2,7 @@
 #define QNVSM_UTILIZATIONCONTAINER_H
 
 #include "UtilizationWidget.h"
-#include "FlowLayout.h"
+#include "FlowGridLayout.h"
 
 class QVBoxLayout;
 
@@ -27,11 +27,11 @@ signals:
     void onDataUpdated();
 
 protected:
-    FlowLayout* getDescLayout();
+    FlowGridLayout* getDescLayout();
 
 protected:
     UtilizationWidget *utilizationWidget;
-    FlowLayout *m_descLayout;
+    FlowGridLayout *m_descLayout;
 };
 
 #endif //QNVSM_UTILIZATIONCONTAINER_H

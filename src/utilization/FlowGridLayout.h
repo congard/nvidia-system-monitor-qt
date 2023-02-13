@@ -8,11 +8,11 @@
 #include <QRect>
 #include <QStyle>
 
-class FlowLayout : public QLayout {
+class FlowGridLayout : public QLayout {
 public:
-    explicit FlowLayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
-    explicit FlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
-    ~FlowLayout() override;
+    explicit FlowGridLayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
+    explicit FlowGridLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
+    ~FlowGridLayout() override;
 
     void addItem(QLayoutItem *item) override;
     void addLayout(QLayout *layout);

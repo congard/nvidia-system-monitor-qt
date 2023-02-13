@@ -60,7 +60,7 @@ set(PROJECT_SOURCES
         src/core/InfoProvider.cpp src/core/InfoProvider.h
         src/utilization/Grid.h
         src/core/PCHIPInterpolator.cpp src/core/PCHIPInterpolator.h
-        src/utilization/FlowLayout.cpp src/utilization/FlowLayout.h
+        src/utilization/FlowGridLayout.cpp src/utilization/FlowGridLayout.h
         src/utilization/GPUDetailsWidget.cpp src/utilization/GPUDetailsWidget.h
         src/utilization/gpu/GPUUtDetailsWidget.cpp src/utilization/gpu/GPUUtDetailsWidget.h
         src/utilization/memory/GPUMemDetailsWidget.cpp src/utilization/memory/GPUMemDetailsWidget.h)

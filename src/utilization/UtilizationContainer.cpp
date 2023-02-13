@@ -40,7 +40,7 @@ void UtilizationContainer::build(const QString &name) {
     layout->addWidget(utilizationWidget);
     layout->addLayout(footerLayout);
 
-    m_descLayout = new FlowLayout(0, 12, 6);
+    m_descLayout = new FlowGridLayout(0, 12, 6);
     layout->addLayout(m_descLayout);
 
     setLayout(layout);
@@ -62,6 +62,6 @@ UtilizationWidget* UtilizationContainer::getUtilizationWidget() const {
     return utilizationWidget;
 }
 
-FlowLayout* UtilizationContainer::getDescLayout() {
+FlowGridLayout* UtilizationContainer::getDescLayout() {
     return m_descLayout;
 }
