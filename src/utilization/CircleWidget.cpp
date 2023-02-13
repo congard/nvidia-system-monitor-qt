@@ -33,5 +33,5 @@ void CircleWidget::paintEvent(QPaintEvent *event) {
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(pen);
     painter.setBrush(brush);
-    painter.drawEllipse(event->rect().adjusted(offset, offset, -offset, -offset));
+    painter.drawEllipse(rect().adjusted(offset, offset, -offset, -offset));
 }
