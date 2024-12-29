@@ -2,9 +2,9 @@
 #include "Utils.h"
 
 #include <cmath>
-#include <unistd.h>
+#include <thread>
+#include <array>
 
-using namespace std;
 using namespace Utils;
 
 QRegularExpression InfoProvider::m_processListRegex;
@@ -29,31 +29,46 @@ int InfoProvider::m_iMemTotal {INT_NONE};
 int InfoProvider::m_iMemFree {INT_NONE};
 int InfoProvider::m_iMemUsed {INT_NONE};
 
-void InfoProvider::init() {
-    // init values
+namespace {
+constexpr auto gpuInfoPowerMaxAttemptCount{3};
+constexpr auto gpuInfoPowerAttemptDelay{std::chrono::milliseconds{50}};
 
+constexpr QStringView operator""_qsv(const char16_t* str, size_t len) noexcept {
+    return QStringView{str, static_cast<qsizetype>(len)};
+}
+}
+
+void InfoProvider::init() {
+    initGPUCount();
+    initProcessList();
+    initGPUInfo();
+}
+
+void InfoProvider::initGPUCount() {
     m_gpuCount = exec_cmd("nvidia-smi --query-gpu=count --format=csv,noheader").split("\n")[0].toInt();
     m_gpuNames.resize(m_gpuCount);
 
     auto names = exec_cmd("nvidia-smi --query-gpu=name --format=csv,noheader").split("\n");
 
-    for (int i = 0; i < m_gpuCount; i++) {
-        m_gpuNames[i] = names[i];
-    }
+    for (int i = 0; i < m_gpuCount; i++)
+        m_gpuNames[i] = std::move(names[i]);
 
     m_info.resize(m_gpuCount);
+}
 
-    // init process list regex
+void InfoProvider::initProcessList() {
+    // TODO: maybe to keep compatibility with older (and newer) drivers, firstly find indices,
+    //  like in `initGPUInfo`, instead of hard-coded ones?
 
     /* Process list example:
 
-        # gpu        pid  type    sm   mem   enc   dec    fb   command
-        # Idx          #   C/G     %     %     %     %    MB   name
-            0       4673     G     -     -     -     -     0   java
-            0       4765     G     0     0     -     -     4   Xorg
+        # gpu         pid   type     sm    mem    enc    dec    jpg    ofa     fb   ccpm    command
+        # Idx           #    C/G      %      %      %      %      %      %     MB     MB    name
+            0       2479     G      -      -      -      -      -      -      1      0    kwalletd6
+            0       2481     G      -      -      -      -      -      -    624      0    Xorg
 
       * Parse pattern:
-      *  n           n  C/G   n/-   n/-   n/-   n/-   n/-   process name
+      *     n           n    C/G     n/-    n/-    n/-    n/-    n/-    n/-    n/-    n/-   process name
       */
 
     auto repeatString = [](const QString &str, int times) {
@@ -65,40 +80,55 @@ void InfoProvider::init() {
         return result;
     };
 
-    #define spacer R"([ \t]*)"
+#define spacer R"([ \t]*)"
 
-    QString processListPattern =
-    repeatString(spacer "([0-9]+)", 2) + // gpu id, pid
-            spacer R"((C(?:\+G)?|G))" + // type
-                   repeatString(spacer R"(([0-9\-]+))", 5) + // sm, mem, enc, dec, fb mem
-            spacer R"(([^ \t\n]+))"; // process name
+    const QString processListPattern{
+        repeatString(spacer "([0-9]+)", 2) + // gpu id, pid
+        spacer R"((C(?:\+G)?|G))" + // type
+        repeatString(spacer R"(([0-9\-]+))", 8) + // sm, mem, enc, dec, jpg, ofa, fb, ccpm
+        spacer R"(([^ \t\n]+))" // process name
+    };
 
     m_processListRegex.setPattern(processListPattern);
+}
 
-    // build info command
+void InfoProvider::initGPUInfo() {
+    const auto queryHelp = exec_cmd("nvidia-smi --help-query-gpu");
 
-    auto queryHelp = exec_cmd("nvidia-smi --help-query-gpu");
-    const char *options[] = {
-            "temperature.gpu", "temperature.memory", "clocks.gr", "clocks.max.gr", "clocks.mem", "clocks.max.mem",
-            "power.draw", "utilization.gpu", "utilization.memory", "memory.total", "memory.free", "memory.used"
+    struct Option {
+        QStringView name;
+        int &index;
     };
-    int *indexes[] = {
-            &m_iGpuTemp, &m_iMemTemp, &m_iGpuFreq, &m_iGpuFreqMax, &m_iMemFreq, &m_iMemFreqMax,
-            &m_iPower, &m_iGpuUtil, &m_iMemUtil, &m_iMemTotal, &m_iMemFree, &m_iMemUsed
+
+    constexpr std::array options{
+        Option{u"temperature.gpu"_qsv, m_iGpuTemp},
+        Option{u"temperature.memory"_qsv, m_iMemTemp},
+        Option{u"clocks.gr"_qsv, m_iGpuFreq},
+        Option{u"clocks.max.gr"_qsv, m_iGpuFreqMax},
+        Option{u"clocks.mem"_qsv, m_iMemFreq},
+        Option{u"clocks.max.mem"_qsv, m_iMemFreqMax},
+        Option{u"power.draw"_qsv, m_iPower},
+        Option{u"utilization.gpu"_qsv, m_iGpuUtil},
+        Option{u"utilization.memory"_qsv, m_iMemUtil},
+        Option{u"memory.total"_qsv, m_iMemTotal},
+        Option{u"memory.free"_qsv, m_iMemFree},
+        Option{u"memory.used"_qsv, m_iMemUsed}
     };
-    int index = 0;
+
+    int index{0};
     QString availableOptions;
 
-    for (int i = 0; i < sizeof(options) / sizeof(options[0]); ++i) {
-        if (queryHelp.contains(options[i])) {
-            *indexes[i] = index;
-            availableOptions.append(options[i]);
+    for (const auto [optName, optIndex] : options) {
+        if (queryHelp.contains(optName)) {
+            optIndex = index;
+            availableOptions.append(optName);
             availableOptions.append(',');
             ++index;
         }
     }
 
-    m_infoQueryCmd = QString::asprintf("nvidia-smi --query-gpu=%s --format=csv,noheader,nounits", qPrintable(availableOptions));
+    m_infoQueryCmd = QString::asprintf(
+        "nvidia-smi --query-gpu=%s --format=csv,noheader,nounits", qPrintable(availableOptions));
 
     updateData();
     m_worker = new Worker();
@@ -109,57 +139,74 @@ void InfoProvider::destroy() {
 }
 
 void InfoProvider::updateData() {
-    // query processes info
+    updateProcessList();
+    updateGPUInfo();
+}
 
+void InfoProvider::updateProcessList() {
     // nvidia-smi process output indices
     enum {
-        GPUIdx = 1, PID, Type, Sm,
-        Mem, Enc, Dec, FbMem, Name
+        GPUIdx = 1,
+        PID,
+        Type,
+        Sm,
+        Mem,
+        Enc,
+        Dec,
+        Jpg,
+        Ofa,
+        FbMem,
+        Ccpm,
+        Name
     };
 
     m_processes = {};
 
-    QRegularExpressionMatchIterator procIt = m_processListRegex.globalMatch(exec_cmd("nvidia-smi pmon -c 1 -s um"));
+    QRegularExpressionMatchIterator procIt{
+        m_processListRegex.globalMatch(exec_cmd("nvidia-smi pmon -c 1 -s um"))
+    };
 
     while (procIt.hasNext()) {
         QRegularExpressionMatch match = procIt.next();
 
         m_processes.append({
-             match.captured(Name), match.captured(Type),
-             match.captured(GPUIdx), match.captured(PID),
-             match.captured(Sm), match.captured(Mem),
-             match.captured(Enc), match.captured(Dec),
-             match.captured(FbMem)
+            .name = match.captured(Name),
+            .type = match.captured(Type),
+            .gpuIdx = match.captured(GPUIdx),
+            .pid = match.captured(PID),
+            .sm = match.captured(Sm),
+            .mem = match.captured(Mem),
+            .enc = match.captured(Enc),
+            .dec = match.captured(Dec),
+            .fbmem = match.captured(FbMem)
         });
     }
+}
 
-    // query gpu info
-
-    int attempt = 0;
-    QString data = exec_cmd_s(m_infoQueryCmd);
+void InfoProvider::updateGPUInfo() {
+    int attempt{0};
+    QString data{exec_cmd_s(m_infoQueryCmd)};
 
     // fix "[Unknown Error]" for power output
-    while (data.contains('[') && attempt < 3) {
-        usleep(50000);
+    while (data.contains('[') && attempt < gpuInfoPowerMaxAttemptCount) {
+        std::this_thread::sleep_for(gpuInfoPowerAttemptDelay);
         data = exec_cmd_s(m_infoQueryCmd);
         ++attempt;
     }
 
-    auto lines = data.split("\n");
+    const auto lines = data.split("\n");
 
     for (int i = 0; i < m_info.size(); ++i) {
-        auto line = lines[i].split(", ");
+        const auto line = lines[i].split(", ");
 
-        auto parseIndex = [&](int index, auto &writeTo) {
-            using T = remove_reference_t<decltype(writeTo)>;
-
+        auto parseIndex = [&]<typename T>(int index, T &writeTo) {
             if (index != INT_NONE) {
                 bool ok;
 
-                if constexpr (is_same_v<T, int>) {
+                if constexpr (std::is_same_v<T, int>) {
                     auto val = QString(line[index]).toInt(&ok);
                     writeTo = ok ? val : INT_NONE;
-                } else if constexpr(is_same_v<T, float>) {
+                } else if constexpr(std::is_same_v<T, float>) {
                     auto val = QString(line[index]).toFloat(&ok);
                     writeTo = ok ? val : NAN;
                 }

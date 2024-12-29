@@ -15,7 +15,7 @@ class InfoProvider {
 public:
     class Worker: public ::Worker {
     public:
-        inline void work() override {
+        void work() override {
             QMutexLocker locker(&mutex);
             InfoProvider::updateData();
             dataUpdated();
@@ -70,6 +70,14 @@ public:
     static const QString& getGPUName(int id);
 
     static Worker* getWorker();
+
+private:
+    static void initGPUCount();
+    static void initProcessList();
+    static void initGPUInfo();
+
+    static void updateProcessList();
+    static void updateGPUInfo();
 
 private:
     static QRegularExpression m_processListRegex;

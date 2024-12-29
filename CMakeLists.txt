@@ -46,7 +46,7 @@ set(PROJECT_SOURCES
         src/core/Worker.cpp src/core/Worker.h
         src/core/WorkerThread.cpp src/core/WorkerThread.h
         src/core/SettingsManager.cpp src/core/SettingsManager.h
-        src/processes/ProcessInfo.cpp src/processes/ProcessInfo.h
+        src/processes/ProcessInfo.h
         src/processes/ProcessesView.cpp src/processes/ProcessesView.h
         src/core/Point.h
         src/utilization/CircleWidget.cpp src/utilization/CircleWidget.h
