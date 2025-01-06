@@ -24,81 +24,83 @@
 
 #include "SettingsDialog.h"
 
-#define constant inline constexpr auto
-
+namespace {
 namespace SessionSettings {
-constant MainWindow_geometry = "MainWindow/geometry";
-constant MainWindow_windowState = "MainWindow/windowState";
-constant MainWindow_utilizationSplitter = "MainWindow/utilizationSplitter";
+constexpr auto MainWindow_geometry = "MainWindow/geometry";
+constexpr auto MainWindow_windowState = "MainWindow/windowState";
+constexpr auto MainWindow_utilizationSplitter = "MainWindow/utilizationSplitter";
+}
+
+constexpr auto processesViewName = "processesView";
+constexpr auto gpuUtilizationContainerName = "gpuUtilizationContainer";
+constexpr auto memoryUtilizationContainerName = "memoryUtilizationContainer";
+constexpr auto utilizationSplitterName = "utilizationSplitter";
 }
 
 using namespace SessionSettings;
-
-constant processesViewName = "processesView";
-constant gpuUtilizationContainerName = "gpuUtilizationContainer";
-constant memoryUtilizationContainerName = "memoryUtilizationContainer";
-constant utilizationSplitterName = "utilizationSplitter";
 
 MainWindow::MainWindow(QWidget*) {
     setWindowTitle("NVIDIA System Monitor");
     setWindowIcon(QIcon(ICON_PATH));
 
-    auto layout = new QVBoxLayout;
+    const auto layout = new QVBoxLayout{};
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
 
     // menu bar
-    auto menuBar = new QMenuBar;
+    const auto menuBar = new QMenuBar{};
 
-    auto fileMenu = new QMenu("&File");
+    const auto fileMenu = new QMenu{"&File"};
     fileMenu->addAction("&Settings", this, SLOT(settings()));
     fileMenu->addSeparator();
     fileMenu->addAction("&Exit", this, SLOT(quit()));
 
-    auto helpMenu = new QMenu("&Help");
-    helpMenu->addAction("&About NVSM", this, SLOT(about()), Qt::CTRL + Qt::Key_A);
-    helpMenu->addAction("&Help", this, SLOT(help()), Qt::CTRL + Qt::Key_H);
+    const auto helpMenu = new QMenu{"&Help"};
+    helpMenu->addAction("&About NVSM", &MainWindow::about, Qt::CTRL + Qt::Key_A);
+    helpMenu->addAction("&About Qt", &QApplication::aboutQt, Qt::CTRL + Qt::Key_Q);
+    helpMenu->addSeparator();
+    helpMenu->addAction("&Help", &MainWindow::help, Qt::CTRL + Qt::Key_H);
 
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(helpMenu);
 
     // tabs
-    auto processes = new ProcessesView();
+    const auto processes = new ProcessesView{};
     processes->setObjectName(processesViewName);
 
-    auto gpuUtilizationContainer = new GPUUtilizationContainer();
+    const auto gpuUtilizationContainer = new GPUUtilizationContainer{};
     gpuUtilizationContainer->setObjectName(gpuUtilizationContainerName);
 
-    auto memoryUtilizationContainer = new MemoryUtilizationContainer();
+    const auto memoryUtilizationContainer = new MemoryUtilizationContainer{};
     memoryUtilizationContainer->setObjectName(memoryUtilizationContainerName);
 
-    auto utilizationSplitter = new QSplitter();
+    const auto utilizationSplitter = new QSplitter{};
     utilizationSplitter->setObjectName(utilizationSplitterName);
     utilizationSplitter->setOrientation(Qt::Vertical);
     utilizationSplitter->setStyleSheet(getSplitterStylesheet());
     utilizationSplitter->addWidget(gpuUtilizationContainer);
     utilizationSplitter->addWidget(memoryUtilizationContainer);
 
-    auto utilizationLayout = new QVBoxLayout();
+    const auto utilizationLayout = new QVBoxLayout{};
     utilizationLayout->addWidget(utilizationSplitter);
     utilizationLayout->setContentsMargins(32, 32, 32, 32);
 
-    auto utilizationWidget = new QWidget();
+    const auto utilizationWidget = new QWidget{};
     utilizationWidget->setLayout(utilizationLayout);
 
-    auto utWidgetScroll = new QScrollArea();
+    const auto utWidgetScroll = new QScrollArea{};
     utWidgetScroll->setWidget(utilizationWidget);
     utWidgetScroll->setWidgetResizable(true);
 
     // add tabs
-    auto tabs = new QTabWidget();
+    const auto tabs = new QTabWidget{};
     tabs->addTab(processes, "Processes");
     tabs->addTab(utWidgetScroll, "Utilization");
 
     layout->addWidget(menuBar);
     layout->addWidget(tabs);
     
-    auto window = new QWidget();
+    const auto window = new QWidget{};
     window->setLayout(layout);
     setCentralWidget(window);
 
@@ -114,7 +116,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 QString MainWindow::getSplitterStylesheet() {
-    QColor background = palette().color(QPalette::Window);
+    QColor background{palette().color(QPalette::Window)};
     QColor splitterColor, hoverSplitterColor, pressedSplitterColor;
 
     if (background.black() >= 128) {
@@ -129,7 +131,7 @@ QString MainWindow::getSplitterStylesheet() {
         pressedSplitterColor = background.darker(300);
     }
 
-    QString splitterStylesheet = Resources::QSplitter::Stylesheet;
+    QString splitterStylesheet{Resources::QSplitter::Stylesheet};
     splitterStylesheet.replace("/* QSplitter_border_color */", splitterColor.name());
     splitterStylesheet.replace("/* QSplitter_hover_border_color */", hoverSplitterColor.name());
     splitterStylesheet.replace("/* QSplitter_pressed_border_color */", pressedSplitterColor.name());
@@ -138,7 +140,7 @@ QString MainWindow::getSplitterStylesheet() {
 }
 
 void MainWindow::saveSettings() {
-    QSettings settings(NVSM_SETTINGS);
+    QSettings settings{NVSM_SETTINGS};
     settings.setValue(MainWindow_geometry, saveGeometry());
     settings.setValue(MainWindow_windowState, saveState());
     settings.setValue(MainWindow_utilizationSplitter, findChild<QSplitter *>(utilizationSplitterName)->saveState());
@@ -152,9 +154,9 @@ inline QSize defaultWindowSize(const QRect &screenGeometry) {
 }
 
 void MainWindow::loadSettings() {
-    QSettings settings(NVSM_SETTINGS);
+    const QSettings settings{NVSM_SETTINGS};
 
-    auto geometryByteArray = settings.value(MainWindow_geometry).toByteArray();
+    const auto geometryByteArray = settings.value(MainWindow_geometry).toByteArray();
 
     if (!geometryByteArray.isEmpty()) {
         restoreGeometry(geometryByteArray);
@@ -180,13 +182,13 @@ void MainWindow::quit() {
 }
 
 void MainWindow::settings() {
-    auto oldGraphLength = SettingsManager::getGraphLength();
+    const auto oldGraphLength = SettingsManager::getGraphLength();
 
     SettingsDialog dialog;
     dialog.exec();
 
-    auto gpuUtilizationContainer = findChild<GPUUtilizationContainer*>(gpuUtilizationContainerName);
-    auto memoryUtilizationContainer = findChild<MemoryUtilizationContainer*>(memoryUtilizationContainerName);
+    const auto gpuUtilizationContainer = findChild<GPUUtilizationContainer*>(gpuUtilizationContainerName);
+    const auto memoryUtilizationContainer = findChild<MemoryUtilizationContainer*>(memoryUtilizationContainerName);
 
     gpuUtilizationContainer->updateLegend();
     memoryUtilizationContainer->updateLegend();
