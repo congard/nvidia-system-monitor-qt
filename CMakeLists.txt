@@ -7,7 +7,7 @@ project(qnvsm)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 20)
 
-set(Version 1.5)
+set(Version 1.6)
 
 if (NOT VersionPrefix)
     set(VersionPrefix "(compiled from source)")
