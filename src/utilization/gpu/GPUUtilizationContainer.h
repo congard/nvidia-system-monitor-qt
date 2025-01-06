@@ -3,7 +3,9 @@
 
 #include "utilization/UtilizationContainer.h"
 
-class GPUUtilizationContainer: public UtilizationContainer {
+class GPUUtilizationContainer final : public UtilizationContainer {
+    Q_OBJECT
+
 public:
     GPUUtilizationContainer();
 };

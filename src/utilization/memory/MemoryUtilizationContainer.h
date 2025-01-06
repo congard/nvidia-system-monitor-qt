@@ -3,7 +3,9 @@
 
 #include "utilization/UtilizationContainer.h"
 
-class MemoryUtilizationContainer: public UtilizationContainer {
+class MemoryUtilizationContainer final : public UtilizationContainer {
+    Q_OBJECT
+
 public:
     MemoryUtilizationContainer();
 };
