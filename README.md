@@ -13,7 +13,6 @@ Task Manager for Linux for Nvidia graphics cards
 ## Packages
 
 * [Flatpak](https://flathub.org/apps/details/io.github.congard.qnvsm)
-* RPM: see [releases](https://github.com/congard/nvidia-system-monitor-qt/releases)
 * [AUR](https://aur.archlinux.org/packages/nvidia-system-monitor-qt/): `nvidia-system-monitor-qt`
 
 ## Dependencies
@@ -28,11 +27,6 @@ Task Manager for Linux for Nvidia graphics cards
 4.  `cmake` (make dependence)
 
 ## Building
-
-### Fedora
-
-You can install rpm package from [releases](https://github.com/congard/nvidia-system-monitor-qt/releases)
-<br>To launch type `qnvsm` or just click on the `.desktop` file
 
 ### ArchLinux
 
@@ -57,7 +51,3 @@ cmake --build build --target qnvsm -- -j 4
 To launch type `build/qnvsm`
 
 The option -j describes the number of parallel processes for the build. In this case make will try to use 4 cores for the build.
-
-## Donate
-
-<b>Payeer:</b> P36281059
