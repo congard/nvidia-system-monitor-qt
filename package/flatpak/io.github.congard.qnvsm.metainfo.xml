@@ -12,12 +12,14 @@
         <p xml:lang="en-GB">Task Manager for Nvidia GPUs</p>
     </description>
     <releases>
-        <release version="1.5" date="2022-02-27"/>
+        <release version="1.6" date="2025-01-06"/>
     </releases>
     <screenshots>
         <screenshot type="default">
-            <image type="source">https://raw.githubusercontent.com/congard/nvidia-system-monitor-qt/master/package/flatpak/screenshots/screenshot_0.png</image>
-            <image type="source">https://raw.githubusercontent.com/congard/nvidia-system-monitor-qt/master/package/flatpak/screenshots/screenshot_1.png</image>
+            <image type="source">https://raw.githubusercontent.com/congard/nvidia-system-monitor-qt/1c50d5e359fb86267729c0a9167db9064764f87a/package/flatpak/screenshots/screenshot_0.png</image>
+        </screenshot>
+        <screenshot>
+            <image type="source">https://raw.githubusercontent.com/congard/nvidia-system-monitor-qt/1c50d5e359fb86267729c0a9167db9064764f87a/package/flatpak/screenshots/screenshot_1.png</image>
         </screenshot>
     </screenshots>
     <categories>
