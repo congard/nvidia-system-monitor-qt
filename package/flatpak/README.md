@@ -9,8 +9,8 @@ Maintainer: [congard](https://github.com/congard)
 
 ## Dependencies
 
-1. `org.kde.Platform//5.15-21.08`
-2. `org.kde.Sdk//5.15-21.08`
+1. `org.kde.Platform//6.8`
+2. `org.kde.Sdk//6.8`
 
 ## Steps
 
