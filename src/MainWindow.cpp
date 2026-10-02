@@ -51,15 +51,15 @@ MainWindow::MainWindow(QWidget*) {
     const auto menuBar = new QMenuBar{};
 
     const auto fileMenu = new QMenu{"&File"};
-    fileMenu->addAction("&Settings", this, SLOT(settings()));
+    fileMenu->addAction("&Settings", this, &MainWindow::settings);
     fileMenu->addSeparator();
-    fileMenu->addAction("&Exit", this, SLOT(quit()));
+    fileMenu->addAction("&Exit", this, &MainWindow::quit);
 
     const auto helpMenu = new QMenu{"&Help"};
-    helpMenu->addAction("&About NVSM", &MainWindow::about, Qt::CTRL + Qt::Key_A);
-    helpMenu->addAction("&About Qt", &QApplication::aboutQt, Qt::CTRL + Qt::Key_Q);
+    helpMenu->addAction("&About NVSM", QKeySequence("Ctrl+A"), this, &MainWindow::about);
+    helpMenu->addAction("&About Qt", QKeySequence("Ctrl+Q"), qApp, &QApplication::aboutQt);
     helpMenu->addSeparator();
-    helpMenu->addAction("&Help", &MainWindow::help, Qt::CTRL + Qt::Key_H);
+    helpMenu->addAction("&Help", QKeySequence("Ctrl+H"), this, &MainWindow::help);
 
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(helpMenu);
